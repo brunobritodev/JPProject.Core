@@ -39,6 +39,7 @@ namespace Jp.Management
             // Response compression
             services.AddBrotliCompression();
 
+            services.ConfigureJpAdmin();
             // authentication
             services.AddDatabase(Configuration);
 
@@ -103,7 +104,6 @@ namespace Jp.Management
             // Adding dependencies from another layers (isolated from Presentation)
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ISystemUser, AspNetUser>();
-            NativeInjectorBootStrapper.RegisterServices(services);
         }
     }
 }
