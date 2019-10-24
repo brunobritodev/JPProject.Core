@@ -1,0 +1,1 @@
+dotnet pack ..\src\JpProject.sln -o .\ -p:PackageVersion=1.0.0
