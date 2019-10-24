@@ -18,6 +18,9 @@ namespace JPProject.Admin.Infra.Data.MigrationHelper
             var id4Context = scope.ServiceProvider.GetRequiredService<IdentityServerContext>();
             var storeDb = scope.ServiceProvider.GetRequiredService<EventStoreContext>();
 
+            if(id4Context.Database.IsInMemory() || storeDb.Database.IsInMemory())
+                return;
+            
             await WaitForDb(id4Context);
             await storeDb.Database.GetPendingMigrationsAsync();
             await storeDb.Database.MigrateAsync();

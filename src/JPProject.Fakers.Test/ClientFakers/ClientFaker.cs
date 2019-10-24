@@ -3,7 +3,7 @@ using System.Security.Claims;
 using Bogus;
 using IdentityServer4.Models;
 
-namespace JPProject.Admin.Domain.Tests.CommandHandlers.ClientTests.Fakers
+namespace JPProject.Fakers.Test.ClientFakers
 {
     public static class ClientFaker
     {

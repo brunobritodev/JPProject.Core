@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using Bogus;
+﻿using Bogus;
 using IdentityServer4.Models;
+using JPProject.Admin.Application.ViewModels.ApiResouceViewModels;
+using System.Linq;
 
-namespace JPProject.Admin.Domain.Tests.CommandHandlers.ApiResourceTests.Fakers
+namespace JPProject.Fakers.Test.ApiResourceFakers
 {
     public class ApiResourceFaker
     {
@@ -35,6 +36,17 @@ namespace JPProject.Admin.Domain.Tests.CommandHandlers.ApiResourceTests.Fakers
                 .RuleFor(s => s.Emphasize, f => f.Random.Bool())
                 .RuleFor(s => s.ShowInDiscoveryDocument, f => f.Random.Bool())
                 .RuleFor(s => s.UserClaims, f => f.PickRandom(IdentityHelpers.Claims, f.Random.Int(0, 3)).ToList());
+        }
+
+        public static Faker<SaveApiSecretViewModel> GenerateSaveClientSecret(string name)
+        {
+            return new Faker<SaveApiSecretViewModel>()
+                .RuleFor(s => s.Description, f => f.Lorem.Word())
+                .RuleFor(s => s.Value, f => f.Lorem.Word())
+                .RuleFor(s => s.Expiration, f => default)
+                .RuleFor(s => s.Hash, f => default)
+                .RuleFor(s => s.Type, f => f.Lorem.Word())
+                .RuleFor(s => s.ResourceName, f => name ?? f.Lorem.Word());
         }
     }
 }
