@@ -2,7 +2,7 @@
 using Bogus;
 using IdentityServer4.Models;
 
-namespace JpProject.Domain.Tests.CommandHandlers.ApiResourceTests.Fakers
+namespace JPProject.Admin.Domain.Tests.CommandHandlers.ApiResourceTests.Fakers
 {
     public class ApiResourceFaker
     {

@@ -1,4 +1,4 @@
-﻿namespace JpProject.Domain.Tests
+﻿namespace JPProject.Admin.Domain.Tests
 {
     public class IdentityHelpers
     {

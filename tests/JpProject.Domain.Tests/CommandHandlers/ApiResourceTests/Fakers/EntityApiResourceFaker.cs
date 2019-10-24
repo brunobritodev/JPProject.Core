@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using IdentityServer4.EntityFramework.Entities;
 
-namespace JpProject.Domain.Tests.CommandHandlers.ApiResourceTests.Fakers
+namespace JPProject.Admin.Domain.Tests.CommandHandlers.ApiResourceTests.Fakers
 {
     public class EntityApiResourceFaker
     {

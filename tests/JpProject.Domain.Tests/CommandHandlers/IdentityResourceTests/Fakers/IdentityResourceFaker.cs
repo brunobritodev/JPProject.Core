@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Bogus;
+﻿using Bogus;
 using IdentityServer4.Models;
 
-namespace JpProject.Domain.Tests.CommandHandlers.IdentityResourceTests.Fakers
+namespace JPProject.Admin.Domain.Tests.CommandHandlers.IdentityResourceTests.Fakers
 {
     public class IdentityResourceFaker
     {

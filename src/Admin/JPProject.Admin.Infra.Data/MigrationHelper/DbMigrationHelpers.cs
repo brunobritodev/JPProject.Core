@@ -1,5 +1,7 @@
 ﻿using IdentityServer4.EntityFramework.Entities;
+using JPProject.Admin.Infra.Data.Configuration;
 using JPProject.Admin.Infra.Data.Context;
+using JPProject.Domain.Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -20,9 +22,12 @@ namespace JPProject.Admin.Infra.Data.MigrationHelper
             await storeDb.Database.GetPendingMigrationsAsync();
             await storeDb.Database.MigrateAsync();
 
-            var isDatabaseExist = await CheckTableExists<Client>(id4Context);
+            var configurationDatabaseExist = await CheckTableExists<Client>(id4Context);
+            var operationalDatabaseExist = await CheckTableExists<PersistedGrant>(id4Context);
+            var isDatabaseExist = configurationDatabaseExist && operationalDatabaseExist;
+
             if (isDatabaseExist && options.MustThrowExceptionIfDatabaseDontExist)
-                throw new Exception("IdentityServer4 Database doesn't exist. Ensure it was created before.'");
+                throw new DatabaseNotFoundException("IdentityServer4 Database doesn't exist. Ensure it was created before.'");
 
         }
 
@@ -35,7 +40,7 @@ namespace JPProject.Admin.Infra.Data.MigrationHelper
         {
             try
             {
-                await db.Set<T>().CountAsync();
+                await db.Set<T>().AnyAsync();
                 return true;
 
             }
@@ -63,7 +68,7 @@ namespace JPProject.Admin.Infra.Data.MigrationHelper
             }
 
             // after a few attemps we give up
-            throw new Exception("Error wating database");
+            throw new DatabaseNotFoundException("Error wating database. Check ConnectionString and ensure database exist");
 
         }
     }
