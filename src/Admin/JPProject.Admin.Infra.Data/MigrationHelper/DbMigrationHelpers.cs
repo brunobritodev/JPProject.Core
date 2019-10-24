@@ -1,26 +1,15 @@
-﻿using JPProject.Admin.Infra.Data.Context;
+﻿using IdentityServer4.EntityFramework.Entities;
+using JPProject.Admin.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Data;
 using System.Threading.Tasks;
 
 namespace JPProject.Admin.Infra.Data.MigrationHelper
 {
     public static class DbMigrationHelpers
     {
-        /// <summary>
-        /// Generate migrations before running this method, you can use command bellow:
-        /// Nuget package manager: Add-Migration DbInit -context ApplicationIdentityContext -output Data/Migrations
-        /// Dotnet CLI: dotnet ef migrations add DbInit -c ApplicationIdentityContext -o Data/Migrations
-        /// </summary>
-        public static async Task EnsureSeedData(IServiceScope serviceScope)
-        {
-            var services = serviceScope.ServiceProvider;
-            await EnsureSeedData(services);
-        }
-
-        public static async Task EnsureSeedData(IServiceProvider serviceProvider)
+        public static async Task CheckDatabases(IServiceProvider serviceProvider, JpDatabaseOptions options)
         {
             using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
@@ -31,21 +20,29 @@ namespace JPProject.Admin.Infra.Data.MigrationHelper
             await storeDb.Database.GetPendingMigrationsAsync();
             await storeDb.Database.MigrateAsync();
 
-            await CheckIs4Database(id4Context);
+            var isDatabaseExist = await CheckTableExists<Client>(id4Context);
+            if (isDatabaseExist && options.MustThrowExceptionIfDatabaseDontExist)
+                throw new Exception("IdentityServer4 Database doesn't exist. Ensure it was created before.'");
 
         }
 
-        private static async Task CheckIs4Database(DbContext context)
+        /// <summary>
+        /// Check if data table is exist in application
+        /// </summary>
+        /// <typeparam name="T">Class of data table to check</typeparam>
+        /// <param name="db">DB Object</param>
+        private static async Task<bool> CheckTableExists<T>(DbContext db) where T : class
         {
-            var conn = context.Database.GetDbConnection();
-            if (conn.State.Equals(ConnectionState.Closed)) await conn.OpenAsync();
-            await using var command = conn.CreateCommand();
+            try
+            {
+                await db.Set<T>().CountAsync();
+                return true;
 
-            command.CommandText = @"
-                                    SELECT 1 FROM sys.tables AS T
-                                        INNER JOIN sys.schemas AS S ON T.schema_id = S.schema_id
-                                    WHERE S.Name = 'SchemaName' AND T.Name = 'Clients'";
-            var exists = await command.ExecuteScalarAsync() != null;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
 
