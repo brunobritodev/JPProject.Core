@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
+using JPProject.EntityFrameworkCore.Context;
 using Xunit;
 
 namespace JPProject.IntegrationTests.ApiResourceTests

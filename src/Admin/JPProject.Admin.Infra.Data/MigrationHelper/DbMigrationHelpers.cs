@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using JPProject.EntityFrameworkCore.Context;
 
 namespace JPProject.Admin.Infra.Data.MigrationHelper
 {
