@@ -1,16 +1,15 @@
-﻿using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace JPProject.Admin.Infra.Data.MigrationHelper
 {
     public class DbHealthChecker
     {
-        public async Task<bool> TestConnection(DbContext context)
+        public bool TestConnection(DbContext context)
         {
 
             try
             {
-                await context.Database.CanConnectAsync();   // Check the database connection
+                context.Database.CanConnect();   // Check the database connection
 
                 return true;
             }

@@ -82,9 +82,23 @@ namespace JPProject.IntegrationTests.ApiResourceTests
         }
 
 
+        [Fact]
+        public async Task ShouldAddNewApiScope()
+        {
+            var command = ApiResourceFaker.GenerateApiResource().Generate();
+
+            await _apiResourceAppService.Save(command);
+
+            var scope = ApiResourceFaker.GenerateSaveScopeViewModer(command.Name).Generate();
+
+            await _apiResourceAppService.SaveScope(scope);
+
+            _database.ApiResources.FirstOrDefault(f => f.Name == command.Name).Should().NotBeNull();
+            _database.ApiScopes.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
+        }
 
         [Fact]
-        public async Task ShouldAddNewClientSecret()
+        public async Task ShouldAddNewApiSecret()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -99,15 +113,17 @@ namespace JPProject.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldNotAddNewClientSecretWhenClientDoesntExist()
+        public async Task ShouldNotAddNewApiSecretWhenClientDoesntExist()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
-            var secret = ApiResourceFaker.GenerateSaveClientSecret(command.Name);
+            var secret = ApiResourceFaker.GenerateSaveClientSecret(command.Name).Generate();
 
             var result = await _apiResourceAppService.SaveSecret(secret);
 
             _database.ApiSecrets.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
             result.Should().BeFalse();
         }
+
+
     }
 }

@@ -1,0 +1,12 @@
+{
+  "ConnectionStrings": {
+    // Postgre Connection
+    "Postgree": "Server=localhost;Port=5432;Database=jpproject;User Id=postgres;Password=@Password1;",
+    // Sql Server connection
+    "SqlServer": "Server=.;Initial Catalog=JpProject;Persist Security Info=False;User ID=sa;Password=@Password1;MultipleActiveResultSets=False;Connection Timeout=30;",
+    // MySql connection
+    "MySql": "server=localhost,port=3306;database=jpproject;user=bruno;password=10203040",
+    // SQLite Connection
+    "Sqlite": "Data Source=jpproject.db"
+  }
+}

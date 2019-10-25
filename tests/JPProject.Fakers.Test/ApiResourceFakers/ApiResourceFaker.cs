@@ -48,5 +48,17 @@ namespace JPProject.Fakers.Test.ApiResourceFakers
                 .RuleFor(s => s.Type, f => f.Lorem.Word())
                 .RuleFor(s => s.ResourceName, f => name ?? f.Lorem.Word());
         }
+
+        public static Faker<SaveApiScopeViewModel> GenerateSaveScopeViewModer(string name)
+        {
+            return new Faker<SaveApiScopeViewModel>()
+                .RuleFor(s => s.ResourceName, f => name ?? f.Lorem.Word())
+                .RuleFor(s => s.Name, f => f.Lorem.Word())
+                .RuleFor(s => s.DisplayName, f => f.Lorem.Word())
+                .RuleFor(s => s.Description, f => f.Lorem.Word())
+                .RuleFor(s => s.Required, f => f.Random.Bool())
+                .RuleFor(s => s.Emphasize, f => f.Random.Bool())
+                .RuleFor(s => s.ShowInDiscoveryDocument, f => f.Random.Bool());
+        }
     }
 }

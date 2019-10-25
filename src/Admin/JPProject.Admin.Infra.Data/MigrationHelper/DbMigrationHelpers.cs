@@ -1,6 +1,7 @@
 ﻿using IdentityServer4.EntityFramework.Entities;
 using JPProject.Admin.Infra.Data.Configuration;
 using JPProject.Admin.Infra.Data.Context;
+using JPProject.Domain.Core.Events;
 using JPProject.Domain.Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,20 +19,30 @@ namespace JPProject.Admin.Infra.Data.MigrationHelper
             var id4Context = scope.ServiceProvider.GetRequiredService<IdentityServerContext>();
             var storeDb = scope.ServiceProvider.GetRequiredService<EventStoreContext>();
 
-            if(id4Context.Database.IsInMemory() || storeDb.Database.IsInMemory())
+            if (id4Context.Database.IsInMemory() || storeDb.Database.IsInMemory())
                 return;
-            
-            await WaitForDb(id4Context);
-            await storeDb.Database.GetPendingMigrationsAsync();
-            await storeDb.Database.MigrateAsync();
 
+            await WaitForDb(id4Context);
+            await ValidateIs4Context(options, id4Context);
+
+            await ConfigureEventStoreContext(storeDb);
+        }
+
+        private static async Task ValidateIs4Context(JpDatabaseOptions options, IdentityServerContext id4Context)
+        {
             var configurationDatabaseExist = await CheckTableExists<Client>(id4Context);
             var operationalDatabaseExist = await CheckTableExists<PersistedGrant>(id4Context);
             var isDatabaseExist = configurationDatabaseExist && operationalDatabaseExist;
 
-            if (isDatabaseExist && options.MustThrowExceptionIfDatabaseDontExist)
+            if (!isDatabaseExist && options.MustThrowExceptionIfDatabaseDontExist)
                 throw new DatabaseNotFoundException("IdentityServer4 Database doesn't exist. Ensure it was created before.'");
+        }
 
+        private static async Task ConfigureEventStoreContext(EventStoreContext storeDb)
+        {
+            var storeDbExist = await CheckTableExists<StoredEvent>(storeDb);
+            if (!storeDbExist)
+                await storeDb.Database.MigrateAsync();
         }
 
         /// <summary>
@@ -62,7 +73,7 @@ namespace JPProject.Admin.Infra.Data.MigrationHelper
             var healthChecker = new DbHealthChecker();
             for (int i = 0; i < maxAttemps; i++)
             {
-                var canConnect = await healthChecker.TestConnection(context);
+                var canConnect = healthChecker.TestConnection(context);
                 if (canConnect)
                 {
                     return;
