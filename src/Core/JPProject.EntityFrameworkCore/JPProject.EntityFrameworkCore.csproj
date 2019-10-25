@@ -22,7 +22,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\JPProject.Domain.Core\JPProject.Domain.Core.csproj" />
+    <ProjectReference Include="..\JPProject.Domain.Core\JPProject.Domain.Core.csproj" />
   </ItemGroup>
 
 </Project>
