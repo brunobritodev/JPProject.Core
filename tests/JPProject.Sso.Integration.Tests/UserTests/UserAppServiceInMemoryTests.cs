@@ -12,7 +12,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
 {
     public class UserAppServiceInMemoryTests : IClassFixture<WarmupInMemory>
     {
-        private IUserAppService _userAppService;
+        private readonly IUserAppService _userAppService;
         private ApplicationIdentityContext _database;
         public WarmupInMemory InMemoryData { get; }
 

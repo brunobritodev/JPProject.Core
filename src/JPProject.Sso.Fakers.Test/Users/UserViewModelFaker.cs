@@ -11,13 +11,13 @@ namespace JPProject.Sso.Fakers.Test.Users
             var pass = _faker.Internet.Password();
             return new Faker<RegisterUserViewModel>()
                 .RuleFor(r => r.Id, f => f.Random.Uuid())
-                .RuleFor(r => r.Email, f => f.Lorem.Word())
+                .RuleFor(r => r.Email, f => f.Person.Email)
                 .RuleFor(r => r.Password, f => pass)
                 .RuleFor(r => r.ConfirmPassword, f => pass)
-                .RuleFor(r => r.PhoneNumber, f => f.Lorem.Word())
-                .RuleFor(r => r.Name, f => f.Lorem.Word())
-                .RuleFor(r => r.Username, f => f.Lorem.Word())
-                .RuleFor(r => r.Picture, f => f.Lorem.Word());
+                .RuleFor(r => r.PhoneNumber, f => f.Phone.PhoneNumber())
+                .RuleFor(r => r.Name, f => f.Person.FullName)
+                .RuleFor(r => r.Username, f => f.Person.UserName)
+                .RuleFor(r => r.Picture, f => f.Person.Avatar);
         }
     }
 }

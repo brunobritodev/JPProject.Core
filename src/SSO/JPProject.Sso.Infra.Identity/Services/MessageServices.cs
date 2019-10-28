@@ -17,7 +17,7 @@ namespace JPProject.Sso.Infra.CrossCutting.Identity.Services
         }
         public async Task SendEmailAsync(string email, string subject, string message)
         {
-            if (!_emailConfiguration.SendEmail)
+            if (_emailConfiguration == null || !_emailConfiguration.SendEmail)
                 return;
 
             var mimeMessage = new MimeMessage();
