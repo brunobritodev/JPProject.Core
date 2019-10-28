@@ -1,10 +1,11 @@
-﻿using Jp.Domain.Interfaces;
-using JPProject.Domain.Core.Bus;
+﻿using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Commands;
+using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
+using JPProject.Sso.Domain.Interfaces;
 using MediatR;
 
-namespace Jp.Domain.CommandHandlers
+namespace JPProject.Sso.Domain.CommandHandlers
 {
     public class CommandHandler
     {

@@ -1,7 +1,7 @@
-using JPProject.Domain.Core.Events;
 using System;
+using JPProject.Domain.Core.Events;
 
-namespace Jp.Domain.Events.User
+namespace JPProject.Sso.Domain.Events.User
 {
     public class UserRoleRemovedEvent : Event
     {

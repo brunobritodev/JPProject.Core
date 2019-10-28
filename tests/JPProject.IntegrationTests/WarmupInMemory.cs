@@ -1,6 +1,5 @@
 using AutoMapper;
 using JPProject.Admin.Application.AutoMapper;
-using JPProject.Admin.Infra.Data.Context;
 using JPProject.EntityFrameworkCore.Context;
 using JPProject.Fakers.Test;
 using MediatR;
@@ -38,7 +37,7 @@ namespace JPProject.IntegrationTests
         public void DetachAll()
         {
 
-            var database = Services.GetService<IdentityServerContext>();
+            var database = Services.GetService<JpProjectContext>();
             foreach (var dbEntityEntry in database.ChangeTracker.Entries())
             {
                 if (dbEntityEntry.Entity != null)

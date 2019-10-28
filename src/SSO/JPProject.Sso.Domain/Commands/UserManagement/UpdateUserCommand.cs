@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Jp.Domain.Commands.UserManagement;
-using Jp.Domain.Validations.User;
-using Jp.Domain.Validations.UserManagement;
+using JPProject.Sso.Domain.Validations.UserManagement;
 
-namespace Jp.Domain.Commands.User
+namespace JPProject.Sso.Domain.Commands.UserManagement
 {
     public class UpdateUserCommand : UserManagementCommand
     {

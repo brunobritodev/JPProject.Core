@@ -1,13 +1,14 @@
-﻿using Jp.Domain.Commands.Role;
-using Jp.Domain.Events.Role;
-using Jp.Domain.Interfaces;
-using JPProject.Domain.Core.Bus;
-using JPProject.Domain.Core.Notifications;
-using MediatR;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using JPProject.Domain.Core.Bus;
+using JPProject.Domain.Core.Interfaces;
+using JPProject.Domain.Core.Notifications;
+using JPProject.Sso.Domain.Commands.Role;
+using JPProject.Sso.Domain.Events.Role;
+using JPProject.Sso.Domain.Interfaces;
+using MediatR;
 
-namespace Jp.Domain.CommandHandlers
+namespace JPProject.Sso.Domain.CommandHandlers
 {
     public class RoleCommandHandler : CommandHandler,
         IRequestHandler<RemoveRoleCommand, bool>,

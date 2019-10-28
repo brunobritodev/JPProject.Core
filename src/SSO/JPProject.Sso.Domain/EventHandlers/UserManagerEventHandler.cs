@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Jp.Domain.Events.UserManagement;
+using JPProject.Sso.Domain.Events.UserManagement;
 using MediatR;
 
-namespace Jp.Domain.EventHandlers
+namespace JPProject.Sso.Domain.EventHandlers
 {
     public class UserManagerEventHandler : 
         INotificationHandler<ProfileUpdatedEvent>,

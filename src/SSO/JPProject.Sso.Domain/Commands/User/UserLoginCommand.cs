@@ -1,6 +1,6 @@
 ﻿using JPProject.Domain.Core.Commands;
 
-namespace Jp.Domain.Commands.User
+namespace JPProject.Sso.Domain.Commands.User
 {
     public abstract class UserLoginCommand : Command
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Jp.Domain.Interfaces
+namespace JPProject.Sso.Domain.Interfaces
 {
     /// <summary>
     /// Interface to propagate user id type

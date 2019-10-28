@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Jp.Domain.Commands.User;
+using JPProject.Sso.Domain.Commands.User;
 
-namespace Jp.Domain.Validations.User
+namespace JPProject.Sso.Domain.Validations.User
 {
     public class ResetPasswordCommandValidation : UserValidation<ResetPasswordCommand>
     {

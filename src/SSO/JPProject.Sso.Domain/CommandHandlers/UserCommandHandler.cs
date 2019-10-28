@@ -1,15 +1,16 @@
-﻿using Jp.Domain.Commands.User;
-using Jp.Domain.Events.User;
-using Jp.Domain.Interfaces;
-using Jp.Domain.Models;
-using JPProject.Domain.Core.Bus;
-using JPProject.Domain.Core.Notifications;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using JPProject.Domain.Core.Bus;
+using JPProject.Domain.Core.Interfaces;
+using JPProject.Domain.Core.Notifications;
+using JPProject.Sso.Domain.Commands.User;
+using JPProject.Sso.Domain.Events.User;
+using JPProject.Sso.Domain.Interfaces;
+using JPProject.Sso.Domain.Models;
+using MediatR;
 
-namespace Jp.Domain.CommandHandlers
+namespace JPProject.Sso.Domain.CommandHandlers
 {
     public class UserCommandHandler : CommandHandler,
         IRequestHandler<RegisterNewUserCommand, bool>,

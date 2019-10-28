@@ -1,7 +1,7 @@
-﻿using JPProject.Domain.Core.Commands;
-using System;
+﻿using System;
+using JPProject.Domain.Core.Commands;
 
-namespace Jp.Domain.Commands.User
+namespace JPProject.Sso.Domain.Commands.User
 {
     public abstract class UserCommand : Command
     {

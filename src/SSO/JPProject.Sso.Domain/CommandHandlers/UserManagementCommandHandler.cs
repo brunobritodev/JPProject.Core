@@ -1,16 +1,17 @@
-﻿using Jp.Domain.Commands.User;
-using Jp.Domain.Commands.UserManagement;
-using Jp.Domain.Events.User;
-using Jp.Domain.Events.UserManagement;
-using Jp.Domain.Interfaces;
-using MediatR;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using JPProject.Domain.Core.Bus;
+using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
+using JPProject.Sso.Domain.Commands.User;
+using JPProject.Sso.Domain.Commands.UserManagement;
+using JPProject.Sso.Domain.Events.User;
+using JPProject.Sso.Domain.Events.UserManagement;
+using JPProject.Sso.Domain.Interfaces;
+using MediatR;
 
-namespace Jp.Domain.CommandHandlers
+namespace JPProject.Sso.Domain.CommandHandlers
 {
     public class UserManagementCommandHandler : CommandHandler,
         IRequestHandler<UpdateProfileCommand, bool>,

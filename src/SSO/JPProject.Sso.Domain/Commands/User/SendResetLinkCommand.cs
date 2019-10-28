@@ -1,6 +1,6 @@
-﻿using Jp.Domain.Validations.User;
+﻿using JPProject.Sso.Domain.Validations.User;
 
-namespace Jp.Domain.Commands.User
+namespace JPProject.Sso.Domain.Commands.User
 {
     public class SendResetLinkCommand: UserCommand
     {

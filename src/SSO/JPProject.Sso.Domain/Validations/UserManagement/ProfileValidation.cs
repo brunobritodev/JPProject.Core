@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Jp.Domain.Commands.UserManagement;
+using JPProject.Sso.Domain.Commands.UserManagement;
 
-namespace Jp.Domain.Validations.UserManagement
+namespace JPProject.Sso.Domain.Validations.UserManagement
 {
     public class ProfileValidation<T> : AbstractValidator<T> where T : ProfileCommand
     {

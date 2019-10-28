@@ -1,6 +1,6 @@
 ﻿using JPProject.Domain.Core.Events;
 
-namespace Jp.Domain.Events.Role
+namespace JPProject.Sso.Domain.Events.Role
 {
     public class RoleSavedEvent : Event
     {

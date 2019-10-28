@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Jp.Domain.Events.User;
+using JPProject.Sso.Domain.Events.User;
 using MediatR;
 
-namespace Jp.Domain.EventHandlers
+namespace JPProject.Sso.Domain.EventHandlers
 {
     
     public class UserEventHandler :

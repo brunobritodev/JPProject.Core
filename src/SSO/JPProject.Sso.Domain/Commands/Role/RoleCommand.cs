@@ -1,6 +1,6 @@
 ﻿using JPProject.Domain.Core.Commands;
 
-namespace Jp.Domain.Commands.Role
+namespace JPProject.Sso.Domain.Commands.Role
 {
     public abstract class RoleCommand : Command
     {

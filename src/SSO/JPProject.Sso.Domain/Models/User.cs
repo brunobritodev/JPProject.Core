@@ -1,8 +1,8 @@
-﻿using Jp.Domain.Commands.User;
-using Jp.Domain.Interfaces;
-using System;
+﻿using System;
+using JPProject.Sso.Domain.Commands.UserManagement;
+using JPProject.Sso.Domain.Interfaces;
 
-namespace Jp.Domain.Models
+namespace JPProject.Sso.Domain.Models
 {
     public class User : IDomainUser
     {

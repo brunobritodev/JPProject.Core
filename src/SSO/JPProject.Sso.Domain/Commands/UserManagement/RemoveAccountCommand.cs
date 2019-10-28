@@ -1,7 +1,7 @@
 ﻿using System;
-using Jp.Domain.Validations.UserManagement;
+using JPProject.Sso.Domain.Validations.UserManagement;
 
-namespace Jp.Domain.Commands.UserManagement
+namespace JPProject.Sso.Domain.Commands.UserManagement
 {
     public class RemoveAccountCommand:ProfileCommand
     {

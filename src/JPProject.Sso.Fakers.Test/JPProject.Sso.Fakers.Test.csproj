@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Bogus" Version="28.4.1" />
+    <PackageReference Include="Bogus.Tools.Analyzer" Version="28.3.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SSO\JPProject.Sso.Application\JPProject.Sso.Application.csproj" />
+    <ProjectReference Include="..\SSO\JPProject.Sso.Infra.Identity\JPProject.Sso.Infra.CrossCutting.Identity.csproj" />
+  </ItemGroup>
+</Project>

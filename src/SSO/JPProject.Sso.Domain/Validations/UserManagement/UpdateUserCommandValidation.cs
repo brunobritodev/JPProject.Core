@@ -1,7 +1,6 @@
-﻿using Jp.Domain.Commands.User;
-using Jp.Domain.Validations.User;
+﻿using JPProject.Sso.Domain.Commands.UserManagement;
 
-namespace Jp.Domain.Validations.UserManagement
+namespace JPProject.Sso.Domain.Validations.UserManagement
 {
     public class UpdateUserCommandValidation : UserManagementValidation<UpdateUserCommand>
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Jp.Domain.Models
+namespace JPProject.Sso.Domain.Models
 {
     public class Role
     {

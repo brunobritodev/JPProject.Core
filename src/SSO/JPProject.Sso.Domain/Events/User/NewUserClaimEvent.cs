@@ -1,6 +1,6 @@
 using JPProject.Domain.Core.Events;
 
-namespace Jp.Domain.Events.User
+namespace JPProject.Sso.Domain.Events.User
 {
     public class NewUserClaimEvent : Event
     {

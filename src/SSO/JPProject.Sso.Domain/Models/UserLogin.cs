@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Jp.Domain.Models
+﻿namespace JPProject.Sso.Domain.Models
 {
    public class UserLogin
     {

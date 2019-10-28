@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels.ClientsViewModels;
-using JPProject.Admin.Infra.Data.Context;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Fakers.Test.ClientFakers;
 using MediatR;
@@ -17,14 +16,14 @@ namespace JPProject.IntegrationTests.ClientTests
     public class ClientAppServiceInMemoryTest : IClassFixture<WarmupInMemory>
     {
         private readonly IClientAppService _clientAppService;
-        private readonly IdentityServerContext _database;
+        private readonly JpProjectContext _database;
 
         public WarmupInMemory InMemoryData { get; }
         public ClientAppServiceInMemoryTest(WarmupInMemory inMemoryData)
         {
             InMemoryData = inMemoryData;
             _clientAppService = InMemoryData.Services.GetRequiredService<IClientAppService>();
-            _database = InMemoryData.Services.GetRequiredService<IdentityServerContext>();
+            _database = InMemoryData.Services.GetRequiredService<JpProjectContext>();
             var notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             notifications.Clear();
         }

@@ -1,13 +1,13 @@
-﻿using Jp.Domain.Commands.User;
-using Jp.Domain.Commands.UserManagement;
-using Jp.Domain.Models;
-using JPProject.Domain.Core.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using JPProject.Domain.Core.ViewModels;
+using JPProject.Sso.Domain.Commands.User;
+using JPProject.Sso.Domain.Commands.UserManagement;
+using JPProject.Sso.Domain.Models;
 
-namespace Jp.Domain.Interfaces
+namespace JPProject.Sso.Domain.Interfaces
 {
     public interface IUserService
     {

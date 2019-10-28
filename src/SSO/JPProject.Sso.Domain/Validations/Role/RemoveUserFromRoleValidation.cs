@@ -1,6 +1,6 @@
-﻿using Jp.Domain.Commands.Role;
+﻿using JPProject.Sso.Domain.Commands.Role;
 
-namespace Jp.Domain.Validations.Role
+namespace JPProject.Sso.Domain.Validations.Role
 {
     public class RemoveUserFromRoleValidation : RoleValidation<RemoveUserFromRoleCommand>
     {

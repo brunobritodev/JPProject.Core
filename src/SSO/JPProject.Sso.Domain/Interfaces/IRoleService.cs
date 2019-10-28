@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Jp.Domain.Models;
+using JPProject.Sso.Domain.Models;
 
-namespace Jp.Domain.Interfaces
+namespace JPProject.Sso.Domain.Interfaces
 {
     public interface IRoleService
     {

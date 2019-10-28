@@ -11,6 +11,7 @@
     <PackageReference Include="FluentAssertions" Version="5.9.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
     <PackageReference Include="Moq" Version="4.13.1" />
@@ -34,12 +35,6 @@
     <ProjectReference Include="..\..\src\Admin\JPProject.Admin.Infra.Data.Sql\JPProject.Admin.Infra.Data.Sql.csproj" />
     <ProjectReference Include="..\..\src\Core\JPProject.AspNet.Core\JPProject.AspNet.Core.csproj" />
     <ProjectReference Include="..\JPProject.Fakers.Test\JPProject.Fakers.Test.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.Extensions.DependencyInjection">
-      <HintPath>C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\3.0.0\ref\netcoreapp3.0\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

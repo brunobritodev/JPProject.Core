@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels.ApiResouceViewModels;
-using JPProject.Admin.Infra.Data.Context;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Fakers.Test.ApiResourceFakers;
 using MediatR;
@@ -17,14 +16,14 @@ namespace JPProject.IntegrationTests.ApiResourceTests
     public class ApiResourceAppServiceInMemoryTest : IClassFixture<WarmupInMemory>
     {
         private readonly IApiResourceAppService _apiResourceAppService;
-        private readonly IdentityServerContext _database;
+        private readonly JpProjectContext _database;
         public WarmupInMemory InMemoryData { get; }
 
         public ApiResourceAppServiceInMemoryTest(WarmupInMemory inMemoryData)
         {
             InMemoryData = inMemoryData;
             _apiResourceAppService = InMemoryData.Services.GetRequiredService<IApiResourceAppService>();
-            _database = InMemoryData.Services.GetRequiredService<IdentityServerContext>();
+            _database = InMemoryData.Services.GetRequiredService<JpProjectContext>();
             var notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             notifications.Clear();
         }

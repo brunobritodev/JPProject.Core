@@ -1,7 +1,7 @@
-﻿using JPProject.Domain.Core.Commands;
-using System;
+﻿using System;
+using JPProject.Domain.Core.Commands;
 
-namespace Jp.Domain.Commands.UserManagement
+namespace JPProject.Sso.Domain.Commands.UserManagement
 {
     public abstract class ProfileCommand : Command
     {

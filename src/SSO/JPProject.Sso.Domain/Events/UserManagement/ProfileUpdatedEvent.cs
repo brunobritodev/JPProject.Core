@@ -1,8 +1,8 @@
-﻿using Jp.Domain.Commands.UserManagement;
+﻿using System;
 using JPProject.Domain.Core.Events;
-using System;
+using JPProject.Sso.Domain.Commands.UserManagement;
 
-namespace Jp.Domain.Events.UserManagement
+namespace JPProject.Sso.Domain.Events.UserManagement
 {
     public class ProfileUpdatedEvent : Event
     {

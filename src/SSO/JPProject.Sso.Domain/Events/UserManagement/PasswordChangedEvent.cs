@@ -1,7 +1,7 @@
-﻿using JPProject.Domain.Core.Events;
-using System;
+﻿using System;
+using JPProject.Domain.Core.Events;
 
-namespace Jp.Domain.Events.UserManagement
+namespace JPProject.Sso.Domain.Events.UserManagement
 {
     public class PasswordChangedEvent : Event
     {
