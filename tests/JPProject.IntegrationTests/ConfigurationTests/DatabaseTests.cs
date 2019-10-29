@@ -29,6 +29,7 @@ namespace JPProject.Admin.IntegrationTests.ConfigurationTests
             Configuration.ServiceCollection.ConfigureJpAdmin<AspNetUserTest>().WithSqlServer(opt => opt.UseSqlServer(connString).EnableSensitiveDataLogging());
 
             Configuration.ServiceCollection.BuildServiceProvider();
+            
         }
     }
 }
