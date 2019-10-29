@@ -2,11 +2,11 @@
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Fakers.Test.Users;
-using JPProject.Sso.Infra.Data.Context;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
+using JPProject.Sso.Infra.Data.Context;
 using Xunit;
 
 namespace JPProject.Sso.Integration.Tests.UserTests

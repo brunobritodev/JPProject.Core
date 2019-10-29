@@ -2,7 +2,6 @@ using AutoMapper;
 using JPProject.EntityFrameworkCore.Configuration;
 using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.Application.Configuration.DependencyInjection;
-using JPProject.Sso.Data.Sql.Configuration;
 using JPProject.Sso.Infra.Data.Context;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using System;
 using System.IO;
+using JPProject.Sso.SqlServer.Configuration;
 
 namespace JPProject.Sso.Integration.Tests
 {
@@ -40,7 +40,7 @@ namespace JPProject.Sso.Integration.Tests
                 opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
 
             serviceCollection
-                .ConfigureSso<AspNetUserTest, IdentityUser<TKey>, IdentityRole<TKey>, TKey>()
+                .ConfigureSso<AspNetUserTest>()
                 .WithSqlServer(dbOptions);
 
             // IdentityServer
@@ -100,7 +100,7 @@ namespace JPProject.Sso.Integration.Tests
         public void DetachAll()
         {
 
-            var database = Services.GetService<ApplicationIdentityContext<TKey>>();
+            var database = Services.GetService<ApplicationIdentityContext>();
             foreach (var dbEntityEntry in database.ChangeTracker.Entries())
             {
                 if (dbEntityEntry.Entity != null)

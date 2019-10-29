@@ -1,4 +1,4 @@
-﻿namespace JPProject.Sso.Data.Sql.Configuration
+﻿namespace JPProject.Sso.SqlServer.Configuration
 {
     public static class IdentityServerConfig
     {
