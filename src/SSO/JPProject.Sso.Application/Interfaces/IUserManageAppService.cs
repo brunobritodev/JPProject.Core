@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using JPProject.Domain.Core.ViewModels;
+﻿using JPProject.Domain.Core.ViewModels;
 using JPProject.Sso.Application.EventSourcedNormalizers;
 using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Application.ViewModels.RoleViewModels;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace JPProject.Sso.Application.Interfaces
 {
@@ -16,11 +16,11 @@ namespace JPProject.Sso.Application.Interfaces
         Task ChangePassword(ChangePasswordViewModel model);
         Task CreatePassword(SetPasswordViewModel model);
         Task RemoveAccount(RemoveAccountViewModel model);
-        Task<bool> HasPassword(Guid userId);
+        Task<bool> HasPassword(string userId);
         Task<ListOf<EventHistoryData>> GetEvents(string username, PagingViewModel paging);
 
         Task<UserViewModel> GetUserDetails(string username);
-        Task<UserViewModel> GetUserAsync(Guid value);
+        Task<UserViewModel> GetUserAsync(string value);
         Task UpdateUser(UserViewModel model);
 
         Task<IEnumerable<ClaimViewModel>> GetClaims(string userName);

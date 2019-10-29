@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Jp.Infra.Data.PostgreSQL.Configuration
+namespace JPProject.Sso.EntityFrameworkCore.PostgreSQL.Configuration
 {
     public static class IdentityServerConfig
     {
-        public static IIdentityServerBuilder UseIdentityServerPostgreSqlDatabase(
+        public static IIdentityServerBuilder WithPostgreSql(
             this IIdentityServerBuilder builder,
             string connectionString)
         {
@@ -32,5 +33,23 @@ namespace Jp.Infra.Data.PostgreSQL.Configuration
             return builder;
         }
 
+        public static IServiceCollection WithPostgreSql(this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction)
+        {
+            builder.AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = optionsAction;
+                })
+                // this adds the operational data from DB (codes, tokens, consents)
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = optionsAction;
+
+                    // this enables automatic token cleanup. this is optional.
+                    options.EnableTokenCleanup = true;
+                    options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
+                });
+
+            return builder.Services;
+        }
     }
 }

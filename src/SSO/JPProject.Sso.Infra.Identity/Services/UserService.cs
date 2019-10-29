@@ -46,26 +46,25 @@ namespace JPProject.Sso.Infra.Identity.Services
             _logger = loggerFactory.CreateLogger<UserService>(); ;
         }
 
-        public Task<Guid?> CreateUserWithPass(IDomainUser user, string password)
+        public Task<string> CreateUserWithPass(IDomainUser user, string password)
         {
             return CreateUser(user, password, null, null);
         }
 
-        public Task<Guid?> CreateUserWithProvider(IDomainUser user, string provider, string providerUserId)
+        public Task<string> CreateUserWithProvider(IDomainUser user, string provider, string providerUserId)
         {
             return CreateUser(user, null, provider, providerUserId);
         }
 
-        public Task<Guid?> CreateUserWithProviderAndPass(IDomainUser user, string password, string provider, string providerId)
+        public Task<string> CreateUserWithProviderAndPass(IDomainUser user, string password, string provider, string providerId)
         {
             return CreateUser(user, password, provider, providerId);
         }
 
-        private async Task<Guid?> CreateUser(IDomainUser user, string password, string provider, string providerId)
+        private async Task<string> CreateUser(IDomainUser user, string password, string provider, string providerId)
         {
             var newUser = new UserIdentity
             {
-                Id = Guid.NewGuid(),
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
                 UserName = user.UserName,
@@ -161,7 +160,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             return GetUser(model);
         }
 
-        public async Task<Guid?> SendResetLink(string requestEmail, string requestUsername)
+        public async Task<string> SendResetLink(string requestEmail, string requestUsername)
         {
             var user = await _userManager.FindByEmailAsync(requestEmail);
             if (user == null)
@@ -185,7 +184,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             return user.Id;
         }
 
-        public async Task<Guid?> ResetPassword(ResetPasswordCommand request)
+        public async Task<string> ResetPassword(ResetPasswordCommand request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
@@ -212,7 +211,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             return null;
         }
 
-        public async Task<Guid?> ConfirmEmailAsync(string email, string code)
+        public async Task<string> ConfirmEmailAsync(string email, string code)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
@@ -351,7 +350,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             return false;
         }
 
-        public async Task<bool> HasPassword(Guid userId)
+        public async Task<bool> HasPassword(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
@@ -437,7 +436,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             return GetUser(user);
         }
 
-        public async Task<User> GetUserAsync(Guid user)
+        public async Task<User> GetUserAsync(string user)
         {
             var userDb = await _userManager.FindByIdAsync(user.ToString());
             return GetUser(userDb);
@@ -466,7 +465,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             return claims;
         }
 
-        public async Task<bool> SaveClaim(Guid userDbId, Claim claim)
+        public async Task<bool> SaveClaim(string userDbId, Claim claim)
         {
             var user = await _userManager.FindByIdAsync(userDbId.ToString());
             var result = await _userManager.AddClaimAsync(user, claim);
@@ -479,7 +478,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             return result.Succeeded;
         }
 
-        public async Task<bool> RemoveClaim(Guid userId, string claimType, string value)
+        public async Task<bool> RemoveClaim(string userId, string claimType, string value)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             var claims = await _userManager.GetClaimsAsync(user);
@@ -504,7 +503,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             return await _userManager.GetRolesAsync(user);
         }
 
-        public async Task<bool> RemoveRole(Guid userDbId, string requestRole)
+        public async Task<bool> RemoveRole(string userDbId, string requestRole)
         {
             var user = await _userManager.FindByIdAsync(userDbId.ToString());
             var result = await _userManager.RemoveFromRoleAsync(user, requestRole);
@@ -518,7 +517,7 @@ namespace JPProject.Sso.Infra.Identity.Services
         }
 
 
-        public async Task<bool> SaveRole(Guid userId, string role)
+        public async Task<bool> SaveRole(string userId, string role)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             var result = await _userManager.AddToRoleAsync(user, role);
@@ -538,7 +537,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             return logins.Select(a => new UserLogin(a.LoginProvider, a.ProviderDisplayName, a.ProviderKey));
         }
 
-        public async Task<bool> RemoveLogin(Guid userId, string loginProvider, string providerKey)
+        public async Task<bool> RemoveLogin(string userId, string loginProvider, string providerKey)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
@@ -585,7 +584,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             return search.IsPresent() ? _userManager.Users.Where(UserFind(search)).CountAsync() : _userManager.Users.CountAsync();
         }
 
-        public async Task<Guid?> AddLoginAsync(string email, string provider, string providerId)
+        public async Task<string> AddLoginAsync(string email, string provider, string providerId)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)

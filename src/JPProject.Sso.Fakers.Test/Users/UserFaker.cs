@@ -8,7 +8,7 @@ namespace JPProject.Sso.Fakers.Test.Users
         public static Faker<User> GenerateUser()
         {
             return new Faker<User>()
-                .RuleFor(u => u.Id, f => f.Random.Uuid())
+                .RuleFor(u => u.Id, f => f.Random.Uuid().ToString())
                 .RuleFor(u => u.Email, f => f.Person.Email)
                 .RuleFor(u => u.EmailConfirmed, f => f.Random.Bool())
                 .RuleFor(u => u.PasswordHash, f => f.Lorem.Word())

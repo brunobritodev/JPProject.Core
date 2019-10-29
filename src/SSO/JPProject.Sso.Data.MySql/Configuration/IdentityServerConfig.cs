@@ -1,12 +1,13 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JPProject.Sso.Data.MySql.Configuration
+namespace JPProject.Sso.EntityFrameworkCore.MySql.Configuration
 {
     public static class IdentityServerConfig
     {
-        public static IIdentityServerBuilder UseIdentityServerMySqlDatabase(
+        public static IIdentityServerBuilder WithMySqlDatabase(
             this IIdentityServerBuilder builder,
             string connectionString)
         {
@@ -33,5 +34,23 @@ namespace JPProject.Sso.Data.MySql.Configuration
             return builder;
         }
 
+        public static IServiceCollection WithMySqlDatabase(this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction)
+        {
+            builder.AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = optionsAction;
+                })
+                // this adds the operational data from DB (codes, tokens, consents)
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = optionsAction;
+
+                    // this enables automatic token cleanup. this is optional.
+                    options.EnableTokenCleanup = true;
+                    options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
+                });
+
+            return builder.Services;
+        }
     }
 }

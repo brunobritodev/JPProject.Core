@@ -1,11 +1,10 @@
-﻿using System;
-using JPProject.Domain.Core.Commands;
+﻿using JPProject.Domain.Core.Commands;
+using System;
 
 namespace JPProject.Sso.Domain.Commands.User
 {
     public abstract class UserCommand : Command
     {
-        public Guid Id { get; protected set; }
         public string Email { get; protected set; }
         public string PhoneNumber { get; protected set; }
         public string Name { get; protected set; }

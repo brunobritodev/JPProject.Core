@@ -1,9 +1,10 @@
-﻿using JPProject.Sso.Infra.Data.Context;
+﻿using System;
+using System.Reflection;
+using JPProject.Sso.Infra.Data.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
-namespace JPProject.Sso.Data.Sqlite.Configuration
+namespace JPProject.Sso.EntityFrameworkCore.Sqlite.Configuration
 {
     public static class IdentityConfig
     {
@@ -11,7 +12,14 @@ namespace JPProject.Sso.Data.Sqlite.Configuration
         {
             var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
 
-            services.AddEntityFrameworkSqlite().AddDbContext<ApplicationIdentityContext>(options => options.UseSqlite(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
+            services.AddEntityFrameworkSqlite().AddSsoContext(options => options.UseSqlite(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
+
+            return services;
+        }
+
+        public static IServiceCollection AddIdentitySqlite(this IServiceCollection services, Action<DbContextOptionsBuilder> optionsAction)
+        {
+            services.AddEntityFrameworkSqlite().AddSsoContext(optionsAction);
 
             return services;
         }

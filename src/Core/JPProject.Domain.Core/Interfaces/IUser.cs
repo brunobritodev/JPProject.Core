@@ -7,8 +7,6 @@ namespace JPProject.Domain.Core.Interfaces
     /// </summary>
     public interface IDomainUser
     {
-
-        Guid Id { get; }
         string Email { get; }
         bool EmailConfirmed { get; }
         string PasswordHash { get; }

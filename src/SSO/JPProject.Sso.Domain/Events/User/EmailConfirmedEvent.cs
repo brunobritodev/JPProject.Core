@@ -1,5 +1,4 @@
-﻿using System;
-using JPProject.Domain.Core.Events;
+﻿using JPProject.Domain.Core.Events;
 
 namespace JPProject.Sso.Domain.Events.User
 {
@@ -8,7 +7,7 @@ namespace JPProject.Sso.Domain.Events.User
         public string Email { get; }
         public string Code { get; }
 
-        public EmailConfirmedEvent(string email, string code, Guid aggregateId)
+        public EmailConfirmedEvent(string email, string code, string aggregateId)
             : base(EventTypes.Success)
         {
             Email = email;

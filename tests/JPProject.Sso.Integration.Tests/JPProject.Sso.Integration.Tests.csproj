@@ -34,7 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\JPProject.Sso.Fakers.Test\JPProject.Sso.Fakers.Test.csproj" />
     <ProjectReference Include="..\..\src\SSO\JPProject.Sso.Application\JPProject.Sso.Application.csproj" />
-    <ProjectReference Include="..\..\src\SSO\JPProject.Sso.Data.Sql\JPProject.Sso.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\SSO\JPProject.Sso.Data.Sql\JPProject.Sso.EntityFrameworkCore.SqlServer.csproj" />
   </ItemGroup>
 
 

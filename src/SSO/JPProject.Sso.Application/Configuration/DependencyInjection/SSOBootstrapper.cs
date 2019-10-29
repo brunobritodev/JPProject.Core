@@ -12,16 +12,21 @@ namespace JPProject.Sso.Application.Configuration.DependencyInjection
     public static class SSOBootstrapper
 #pragma warning restore S101 // Types should be named in PascalCase
     {
-        public static IIdentityServerBuilder ConfigureSso<THttpUser>(this IServiceCollection services)
+        public static IServiceCollection ConfigureUserIdentity<THttpUser>(this IServiceCollection services)
             where THttpUser : class, ISystemUser
         {
 
             services
                 .BaseSsoConfiguration<THttpUser>()
-                .AddIdentity<UserIdentity, UserIdentityRole>(AccountOptions.NistAccountOptions())
+                .AddIdentity<UserIdentity, IdentityRole>(AccountOptions.NistAccountOptions())
                 .AddEntityFrameworkStores<ApplicationIdentityContext>()
                 .AddDefaultTokenProviders();
+            return services;
+        }
 
+
+        public static IIdentityServerBuilder ConfigureIdentityServer(this IServiceCollection services)
+        {
             var is4Builder = services.AddIdentityServer(
                     options =>
                     {

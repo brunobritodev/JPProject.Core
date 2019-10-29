@@ -1,13 +1,13 @@
 ﻿using JPProject.Sso.Infra.Data.Constants;
 using JPProject.Sso.Infra.Identity.Models.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace JPProject.Sso.Infra.Data.Context
 {
 
-    public class ApplicationIdentityContext : IdentityDbContext<UserIdentity, UserIdentityRole, Guid, UserIdentityUserClaim, UserIdentityUserRole, UserIdentityUserLogin, UserIdentityRoleClaim, UserIdentityUserToken>
+    public class ApplicationIdentityContext : IdentityDbContext<UserIdentity>
     {
         public ApplicationIdentityContext(
             DbContextOptions<ApplicationIdentityContext> options)
@@ -24,14 +24,15 @@ namespace JPProject.Sso.Infra.Data.Context
 
         private void ConfigureIdentityContext(ModelBuilder builder)
         {
-            builder.Entity<UserIdentityRole>().ToTable(TableConsts.IdentityRoles);
-            builder.Entity<UserIdentityRoleClaim>().ToTable(TableConsts.IdentityRoleClaims);
-            builder.Entity<UserIdentityUserRole>().ToTable(TableConsts.IdentityUserRoles);
+            base.OnModelCreating(builder);
+            builder.Entity<IdentityRole>().ToTable(TableConsts.IdentityRoles);
+            builder.Entity<IdentityRoleClaim<string>>().ToTable(TableConsts.IdentityRoleClaims);
+            builder.Entity<IdentityUserRole<string>>().ToTable(TableConsts.IdentityUserRoles);
 
             builder.Entity<UserIdentity>().ToTable(TableConsts.IdentityUsers);
-            builder.Entity<UserIdentityUserLogin>().ToTable(TableConsts.IdentityUserLogins);
-            builder.Entity<UserIdentityUserClaim>().ToTable(TableConsts.IdentityUserClaims);
-            builder.Entity<UserIdentityUserToken>().ToTable(TableConsts.IdentityUserTokens);
+            builder.Entity<IdentityUserLogin<string>>().ToTable(TableConsts.IdentityUserLogins);
+            builder.Entity<IdentityUserClaim<string>>().ToTable(TableConsts.IdentityUserClaims);
+            builder.Entity<IdentityUserToken<string>>().ToTable(TableConsts.IdentityUserTokens);
         }
     }
 

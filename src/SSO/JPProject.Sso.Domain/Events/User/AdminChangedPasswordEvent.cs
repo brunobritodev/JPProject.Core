@@ -1,4 +1,3 @@
-using System;
 using JPProject.Domain.Core.Events;
 
 namespace JPProject.Sso.Domain.Events.User
@@ -7,11 +6,11 @@ namespace JPProject.Sso.Domain.Events.User
     {
         public string Username { get; }
 
-        public AdminChangedPasswordEvent(Guid userId, string username)
+        public AdminChangedPasswordEvent(string userId, string username)
             : base(EventTypes.Success)
         {
             Username = username;
-            AggregateId = userId.ToString();
+            AggregateId = userId;
         }
     }
 }

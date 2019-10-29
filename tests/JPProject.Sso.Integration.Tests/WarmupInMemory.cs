@@ -3,7 +3,6 @@ using JPProject.EntityFrameworkCore.Configuration;
 using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.Application.Configuration.DependencyInjection;
 using JPProject.Sso.Infra.Data.Context;
-using JPProject.Sso.SqlServer.Configuration;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using System.IO;
+using JPProject.Sso.EntityFrameworkCore.SqlServer.Configuration;
 
 namespace JPProject.Sso.Integration.Tests
 {
@@ -35,10 +35,13 @@ namespace JPProject.Sso.Integration.Tests
             void DatabaseOptions(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
 
             serviceCollection
-                .ConfigureSso<AspNetUserTest>()
+                .ConfigureUserIdentity<AspNetUserTest>()
                 .WithSqlServer(DatabaseOptions)
-                .AddEventStoreContext(DatabaseOptions);
 
+                .ConfigureIdentityServer()
+                .WithSqlServer(DatabaseOptions)
+
+                .AddEventStoreContext(DatabaseOptions);
 
             var mappings = SsoMapperConfig.RegisterMappings();
             var automapperConfig = new MapperConfiguration(mappings);

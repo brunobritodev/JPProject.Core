@@ -1,5 +1,4 @@
-﻿using System;
-using FluentValidation;
+﻿using FluentValidation;
 using JPProject.Sso.Domain.Commands.User;
 
 namespace JPProject.Sso.Domain.Validations.User
@@ -19,12 +18,6 @@ namespace JPProject.Sso.Domain.Validations.User
             RuleFor(c => c.Email)
                 .NotEmpty()
                 .EmailAddress();
-        }
-
-        protected void ValidateId()
-        {
-            RuleFor(c => c.Id)
-                .NotEqual(Guid.Empty);
         }
 
         protected void ValidateUsername()

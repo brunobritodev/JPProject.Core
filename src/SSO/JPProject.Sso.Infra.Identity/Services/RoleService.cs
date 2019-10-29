@@ -2,7 +2,6 @@
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
-using JPProject.Sso.Infra.Identity.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,12 +13,12 @@ namespace JPProject.Sso.Infra.Identity.Services
 {
     public class RoleService : IRoleService
     {
-        private readonly RoleManager<UserIdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private ILogger<UserService> _logger;
         private IMediatorHandler _bus;
 
         public RoleService(
-            RoleManager<UserIdentityRole> roleManager,
+            RoleManager<IdentityRole> roleManager,
             IMediatorHandler bus,
             ILoggerFactory loggerFactory)
         {
@@ -55,7 +54,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<bool> Save(string name)
         {
-            var result = await _roleManager.CreateAsync(new UserIdentityRole() { Name = name });
+            var result = await _roleManager.CreateAsync(new IdentityRole() { Name = name });
             foreach (var error in result.Errors)
             {
                 await _bus.RaiseEvent(new DomainNotification(result.ToString(), error.Description));

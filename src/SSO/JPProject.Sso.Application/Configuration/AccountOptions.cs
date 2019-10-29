@@ -5,6 +5,11 @@ namespace JPProject.Sso.Application.Configuration
 {
     internal class AccountOptions
     {
+        /// <summary>
+        /// Nist account best pratices
+        /// https://pages.nist.gov/800-63-3/sp800-63b.html#appA
+        /// </summary>
+        /// <returns></returns>
         public static Action<IdentityOptions> NistAccountOptions() =>
             options =>
             {
@@ -12,7 +17,6 @@ namespace JPProject.Sso.Application.Configuration
                 options.User.RequireUniqueEmail = true;
 
 
-                // NIST Password best practices: https://pages.nist.gov/800-63-3/sp800-63b.html#appA
                 options.Lockout.MaxFailedAccessAttempts = 10;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireDigit = false;

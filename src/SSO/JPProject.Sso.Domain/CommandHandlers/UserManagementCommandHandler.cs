@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
-using JPProject.Domain.Core.Bus;
+﻿using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.Commands.User;
@@ -10,6 +7,9 @@ using JPProject.Sso.Domain.Events.User;
 using JPProject.Sso.Domain.Events.UserManagement;
 using JPProject.Sso.Domain.Interfaces;
 using MediatR;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace JPProject.Sso.Domain.CommandHandlers
 {
@@ -264,7 +264,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var success = await _userService.RemoveLogin(user.Id, request.LoginProvider, request.ProviderKey);
+            var success = await _userService.RemoveLogin(user.UserName, request.LoginProvider, request.ProviderKey);
 
             if (success)
             {

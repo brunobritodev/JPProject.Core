@@ -1,34 +1,49 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace JPProject.Sso.Data.Sqlite.Configuration
+namespace JPProject.Sso.EntityFrameworkCore.Sqlite.Configuration
 {
     public static class IdentityServerConfig
     {
-        public static IIdentityServerBuilder UseIdentityServerSqlite(this IIdentityServerBuilder builder, string connectionString)
+        public static IServiceCollection WithSqlite(this IIdentityServerBuilder builder, string connectionString)
         {
-            var migrationsAssembly = typeof(IdentityServerConfig).GetTypeInfo().Assembly.GetName().Name;
-
-            // this adds the config data from DB (clients, resources)
+            var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
             builder.AddConfigurationStore(options =>
                 {
-                    options.ConfigureDbContext = b =>
-                        b.UseSqlite(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.ConfigureDbContext = opt => opt.UseSqlite(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
                 // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
-                    options.ConfigureDbContext = b =>
-                        b.UseSqlite(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.ConfigureDbContext = opt => opt.UseSqlite(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
 
                     // this enables automatic token cleanup. this is optional.
                     options.EnableTokenCleanup = true;
                     options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
                 });
 
-            return builder;
+            return builder.Services;
         }
 
+        public static IServiceCollection WithSqlite(this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction)
+        {
+            builder.AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = optionsAction;
+                })
+                // this adds the operational data from DB (codes, tokens, consents)
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = optionsAction;
+
+                    // this enables automatic token cleanup. this is optional.
+                    options.EnableTokenCleanup = true;
+                    options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
+                });
+
+            return builder.Services;
+        }
     }
 }
