@@ -52,7 +52,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var result = await _userService.UpdateProfileAsync(request);
             if (result)
             {
-                await Bus.RaiseEvent(new ProfileUpdatedEvent(request.Id.Value, request));
+                await Bus.RaiseEvent(new ProfileUpdatedEvent(request.Id, request));
                 return true;
             }
             return false;
@@ -69,7 +69,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var result = await _userService.UpdateProfilePictureAsync(request);
             if (result)
             {
-                await Bus.RaiseEvent(new ProfilePictureUpdatedEvent(request.Id.Value, request.Picture));
+                await Bus.RaiseEvent(new ProfilePictureUpdatedEvent(request.Id, request.Picture));
                 return true;
             }
             return false;
@@ -86,7 +86,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var result = await _userService.CreatePasswordAsync(request);
             if (result)
             {
-                await Bus.RaiseEvent(new PasswordCreatedEvent(request.Id.Value));
+                await Bus.RaiseEvent(new PasswordCreatedEvent(request.Id));
                 return true;
             }
             return false;
@@ -103,7 +103,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var result = await _userService.ChangePasswordAsync(request);
             if (result)
             {
-                await Bus.RaiseEvent(new PasswordChangedEvent(request.Id.Value));
+                await Bus.RaiseEvent(new PasswordChangedEvent(request.Id));
                 return true;
             }
             return false;
@@ -120,7 +120,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var result = await _userService.RemoveAccountAsync(request);
             if (result)
             {
-                await Bus.RaiseEvent(new AccountRemovedEvent(request.Id.Value));
+                await Bus.RaiseEvent(new AccountRemovedEvent(request.Id));
                 return true;
             }
             return false;
@@ -138,7 +138,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var user = await _userService.FindByNameAsync(request.Username);
             if (user == null)
             {
-                await Bus.RaiseEvent(new DomainNotification("1", "User not found"));
+                await Bus.RaiseEvent(new DomainNotification("Username", "User not found"));
                 return false;
             }
             user.UpdateInfo(request);
@@ -158,7 +158,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var userDb = await _userService.FindByNameAsync(request.Username);
             if (userDb == null)
             {
-                await Bus.RaiseEvent(new DomainNotification("1", "User not found"));
+                await Bus.RaiseEvent(new DomainNotification("Username", "User not found"));
                 return false;
             }
 
@@ -185,7 +185,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var userDb = await _userService.FindByNameAsync(request.Username);
             if (userDb == null)
             {
-                await Bus.RaiseEvent(new DomainNotification("1", "User not found"));
+                await Bus.RaiseEvent(new DomainNotification("Username", "User not found"));
                 return false;
             }
 
@@ -210,7 +210,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var userDb = await _userService.FindByNameAsync(request.Username);
             if (userDb == null)
             {
-                await Bus.RaiseEvent(new DomainNotification("1", "User not found"));
+                await Bus.RaiseEvent(new DomainNotification("Username", "User not found"));
                 return false;
             }
 
@@ -235,7 +235,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var user = await _userService.FindByNameAsync(request.Username);
             if (user == null)
             {
-                await Bus.RaiseEvent(new DomainNotification("1", "User not found"));
+                await Bus.RaiseEvent(new DomainNotification("Username", "User not found"));
                 return false;
             }
 
@@ -260,7 +260,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var user = await _userService.FindByNameAsync(request.Username);
             if (user == null)
             {
-                await Bus.RaiseEvent(new DomainNotification("1", "User not found"));
+                await Bus.RaiseEvent(new DomainNotification("Username", "User not found"));
                 return false;
             }
 
@@ -285,7 +285,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var user = await _userService.FindByNameAsync(request.Username);
             if (user == null)
             {
-                await Bus.RaiseEvent(new DomainNotification("1", "User not found"));
+                await Bus.RaiseEvent(new DomainNotification("Username", "User not found"));
                 return false;
             }
 

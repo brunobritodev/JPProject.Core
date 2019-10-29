@@ -1,17 +1,16 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using FluentAssertions;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels.IdentityResourceViewModels;
+using JPProject.Admin.Fakers.Test.IdentityResourceFakers;
+using JPProject.Admin.Infra.Data.Context;
 using JPProject.Domain.Core.Notifications;
-using JPProject.Fakers.Test.IdentityResourceFakers;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using System.Threading.Tasks;
-using JPProject.Admin.Infra.Data.Context;
-using JPProject.EntityFrameworkCore.Context;
 using Xunit;
 
-namespace JPProject.IntegrationTests.IdentityResourceTests
+namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
 {
     public class IdentityResourceAppServiceTests : IClassFixture<WarmupInMemory>
     {

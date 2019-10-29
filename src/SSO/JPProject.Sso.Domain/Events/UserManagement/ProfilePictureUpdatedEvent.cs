@@ -7,10 +7,10 @@ namespace JPProject.Sso.Domain.Events.UserManagement
     {
         public string Picture { get; }
 
-        public ProfilePictureUpdatedEvent(Guid aggregateId, string picture)
+        public ProfilePictureUpdatedEvent(string aggregateId, string picture)
             : base(EventTypes.Success)
         {
-            AggregateId = aggregateId.ToString();
+            AggregateId = aggregateId;
             Picture = picture;
         }
     }

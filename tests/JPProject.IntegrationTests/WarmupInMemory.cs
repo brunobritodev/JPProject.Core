@@ -1,8 +1,7 @@
 using AutoMapper;
 using JPProject.Admin.Application.AutoMapper;
+using JPProject.Admin.Fakers.Test;
 using JPProject.Admin.Infra.Data.Context;
-using JPProject.EntityFrameworkCore.Context;
-using JPProject.Fakers.Test;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 
-namespace JPProject.IntegrationTests
+namespace JPProject.Admin.IntegrationTests
 {
 
     public class WarmupInMemory

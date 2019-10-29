@@ -1,14 +1,12 @@
-﻿using System;
-
-namespace JPProject.Sso.Application.ViewModels.UserViewModels
+﻿namespace JPProject.Sso.Application.ViewModels.UserViewModels
 {
     public class RemoveAccountViewModel
     {
-        public RemoveAccountViewModel(Guid id)
+        public RemoveAccountViewModel(string id)
         {
             Id = id;
         }
 
-        public Guid? Id { get; set; }
+        public string Id { get; set; }
     }
 }

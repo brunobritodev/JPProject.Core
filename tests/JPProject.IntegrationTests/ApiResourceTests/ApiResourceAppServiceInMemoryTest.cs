@@ -1,18 +1,17 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using FluentAssertions;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels.ApiResouceViewModels;
+using JPProject.Admin.Fakers.Test.ApiResourceFakers;
+using JPProject.Admin.Infra.Data.Context;
 using JPProject.Domain.Core.Notifications;
-using JPProject.Fakers.Test.ApiResourceFakers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using System.Threading.Tasks;
-using JPProject.Admin.Infra.Data.Context;
-using JPProject.EntityFrameworkCore.Context;
 using Xunit;
 
-namespace JPProject.IntegrationTests.ApiResourceTests
+namespace JPProject.Admin.IntegrationTests.ApiResourceTests
 {
     public class ApiResourceAppServiceInMemoryTest : IClassFixture<WarmupInMemory>
     {

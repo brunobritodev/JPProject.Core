@@ -8,10 +8,10 @@ namespace JPProject.Sso.Domain.Events.UserManagement
     {
         public UpdateProfileCommand Request { get; }
 
-        public ProfileUpdatedEvent(Guid aggregateId, UpdateProfileCommand request)
+        public ProfileUpdatedEvent(string aggregateId, UpdateProfileCommand request)
             : base(EventTypes.Success)
         {
-            AggregateId = aggregateId.ToString();
+            AggregateId = aggregateId;
             Request = request;
         }
     }

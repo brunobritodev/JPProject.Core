@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace JPProject.Fakers.Test
+﻿namespace JPProject.Admin.Fakers.Test
 {
     public class IdentityHelpers
     {

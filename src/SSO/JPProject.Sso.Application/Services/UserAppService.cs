@@ -64,15 +64,15 @@ namespace JPProject.Sso.Application.Services
             return Bus.SendCommand(registerCommand);
         }
 
-        public async Task<UserViewModel> FindByNameAsync(string username)
+        public async Task<UserViewModel> FindByUsernameAsync(string username)
         {
             var user = await _userService.FindByNameAsync(username);
             return _mapper.Map<UserViewModel>(user);
         }
 
-        public async Task<UserViewModel> FindByEmailAsync(string username)
+        public async Task<UserViewModel> FindByEmailAsync(string email)
         {
-            var user = await _userService.FindByEmailAsync(username);
+            var user = await _userService.FindByEmailAsync(email);
             return _mapper.Map<UserViewModel>(user);
         }
 

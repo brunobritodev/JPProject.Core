@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 
 namespace JPProject.Sso.Application.ViewModels.UserViewModels
 {
@@ -30,7 +30,7 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
         public string JobTitle { get; set; }
 
         [JsonIgnore]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public bool EmailConfirmed { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
         public bool TwoFactorEnabled { get; set; }

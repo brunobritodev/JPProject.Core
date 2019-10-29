@@ -34,7 +34,7 @@
     <ProjectReference Include="..\..\src\Admin\JPProject.Admin.Infra.Data.Sqlite\JPProject.Admin.Infra.Data.Sqlite.csproj" />
     <ProjectReference Include="..\..\src\Admin\JPProject.Admin.Infra.Data.Sql\JPProject.Admin.Infra.Data.Sql.csproj" />
     <ProjectReference Include="..\..\src\Core\JPProject.AspNet.Core\JPProject.AspNet.Core.csproj" />
-    <ProjectReference Include="..\JPProject.Fakers.Test\JPProject.Fakers.Test.csproj" />
+    <ProjectReference Include="..\JPProject.Fakers.Test\JPProject.Admin.Fakers.Test.csproj" />
   </ItemGroup>
 
   <ItemGroup>

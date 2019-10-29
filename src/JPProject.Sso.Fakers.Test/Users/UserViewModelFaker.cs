@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
 
 namespace JPProject.Sso.Fakers.Test.Users
@@ -30,5 +31,17 @@ namespace JPProject.Sso.Fakers.Test.Users
                 .RuleFor(r => r.Username, f => f.Person.UserName)
                 .RuleFor(r => r.Picture, f => f.Person.Avatar);
         }
+
+        public static Faker<SocialViewModel> GenerateSocialViewModel(string email = null, string username = null)
+        {
+            return new Faker<SocialViewModel>()
+                .RuleFor(r => r.Email, f => email ?? f.Person.Email)
+                .RuleFor(r => r.Provider, f => f.Company.CompanyName())
+                .RuleFor(r => r.ProviderId, f => f.Random.AlphaNumeric(21))
+                .RuleFor(r => r.Name, f => f.Person.FullName)
+                .RuleFor(r => r.Username, f => username ?? f.Person.UserName)
+                .RuleFor(r => r.Picture, f => f.Person.Avatar);
+        }
+
     }
 }

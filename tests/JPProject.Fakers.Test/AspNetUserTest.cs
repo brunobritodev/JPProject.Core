@@ -1,10 +1,10 @@
-﻿using Bogus;
-using JPProject.Domain.Core.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Bogus;
+using JPProject.Domain.Core.Interfaces;
 
-namespace JPProject.Fakers.Test
+namespace JPProject.Admin.Fakers.Test
 {
     public class AspNetUserTest : ISystemUser
     {

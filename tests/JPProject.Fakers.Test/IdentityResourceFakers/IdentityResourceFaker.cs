@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using IdentityServer4.Models;
 
-namespace JPProject.Fakers.Test.IdentityResourceFakers
+namespace JPProject.Admin.Fakers.Test.IdentityResourceFakers
 {
     public class IdentityResourceFaker
     {

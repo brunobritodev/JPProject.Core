@@ -51,14 +51,14 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var emailAlreadyExist = await _userService.FindByEmailAsync(user.Email);
             if (emailAlreadyExist != null)
             {
-                await Bus.RaiseEvent(new DomainNotification("1001", "E-mail already exist. If you don't remember your passwork, reset it."));
+                await Bus.RaiseEvent(new DomainNotification("New User", "E-mail already exist. If you don't remember your passwork, reset it."));
                 return false;
             }
             var usernameAlreadyExist = await _userService.FindByNameAsync(user.UserName);
 
             if (usernameAlreadyExist != null)
             {
-                await Bus.RaiseEvent(new DomainNotification("1002", "Username already exist. If you don't remember your passwork, reset it."));
+                await Bus.RaiseEvent(new DomainNotification("New User", "Username already exist. If you don't remember your passwork, reset it."));
                 return false;
             }
 
@@ -90,14 +90,14 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var emailAlreadyExist = await _userService.FindByEmailAsync(user.Email);
             if (emailAlreadyExist != null)
             {
-                await Bus.RaiseEvent(new DomainNotification("1001", "E-mail already exist. If you don't remember your passwork, reset it."));
+                await Bus.RaiseEvent(new DomainNotification("New User", "E-mail already exist. If you don't remember your passwork, reset it."));
                 return false;
             }
             var usernameAlreadyExist = await _userService.FindByNameAsync(user.UserName);
 
             if (usernameAlreadyExist != null)
             {
-                await Bus.RaiseEvent(new DomainNotification("1002", "Username already exist. If you don't remember your passwork, reset it."));
+                await Bus.RaiseEvent(new DomainNotification("New User", "Username already exist. If you don't remember your passwork, reset it."));
                 return false;
             }
 

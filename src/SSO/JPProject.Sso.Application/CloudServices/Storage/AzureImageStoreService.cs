@@ -1,13 +1,13 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using JPProject.Domain.Core.StringUtils;
+﻿using JPProject.Domain.Core.StringUtils;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace JPProject.Sso.Application.CloudServices.Storage
 {
@@ -25,7 +25,7 @@ namespace JPProject.Sso.Application.CloudServices.Storage
         {
             var container = await GetBlobContainer();
 
-            await RemovePreviousImage(image.Id.Value.ToString(), container);
+            await RemovePreviousImage(image.Id, container);
 
             var newPicture = await UploadNewOne(image, container);
 

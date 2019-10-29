@@ -1,9 +1,9 @@
-﻿using Bogus;
+﻿using System.Linq;
+using Bogus;
 using IdentityServer4.Models;
 using JPProject.Admin.Application.ViewModels.ApiResouceViewModels;
-using System.Linq;
 
-namespace JPProject.Fakers.Test.ApiResourceFakers
+namespace JPProject.Admin.Fakers.Test.ApiResourceFakers
 {
     public class ApiResourceFaker
     {

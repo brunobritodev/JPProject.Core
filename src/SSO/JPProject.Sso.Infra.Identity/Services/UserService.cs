@@ -77,7 +77,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             {
                 var userByProvider = await _userManager.FindByLoginAsync(provider, providerId);
                 if (userByProvider != null)
-                    await _bus.RaiseEvent(new DomainNotification("1001", $"User already taken with {provider}"));
+                    await _bus.RaiseEvent(new DomainNotification("New User", $"User already taken with {provider}"));
             }
 
             if (password.IsMissing())
@@ -296,7 +296,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<bool> CreatePasswordAsync(SetPasswordCommand request)
         {
-            var user = await _userManager.FindByIdAsync(request.Id.Value.ToString());
+            var user = await _userManager.FindByIdAsync(request.Id);
 
             var hasPassword = await _userManager.HasPasswordAsync(user);
             if (hasPassword)
@@ -322,7 +322,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<bool> ChangePasswordAsync(ChangePasswordCommand request)
         {
-            var user = await _userManager.FindByIdAsync(request.Id.Value.ToString());
+            var user = await _userManager.FindByIdAsync(request.Id);
             var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.Password);
             if (result.Succeeded)
                 return true;
@@ -337,7 +337,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<bool> RemoveAccountAsync(RemoveAccountCommand request)
         {
-            var user = await _userManager.FindByIdAsync(request.Id.Value.ToString());
+            var user = await _userManager.FindByIdAsync(request.Id);
             var result = await _userManager.DeleteAsync(user);
             if (result.Succeeded)
                 return true;

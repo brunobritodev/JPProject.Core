@@ -16,8 +16,8 @@ namespace JPProject.Sso.Application.Interfaces
         Task<bool> SendResetLink(ForgotPasswordViewModel model);
         Task<bool> ResetPassword(ResetPasswordViewModel model);
         Task<bool> ConfirmEmail(ConfirmEmailViewModel model);
-        Task<UserViewModel> FindByNameAsync(string username);
-        Task<UserViewModel> FindByEmailAsync(string username);
+        Task<UserViewModel> FindByUsernameAsync(string username);
+        Task<UserViewModel> FindByEmailAsync(string email);
         Task<UserViewModel> FindByProviderAsync(string provider, string providerUserId);
         Task<bool> AddLogin(SocialViewModel user);
     }

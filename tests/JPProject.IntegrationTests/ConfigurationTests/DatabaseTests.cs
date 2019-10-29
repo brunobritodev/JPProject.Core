@@ -1,10 +1,10 @@
-﻿using JPProject.Fakers.Test;
+﻿using JPProject.Admin.Fakers.Test;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace JPProject.IntegrationTests.ConfigurationTests
+namespace JPProject.Admin.IntegrationTests.ConfigurationTests
 {
     /// <summary>
     /// It only work if databases are well configured

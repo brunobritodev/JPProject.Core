@@ -1,11 +1,10 @@
-﻿using System;
-using JPProject.Sso.Domain.Validations.UserManagement;
+﻿using JPProject.Sso.Domain.Validations.UserManagement;
 
 namespace JPProject.Sso.Domain.Commands.UserManagement
 {
     public class SetPasswordCommand : PasswordCommand
     {
-        public SetPasswordCommand(Guid? id, string newPassword, string confirmPassword)
+        public SetPasswordCommand(string id, string newPassword, string confirmPassword)
         {
             Id = id;
             Password = newPassword;

@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 
 namespace JPProject.Sso.Application.ViewModels
 {
@@ -13,7 +12,7 @@ namespace JPProject.Sso.Application.ViewModels
         [Required(ErrorMessage = "Invalid image")]
         public string Value { get; set; }
 
-        public Guid? Id { get; set; }
+        public string Id { get; set; }
         [JsonIgnore]
         public string Picture { get; set; }
     }

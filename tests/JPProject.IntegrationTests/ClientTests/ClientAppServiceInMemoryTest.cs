@@ -1,18 +1,17 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using FluentAssertions;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels.ClientsViewModels;
+using JPProject.Admin.Fakers.Test.ClientFakers;
+using JPProject.Admin.Infra.Data.Context;
 using JPProject.Domain.Core.Notifications;
-using JPProject.Fakers.Test.ClientFakers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using System.Threading.Tasks;
-using JPProject.Admin.Infra.Data.Context;
-using JPProject.EntityFrameworkCore.Context;
 using Xunit;
 
-namespace JPProject.IntegrationTests.ClientTests
+namespace JPProject.Admin.IntegrationTests.ClientTests
 {
     public class ClientAppServiceInMemoryTest : IClassFixture<WarmupInMemory>
     {
@@ -145,7 +144,7 @@ namespace JPProject.IntegrationTests.ClientTests
         public async Task ShouldNotAddNewClientPropertyWhenClientDoesntExist()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
-            var property = ClientViewModelFaker.GenerateSaveProperty(command.ClientId);
+            var property = ClientViewModelFaker.GenerateSaveProperty(command.ClientId).Generate();
 
             var result = await _clientAppService.SaveProperty(property);
 
@@ -172,7 +171,7 @@ namespace JPProject.IntegrationTests.ClientTests
         public async Task ShouldNotAddNewClientClaimWhenClientDoesntExist()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
-            var property = ClientViewModelFaker.GenerateSaveClaim(command.ClientId);
+            var property = ClientViewModelFaker.GenerateSaveClaim(command.ClientId).Generate();
 
             var result = await _clientAppService.SaveClaim(property);
 

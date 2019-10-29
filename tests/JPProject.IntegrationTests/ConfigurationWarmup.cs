@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.IO;
+using AutoMapper;
 using JPProject.Admin.Application.AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -6,9 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
-using System.IO;
 
-namespace JPProject.IntegrationTests
+namespace JPProject.Admin.IntegrationTests
 {
     public class ConfigurationWarmup
     {

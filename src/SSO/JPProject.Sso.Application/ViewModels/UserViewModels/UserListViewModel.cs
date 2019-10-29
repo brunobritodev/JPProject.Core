@@ -18,7 +18,7 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
         [Display(Name = "UserName")]
         public string UserName { get; set; }
 
-        public Guid? Id { get; set; }
+        public string Id { get; set; }
     }
 
 }

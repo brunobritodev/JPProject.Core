@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using IdentityServer4.EntityFramework.Entities;
 
-namespace JPProject.Fakers.Test.ClientFakers
+namespace JPProject.Admin.Fakers.Test.ClientFakers
 {
     public class EntityClientFaker
     {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Bogus;
+﻿using Bogus;
 using FluentAssertions;
 using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
@@ -11,6 +8,8 @@ using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Fakers.Test.Users;
 using Moq;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
@@ -73,7 +72,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         {
             var command = UserCommandFaker.GenerateAddLoginCommand().Generate();
 
-            _userService.Setup(s => s.AddLoginAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync((Guid?)null);
+            _userService.Setup(s => s.AddLoginAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync((string)null);
 
             var result = await _commandHandler.Handle(command, _tokenSource.Token);
 

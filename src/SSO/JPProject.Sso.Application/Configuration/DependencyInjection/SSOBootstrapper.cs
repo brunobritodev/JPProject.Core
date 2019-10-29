@@ -40,8 +40,6 @@ namespace JPProject.Sso.Application.Configuration.DependencyInjection
             return is4Builder;
         }
 
-
-
         private static IServiceCollection BaseSsoConfiguration<T>(this IServiceCollection services)
             where T : class, ISystemUser
         {

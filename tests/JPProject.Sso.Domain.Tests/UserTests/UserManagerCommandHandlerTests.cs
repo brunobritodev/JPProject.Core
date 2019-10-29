@@ -8,7 +8,6 @@ using JPProject.Sso.Domain.CommandHandlers;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Fakers.Test.Users;
 using Moq;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -47,7 +46,7 @@ namespace JPProject.Sso.Domain.Tests.UserTests
 
             _userService.Setup(s => s.FindByNameAsync(It.Is<string>(e => e == command.Username))).ReturnsAsync(user);
             _userService.Setup(s => s.RemoveClaim(
-                       It.Is<Guid>(c => c == user.Id),
+                       It.Is<string>(c => c == user.Id),
                      It.Is<string>(c => c.Equals(command.Type)),
                         It.Is<string>(c => c.IsMissing())))
                 .ReturnsAsync(true);
@@ -70,7 +69,7 @@ namespace JPProject.Sso.Domain.Tests.UserTests
 
             _userService.Setup(s => s.FindByNameAsync(It.Is<string>(e => e == command.Username))).ReturnsAsync(user);
             _userService.Setup(s => s.RemoveClaim(
-                    It.Is<Guid>(c => c == user.Id),
+                    It.Is<string>(c => c == user.Id),
                     It.Is<string>(c => c.Equals(command.Type)),
                     It.Is<string>(c => c.Equals(command.Value))))
                 .ReturnsAsync(true);

@@ -1,12 +1,11 @@
-﻿using System;
-using JPProject.Sso.Domain.Validations.UserManagement;
+﻿using JPProject.Sso.Domain.Validations.UserManagement;
 
 namespace JPProject.Sso.Domain.Commands.UserManagement
 {
     public class UpdateProfileCommand : ProfileCommand
     {
 
-        public UpdateProfileCommand(Guid? id, string url, string bio, string company, string jobTitle, string name, string phoneNumber)
+        public UpdateProfileCommand(string id, string url, string bio, string company, string jobTitle, string name, string phoneNumber)
         {
             Id = id;
             Url = url;
@@ -23,6 +22,6 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
             return ValidationResult.IsValid;
         }
     }
-    
-    
+
+
 }
