@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\JPProject.Sso.Fakers.Test\JPProject.Sso.Fakers.Test.csproj" />
     <ProjectReference Include="..\..\src\SSO\JPProject.Sso.Domain\JPProject.Sso.Domain.csproj" />
+    <ProjectReference Include="..\JPProject.Sso.Fakers.Test\JPProject.Sso.Fakers.Test.csproj" />
   </ItemGroup>
 
 </Project>
