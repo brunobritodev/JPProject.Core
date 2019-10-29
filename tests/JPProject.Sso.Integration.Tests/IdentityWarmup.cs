@@ -21,9 +21,10 @@ namespace JPProject.Sso.Integration.Tests
     /// 
     /// </summary>
     /// <typeparam name="TKey">Identity user primary key</typeparam>
-    public class WarmupInMemory
+    public class IdentityWarmup<TKey>
+        where TKey : IEquatable<TKey>
     {
-        public WarmupInMemory()
+        public IdentityWarmup()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -39,7 +40,7 @@ namespace JPProject.Sso.Integration.Tests
                 opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
 
             serviceCollection
-                .ConfigureSso<AspNetUserTest>()
+                .ConfigureSso<AspNetUserTest, IdentityUser<TKey>, IdentityRole<TKey>, TKey>()
                 .WithSqlServer(dbOptions);
 
             // IdentityServer
@@ -51,7 +52,7 @@ namespace JPProject.Sso.Integration.Tests
                         options.Events.RaiseFailureEvents = true;
                         options.Events.RaiseSuccessEvents = true;
                     })
-                .AddAspNetIdentity<IdentityUser<Guid>>()
+                .AddAspNetIdentity<IdentityUser<TKey>>()
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = dbOptions;
@@ -89,7 +90,7 @@ namespace JPProject.Sso.Integration.Tests
             var mappings = SsoMapperConfig.RegisterMappings();
             var automapperConfig = new MapperConfiguration(mappings);
             serviceCollection.TryAddSingleton(automapperConfig.CreateMapper());
-            serviceCollection.AddMediatR(typeof(WarmupInMemory));
+            serviceCollection.AddMediatR(typeof(IdentityWarmup<TKey>));
             serviceCollection.TryAddSingleton<IHttpContextAccessor>(mockHttpContextAccessor.Object);
 
             Services = serviceCollection.BuildServiceProvider();
@@ -99,7 +100,7 @@ namespace JPProject.Sso.Integration.Tests
         public void DetachAll()
         {
 
-            var database = Services.GetService<ApplicationIdentityContext>();
+            var database = Services.GetService<ApplicationIdentityContext<TKey>>();
             foreach (var dbEntityEntry in database.ChangeTracker.Entries())
             {
                 if (dbEntityEntry.Entity != null)

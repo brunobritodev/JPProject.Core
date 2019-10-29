@@ -1,17 +1,15 @@
 ﻿using System;
 
-namespace JPProject.Sso.Domain.Interfaces
+namespace JPProject.Domain.Core.Interfaces
 {
     /// <summary>
     /// Interface to propagate user id type
     /// </summary>
-    public interface IDomainUser : IUser<Guid>
+    public interface IDomainUser<TKey>
+        where TKey : IEquatable<TKey>
     {
 
-    }
-    public interface IUser<TUserId>
-    {
-        TUserId Id { get; }
+        TKey Id { get; }
         string Email { get; }
         bool EmailConfirmed { get; }
         string PasswordHash { get; }
@@ -29,6 +27,8 @@ namespace JPProject.Sso.Domain.Interfaces
         string Company { get; }
         string Bio { get; }
         string JobTitle { get; }
+
+        IDomainUser<TKey> Create();
 
     }
 }

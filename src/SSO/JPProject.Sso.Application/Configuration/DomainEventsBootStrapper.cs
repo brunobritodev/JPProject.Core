@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace JPProject.Sso.Application.Configuration
 {
-    internal class DomainEventsBootStrapper
+    internal static class DomainEventsBootStrapper
     {
-        public static void RegisterServices(IServiceCollection services)
+        public static IServiceCollection AddDomainEvents(this IServiceCollection services)
         {
             services.TryAddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
 
@@ -21,6 +21,7 @@ namespace JPProject.Sso.Application.Configuration
             services.AddScoped<INotificationHandler<PasswordCreatedEvent>, UserManagerEventHandler>();
             services.AddScoped<INotificationHandler<PasswordChangedEvent>, UserManagerEventHandler>();
             services.AddScoped<INotificationHandler<AccountRemovedEvent>, UserManagerEventHandler>();
+            return services;
         }
     }
 }

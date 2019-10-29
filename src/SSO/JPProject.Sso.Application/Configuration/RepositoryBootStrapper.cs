@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JPProject.Sso.Application.Configuration
 {
-    internal class RepositoryBootStrapper
+    internal static class RepositoryBootStrapper
     {
-        public static void RegisterServices(IServiceCollection services)
+        public static IServiceCollection AddStores(this IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -18,6 +18,8 @@ namespace JPProject.Sso.Application.Configuration
             services.AddScoped<IEventStoreRepository, EventStoreRepository>();
             services.AddScoped<IEventStore, SqlEventStore>();
             services.AddScoped<EventStoreContext>();
+
+            return services;
         }
     }
 }

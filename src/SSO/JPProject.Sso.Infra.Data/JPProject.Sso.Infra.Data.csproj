@@ -4,12 +4,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
-
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
     
   </ItemGroup>
 
@@ -17,10 +13,6 @@
     <ProjectReference Include="..\..\Core\JPProject.Domain.Core\JPProject.Domain.Core.csproj" />
     <ProjectReference Include="..\JPProject.Sso.Domain\JPProject.Sso.Domain.csproj" />
     <ProjectReference Include="..\JPProject.Sso.Infra.Identity\JPProject.Sso.Infra.CrossCutting.Identity.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Entities\" />
   </ItemGroup>
 
 </Project>

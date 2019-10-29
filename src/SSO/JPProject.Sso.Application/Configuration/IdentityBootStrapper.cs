@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JPProject.Sso.Application.Configuration
 {
-    internal class IdentityBootStrapper
+    internal static class IdentityBootStrapper
     {
-        public static void RegisterServices(IServiceCollection services)
+        public static IServiceCollection AddIdentityServices(this IServiceCollection services)
         {
             // Infra - Identity Services
 
@@ -17,6 +17,8 @@ namespace JPProject.Sso.Application.Configuration
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddSingleton<IImageStorage, AzureImageStoreService>();
+
+            return services;
         }
     }
 }

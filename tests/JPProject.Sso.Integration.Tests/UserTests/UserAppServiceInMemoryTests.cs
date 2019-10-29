@@ -5,6 +5,7 @@ using JPProject.Sso.Fakers.Test.Users;
 using JPProject.Sso.Infra.Data.Context;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -32,6 +33,8 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             var result = await _userAppService.Register(command);
             result.Should().BeTrue();
+            _database.Users.FirstOrDefault(f => f.UserName == command.Username).Should().NotBeNull();
         }
+
     }
 }

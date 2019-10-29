@@ -10,7 +10,6 @@ namespace JPProject.Sso.Fakers.Test.Users
         {
             var pass = _faker.Internet.Password();
             return new Faker<RegisterUserViewModel>()
-                .RuleFor(r => r.Id, f => f.Random.Uuid())
                 .RuleFor(r => r.Email, f => f.Person.Email)
                 .RuleFor(r => r.Password, f => pass)
                 .RuleFor(r => r.ConfirmPassword, f => pass)

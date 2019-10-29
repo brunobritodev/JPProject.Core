@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JPProject.Sso.Application.Configuration
 {
-    internal class DomainCommandsBootStrapper
+    internal static class DomainCommandsBootStrapper
     {
-        public static void RegisterServices(IServiceCollection services)
+        public static IServiceCollection AddDomainCommands(this IServiceCollection services)
         {
             /*
              * Role commands
@@ -45,6 +45,8 @@ namespace JPProject.Sso.Application.Configuration
             services.AddScoped<IRequestHandler<SaveUserRoleCommand, bool>, UserManagementCommandHandler>();
             services.AddScoped<IRequestHandler<RemoveUserRoleCommand, bool>, UserManagementCommandHandler>();
             services.AddScoped<IRequestHandler<AdminChangePasswordCommand, bool>, UserManagementCommandHandler>();
+
+            return services;
         }
     }
 }

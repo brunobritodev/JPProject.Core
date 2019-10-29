@@ -1,13 +1,10 @@
-﻿using System;
+﻿using JPProject.Domain.Core.StringUtils;
 using System.ComponentModel.DataAnnotations;
-using JPProject.Domain.Core.StringUtils;
 
 namespace JPProject.Sso.Application.ViewModels.UserViewModels
 {
     public class RegisterUserViewModel
     {
-        public Guid Id { get; set; }
-
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

@@ -1,5 +1,6 @@
 ﻿using IdentityModel;
 using JPProject.Domain.Core.Bus;
+using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Domain.Core.StringUtils;
 using JPProject.Domain.Core.ViewModels;
@@ -23,7 +24,8 @@ using System.Threading.Tasks;
 
 namespace JPProject.Sso.Infra.CrossCutting.Identity.Services
 {
-    public class UserService : IUserService
+    public class UserService<TKey> : IUserService<TKey>
+        where TKey : IEquatable<TKey>
     {
         private readonly UserManager<UserIdentity> _userManager;
         private readonly IEmailSender _emailSender;
@@ -42,25 +44,25 @@ namespace JPProject.Sso.Infra.CrossCutting.Identity.Services
             _emailSender = emailSender;
             _bus = bus;
             _config = config;
-            _logger = loggerFactory.CreateLogger<UserService>(); ;
+            _logger = loggerFactory.CreateLogger<UserService<TKey>>(); ;
         }
 
-        public Task<Guid?> CreateUserWithPass(IDomainUser user, string password)
+        public Task<TKey> CreateUserWithPass(IDomainUser<TKey> user, string password)
         {
             return CreateUser(user, password, null, null);
         }
 
-        public Task<Guid?> CreateUserWithProvider(IDomainUser user, string provider, string providerUserId)
+        public Task<TKey> CreateUserWithProvider(IDomainUser<TKey> user, string provider, string providerUserId)
         {
             return CreateUser(user, null, provider, providerUserId);
         }
 
-        public Task<Guid?> CreateUserWithProviderAndPass(IDomainUser user, string password, string provider, string providerId)
+        public Task<TKey> CreateUserWithProviderAndPass(IDomainUser<TKey> user, string password, string provider, string providerId)
         {
             return CreateUser(user, password, provider, providerId);
         }
 
-        private async Task<Guid?> CreateUser(IDomainUser user, string password, string provider, string providerId)
+        private async Task<TKey> CreateUser(IDomainUser<TKey> user, string password, string provider, string providerId)
         {
             var newUser = new UserIdentity
             {
