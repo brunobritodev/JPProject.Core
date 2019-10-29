@@ -4,7 +4,7 @@ using MimeKit;
 using MimeKit.Text;
 using System.Threading.Tasks;
 
-namespace JPProject.Sso.Infra.CrossCutting.Identity.Services
+namespace JPProject.Sso.Infra.Identity.Services
 {
 
     public class AuthEmailMessageSender : IEmailSender

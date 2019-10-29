@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace JPProject.Sso.Infra.CrossCutting.Identity.Services
+namespace JPProject.Sso.Infra.Identity.Services
 {
     public interface IEmailSender
     {

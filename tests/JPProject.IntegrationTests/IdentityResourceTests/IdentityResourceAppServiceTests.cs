@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
+using JPProject.Admin.Infra.Data.Context;
 using JPProject.EntityFrameworkCore.Context;
 using Xunit;
 

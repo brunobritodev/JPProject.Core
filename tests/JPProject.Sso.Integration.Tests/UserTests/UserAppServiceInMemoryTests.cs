@@ -2,11 +2,11 @@
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Fakers.Test.Users;
+using JPProject.Sso.Infra.Data.Context;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
-using JPProject.Sso.Infra.Data.Context;
 using Xunit;
 
 namespace JPProject.Sso.Integration.Tests.UserTests
@@ -32,6 +32,32 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             var result = await _userAppService.Register(command);
+            result.Should().BeTrue();
+            _database.Users.FirstOrDefault(f => f.UserName == command.Username).Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task ShouldNotRegisterUserWithoutPassword()
+        {
+            var command = UserViewModelFaker.GenerateUserWithProviderViewModel().Generate();
+            command.Password = null;
+            command.ConfirmPassword = null;
+
+            var result = await _userAppService.Register(command);
+            result.Should().BeFalse();
+            _database.Users.FirstOrDefault(f => f.UserName == command.Username).Should().BeNull();
+        }
+
+
+        [Fact]
+        public async Task ShouldRegisterNewUserWithProviderAndWithoutPassword()
+        {
+            var command = UserViewModelFaker.GenerateUserWithProviderViewModel().Generate();
+            command.Password = null;
+            command.ConfirmPassword = null;
+
+
+            var result = await _userAppService.RegisterWithProvider(command);
             result.Should().BeTrue();
             _database.Users.FirstOrDefault(f => f.UserName == command.Username).Should().NotBeNull();
         }

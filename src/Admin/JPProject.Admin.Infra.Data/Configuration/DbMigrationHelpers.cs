@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.Entities;
+using JPProject.Admin.Infra.Data.Context;
 using JPProject.Domain.Core.Events;
 using JPProject.Domain.Core.Exceptions;
 using JPProject.EntityFrameworkCore.Context;

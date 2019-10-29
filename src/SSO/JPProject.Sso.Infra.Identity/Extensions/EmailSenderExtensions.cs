@@ -1,8 +1,8 @@
+using JPProject.Sso.Infra.Identity.Services;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using JPProject.Sso.Infra.CrossCutting.Identity.Services;
 
-namespace JPProject.Sso.Infra.CrossCutting.Identity.Extensions
+namespace JPProject.Sso.Infra.Identity.Extensions
 {
     public static class EmailSenderExtensions
     {

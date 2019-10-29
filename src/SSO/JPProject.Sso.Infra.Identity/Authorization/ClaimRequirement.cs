@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace JPProject.Sso.Infra.CrossCutting.Identity.Authorization
+namespace JPProject.Sso.Infra.Identity.Authorization
 {
     public class ClaimRequirement : IAuthorizationRequirement
     {

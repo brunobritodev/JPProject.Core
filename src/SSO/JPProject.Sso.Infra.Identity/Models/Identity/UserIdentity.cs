@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace JPProject.Sso.Infra.CrossCutting.Identity.Models.Identity
+namespace JPProject.Sso.Infra.Identity.Models.Identity
 {
     public class UserIdentity : IdentityUser<Guid>, IDomainUser
     {

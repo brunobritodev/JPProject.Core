@@ -1,7 +1,7 @@
 ﻿using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
-using JPProject.Sso.Infra.CrossCutting.Identity.Models.Identity;
 using JPProject.Sso.Infra.Data.Context;
+using JPProject.Sso.Infra.Identity.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

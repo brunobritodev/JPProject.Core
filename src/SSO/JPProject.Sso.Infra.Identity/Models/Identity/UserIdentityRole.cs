@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 
-namespace JPProject.Sso.Infra.CrossCutting.Identity.Models.Identity
+namespace JPProject.Sso.Infra.Identity.Models.Identity
 {
-	public class UserIdentityRole : IdentityRole<Guid>
-	{
-		
-	}
+    public class UserIdentityRole : IdentityRole<Guid>
+    {
+
+    }
 }

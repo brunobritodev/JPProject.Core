@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using JPProject.Domain.Core.Bus;
+﻿using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
-using JPProject.Sso.Infra.CrossCutting.Identity.Models.Identity;
+using JPProject.Sso.Infra.Identity.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace JPProject.Sso.Infra.CrossCutting.Identity.Services
+namespace JPProject.Sso.Infra.Identity.Services
 {
     public class RoleService : IRoleService
     {

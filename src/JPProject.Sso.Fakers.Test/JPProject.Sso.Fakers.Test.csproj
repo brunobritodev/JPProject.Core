@@ -13,6 +13,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SSO\JPProject.Sso.Application\JPProject.Sso.Application.csproj" />
-    <ProjectReference Include="..\SSO\JPProject.Sso.Infra.Identity\JPProject.Sso.Infra.CrossCutting.Identity.csproj" />
+    <ProjectReference Include="..\SSO\JPProject.Sso.Infra.Identity\JPProject.Sso.Infra.Identity.csproj" />
   </ItemGroup>
 </Project>

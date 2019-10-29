@@ -8,8 +8,8 @@ using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
-using JPProject.Sso.Infra.CrossCutting.Identity.Extensions;
-using JPProject.Sso.Infra.CrossCutting.Identity.Models.Identity;
+using JPProject.Sso.Infra.Identity.Extensions;
+using JPProject.Sso.Infra.Identity.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +22,7 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace JPProject.Sso.Infra.CrossCutting.Identity.Services
+namespace JPProject.Sso.Infra.Identity.Services
 {
     public class UserService : IUserService
     {

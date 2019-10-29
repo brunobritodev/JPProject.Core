@@ -1,5 +1,5 @@
-﻿using JPProject.Sso.Infra.CrossCutting.Identity.Models.Identity;
-using JPProject.Sso.Infra.Data.Constants;
+﻿using JPProject.Sso.Infra.Data.Constants;
+using JPProject.Sso.Infra.Identity.Models.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;

@@ -1,7 +1,7 @@
 ﻿using JPProject.Sso.Application.CloudServices.Storage;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Domain.Interfaces;
-using JPProject.Sso.Infra.CrossCutting.Identity.Services;
+using JPProject.Sso.Infra.Identity.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JPProject.Sso.Application.Configuration
