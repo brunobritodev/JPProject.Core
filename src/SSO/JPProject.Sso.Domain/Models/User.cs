@@ -1,6 +1,6 @@
-﻿using System;
+﻿using JPProject.Domain.Core.Interfaces;
 using JPProject.Sso.Domain.Commands.UserManagement;
-using JPProject.Sso.Domain.Interfaces;
+using System;
 
 namespace JPProject.Sso.Domain.Models
 {

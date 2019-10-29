@@ -24,8 +24,7 @@ using System.Threading.Tasks;
 
 namespace JPProject.Sso.Infra.CrossCutting.Identity.Services
 {
-    public class UserService<TKey> : IUserService<TKey>
-        where TKey : IEquatable<TKey>
+    public class UserService : IUserService
     {
         private readonly UserManager<UserIdentity> _userManager;
         private readonly IEmailSender _emailSender;
@@ -44,25 +43,25 @@ namespace JPProject.Sso.Infra.CrossCutting.Identity.Services
             _emailSender = emailSender;
             _bus = bus;
             _config = config;
-            _logger = loggerFactory.CreateLogger<UserService<TKey>>(); ;
+            _logger = loggerFactory.CreateLogger<UserService>(); ;
         }
 
-        public Task<TKey> CreateUserWithPass(IDomainUser<TKey> user, string password)
+        public Task<Guid?> CreateUserWithPass(IDomainUser user, string password)
         {
             return CreateUser(user, password, null, null);
         }
 
-        public Task<TKey> CreateUserWithProvider(IDomainUser<TKey> user, string provider, string providerUserId)
+        public Task<Guid?> CreateUserWithProvider(IDomainUser user, string provider, string providerUserId)
         {
             return CreateUser(user, null, provider, providerUserId);
         }
 
-        public Task<TKey> CreateUserWithProviderAndPass(IDomainUser<TKey> user, string password, string provider, string providerId)
+        public Task<Guid?> CreateUserWithProviderAndPass(IDomainUser user, string password, string provider, string providerId)
         {
             return CreateUser(user, password, provider, providerId);
         }
 
-        private async Task<TKey> CreateUser(IDomainUser<TKey> user, string password, string provider, string providerId)
+        private async Task<Guid?> CreateUser(IDomainUser user, string password, string provider, string providerId)
         {
             var newUser = new UserIdentity
             {

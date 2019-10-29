@@ -5,11 +5,10 @@ namespace JPProject.Domain.Core.Interfaces
     /// <summary>
     /// Interface to propagate user id type
     /// </summary>
-    public interface IDomainUser<TKey>
-        where TKey : IEquatable<TKey>
+    public interface IDomainUser
     {
 
-        TKey Id { get; }
+        Guid Id { get; }
         string Email { get; }
         bool EmailConfirmed { get; }
         string PasswordHash { get; }
@@ -27,8 +26,5 @@ namespace JPProject.Domain.Core.Interfaces
         string Company { get; }
         string Bio { get; }
         string JobTitle { get; }
-
-        IDomainUser<TKey> Create();
-
     }
 }

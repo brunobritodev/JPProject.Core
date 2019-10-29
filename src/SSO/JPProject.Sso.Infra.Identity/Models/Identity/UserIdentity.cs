@@ -1,6 +1,6 @@
-﻿using System;
-using JPProject.Sso.Domain.Interfaces;
+﻿using JPProject.Domain.Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace JPProject.Sso.Infra.CrossCutting.Identity.Models.Identity
 {
