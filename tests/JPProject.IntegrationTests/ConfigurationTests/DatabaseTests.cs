@@ -21,7 +21,7 @@ namespace JPProject.Admin.IntegrationTests.ConfigurationTests
 
         [Trait("Category", "Database")]
         [Fact(
-        //Skip = "Database need to be configured to run. Usually works in tests scenarios"
+            Skip = "Database need to be configured to run. Usually works in tests scenarios"
         )]
         public void ShouldConnectSqlServerDatabase()
         {
@@ -29,7 +29,7 @@ namespace JPProject.Admin.IntegrationTests.ConfigurationTests
             Configuration.ServiceCollection.ConfigureJpAdmin<AspNetUserTest>().WithSqlServer(opt => opt.UseSqlServer(connString).EnableSensitiveDataLogging());
 
             Configuration.ServiceCollection.BuildServiceProvider();
-            
+
         }
     }
 }

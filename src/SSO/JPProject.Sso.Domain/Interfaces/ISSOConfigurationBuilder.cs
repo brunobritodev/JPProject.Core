@@ -2,7 +2,7 @@
 
 namespace JPProject.Sso.Domain.Interfaces
 {
-    public interface ISSOConfigurationBuilder
+    public interface ISsoConfigurationBuilder
     {
         IServiceCollection Services { get; }
     }

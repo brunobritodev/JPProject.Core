@@ -2,6 +2,7 @@ using AutoMapper;
 using JPProject.Admin.Application.AutoMapper;
 using JPProject.Admin.Fakers.Test;
 using JPProject.Admin.Infra.Data.Context;
+using JPProject.EntityFrameworkCore.Configuration;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +25,16 @@ namespace JPProject.Admin.IntegrationTests
             var mappings = AdminUiMapperConfiguration.RegisterMappings();
             var automapperConfig = new MapperConfiguration(mappings);
 
-            serviceCollection.ConfigureJpAdmin<AspNetUserTest>().WithSqlServer(opt => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging());
+            void Options(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
+
+            serviceCollection
+                .ConfigureJpAdmin<AspNetUserTest>()
+                .WithSqlServer(Options);
+
+            serviceCollection.AddEventStoreContext(Options);
             serviceCollection.TryAddSingleton(automapperConfig.CreateMapper());
             serviceCollection.AddMediatR(typeof(WarmupInMemory));
-            serviceCollection.TryAddSingleton<IHttpContextAccessor>(mockHttpContextAccessor.Object);
+            serviceCollection.TryAddSingleton(mockHttpContextAccessor.Object);
 
             Services = serviceCollection.BuildServiceProvider();
         }
@@ -37,7 +44,7 @@ namespace JPProject.Admin.IntegrationTests
         public void DetachAll()
         {
 
-            var database = Services.GetService<JpProjectContext>();
+            var database = Services.GetService<JPProjectAdminUIContext>();
             foreach (var dbEntityEntry in database.ChangeTracker.Entries())
             {
                 if (dbEntityEntry.Entity != null)

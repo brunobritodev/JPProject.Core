@@ -1,7 +1,7 @@
 using AutoMapper;
 using JPProject.EntityFrameworkCore.Configuration;
 using JPProject.Sso.Application.AutoMapper;
-using JPProject.Sso.Application.Configuration.DependencyInjection;
+using JPProject.Sso.EntityFrameworkCore.SqlServer.Configuration;
 using JPProject.Sso.Infra.Data.Context;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using System.IO;
-using JPProject.Sso.EntityFrameworkCore.SqlServer.Configuration;
 
 namespace JPProject.Sso.Integration.Tests
 {
@@ -56,7 +55,7 @@ namespace JPProject.Sso.Integration.Tests
         public void DetachAll()
         {
 
-            var database = Services.GetService<ApplicationIdentityContext>();
+            var database = Services.GetService<ApplicationSsoContext>();
             foreach (var dbEntityEntry in database.ChangeTracker.Entries())
             {
                 if (dbEntityEntry.Entity != null)

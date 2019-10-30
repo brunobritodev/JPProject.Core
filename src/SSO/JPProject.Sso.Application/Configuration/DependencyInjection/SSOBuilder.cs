@@ -3,12 +3,19 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JPProject.Sso.Application.Configuration.DependencyInjection
 {
-    public class SSOBuilder : ISSOConfigurationBuilder
+    public class SsoBuilder : ISsoConfigurationBuilder
     {
-        public SSOBuilder(IServiceCollection services)
+        public SsoBuilder(IServiceCollection services)
         {
             Services = services;
         }
+
+        public ISsoConfigurationBuilder SetIdentityServer(IIdentityServerBuilder builder)
+        {
+            IdentityServer = builder;
+            return this;
+        }
         public IServiceCollection Services { get; }
+        public IIdentityServerBuilder IdentityServer { get; set; }
     }
 }

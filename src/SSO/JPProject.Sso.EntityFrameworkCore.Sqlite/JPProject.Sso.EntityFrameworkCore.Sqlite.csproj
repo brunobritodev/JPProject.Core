@@ -11,7 +11,7 @@
     <PackageIconUrl>https://jpproject.blob.core.windows.net/images/jplogo-min.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/brunohbrito/JPProject.IdentityServer4.SSO</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>identity identityserver4 oauth2 jpproject</PackageTags>
+    <PackageTags>identity identityserver4 oauth2 jpproject sso entityframework sqlite</PackageTags>
     <NeutralLanguage>English</NeutralLanguage>
   </PropertyGroup>
 

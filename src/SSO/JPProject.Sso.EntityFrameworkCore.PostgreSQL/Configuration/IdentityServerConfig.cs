@@ -7,11 +7,11 @@ namespace JPProject.Sso.EntityFrameworkCore.PostgreSQL.Configuration
 {
     public static class IdentityServerConfig
     {
-        public static IIdentityServerBuilder WithPostgreSql(
+        public static IIdentityServerBuilder WithPostgreSql<T>(
             this IIdentityServerBuilder builder,
             string connectionString)
         {
-            var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
+            var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
 
             // this adds the config data from DB (clients, resources)
             builder.AddConfigurationStore(options =>

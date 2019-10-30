@@ -1,17 +1,17 @@
-﻿using System;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Reflection;
 
 namespace JPProject.Sso.EntityFrameworkCore.MySql.Configuration
 {
     public static class IdentityServerConfig
     {
-        public static IIdentityServerBuilder WithMySqlDatabase(
+        public static IIdentityServerBuilder WithMySql<T>(
             this IIdentityServerBuilder builder,
             string connectionString)
         {
-            var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
+            var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
 
             // this adds the config data from DB (clients, resources)
             builder.AddConfigurationStore(options =>
@@ -34,7 +34,7 @@ namespace JPProject.Sso.EntityFrameworkCore.MySql.Configuration
             return builder;
         }
 
-        public static IServiceCollection WithMySqlDatabase(this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction)
+        public static IServiceCollection WithMySql(this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction)
         {
             builder.AddConfigurationStore(options =>
                 {

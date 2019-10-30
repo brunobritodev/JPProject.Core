@@ -15,7 +15,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
     public class UserAppServiceInMemoryTests : IClassFixture<WarmupInMemory>
     {
         private readonly IUserAppService _userAppService;
-        private readonly ApplicationIdentityContext _database;
+        private readonly ApplicationSsoContext _database;
         private readonly Faker _faker;
         public WarmupInMemory InMemoryData { get; }
 
@@ -24,7 +24,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             _faker = new Faker();
             InMemoryData = inMemory;
             _userAppService = InMemoryData.Services.GetRequiredService<IUserAppService>();
-            _database = InMemoryData.Services.GetRequiredService<ApplicationIdentityContext>();
+            _database = InMemoryData.Services.GetRequiredService<ApplicationSsoContext>();
             var notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
 
             notifications.Clear();

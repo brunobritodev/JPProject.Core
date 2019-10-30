@@ -16,14 +16,14 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
     public class ApiResourceAppServiceInMemoryTest : IClassFixture<WarmupInMemory>
     {
         private readonly IApiResourceAppService _apiResourceAppService;
-        private readonly JpProjectContext _database;
+        private readonly JPProjectAdminUIContext _database;
         public WarmupInMemory InMemoryData { get; }
 
         public ApiResourceAppServiceInMemoryTest(WarmupInMemory inMemoryData)
         {
             InMemoryData = inMemoryData;
             _apiResourceAppService = InMemoryData.Services.GetRequiredService<IApiResourceAppService>();
-            _database = InMemoryData.Services.GetRequiredService<JpProjectContext>();
+            _database = InMemoryData.Services.GetRequiredService<JPProjectAdminUIContext>();
             var notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             notifications.Clear();
         }

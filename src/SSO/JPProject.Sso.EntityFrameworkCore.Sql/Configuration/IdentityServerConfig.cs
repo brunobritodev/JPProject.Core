@@ -1,15 +1,15 @@
-﻿using System;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Reflection;
 
 namespace JPProject.Sso.EntityFrameworkCore.SqlServer.Configuration
 {
     public static class IdentityServerConfig
     {
-        public static IServiceCollection WithSqlServer(this IIdentityServerBuilder builder, string connectionString)
+        public static IServiceCollection WithSqlServer<T>(this IIdentityServerBuilder builder, string connectionString)
         {
-            var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
+            var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
             builder.AddConfigurationStore(options =>
             {
                 options.ConfigureDbContext = opt => opt.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));

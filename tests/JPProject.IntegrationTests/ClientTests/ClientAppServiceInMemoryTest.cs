@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels.ClientsViewModels;
 using JPProject.Admin.Fakers.Test.ClientFakers;
@@ -9,6 +7,8 @@ using JPProject.Domain.Core.Notifications;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace JPProject.Admin.IntegrationTests.ClientTests
@@ -16,14 +16,14 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
     public class ClientAppServiceInMemoryTest : IClassFixture<WarmupInMemory>
     {
         private readonly IClientAppService _clientAppService;
-        private readonly JpProjectContext _database;
+        private readonly JPProjectAdminUIContext _database;
 
         public WarmupInMemory InMemoryData { get; }
         public ClientAppServiceInMemoryTest(WarmupInMemory inMemoryData)
         {
             InMemoryData = inMemoryData;
             _clientAppService = InMemoryData.Services.GetRequiredService<IClientAppService>();
-            _database = InMemoryData.Services.GetRequiredService<JpProjectContext>();
+            _database = InMemoryData.Services.GetRequiredService<JPProjectAdminUIContext>();
             var notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             notifications.Clear();
         }
@@ -50,7 +50,8 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
             var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
             client.Should().NotBeNull();
-            _database.ClientPostLogoutRedirectUris.Include(w => w.Client).Any(w => w.Client.ClientId == command.ClientId).Should().BeFalse();
+            _database.Clients.Include(w => w.PostLogoutRedirectUris).FirstOrDefault(w => w.ClientId == command.ClientId)
+                .PostLogoutRedirectUris.Should().BeEmpty();
         }
 
         [Fact]

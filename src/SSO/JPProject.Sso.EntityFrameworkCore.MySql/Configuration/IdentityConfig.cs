@@ -1,4 +1,5 @@
 ﻿using JPProject.EntityFrameworkCore.Configuration;
+using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Infra.Data.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,24 +10,24 @@ namespace JPProject.Sso.EntityFrameworkCore.MySql.Configuration
 {
     public static class IdentityConfig
     {
-        public static IServiceCollection WithMySql(this IServiceCollection services, string connectionString)
+        public static ISsoConfigurationBuilder WithMySql<T>(this ISsoConfigurationBuilder services, string connectionString)
         {
-            var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
+            var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
 
-            services.AddEntityFrameworkMySql().AddSsoContext(options => options.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
+            services.Services.AddEntityFrameworkMySql().AddSsoContext(options => options.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
             return services;
         }
 
-        public static IServiceCollection AddEventStoreMySql(this IServiceCollection services, string connectionString)
+        public static ISsoConfigurationBuilder AddEventStoreMySql<T>(this ISsoConfigurationBuilder services, string connectionString, EventStoreMigrationOptions options = null)
         {
-            var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
+            var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
 
-            services.AddEventStoreContext(options => options.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
+            services.Services.AddEventStoreContext(options => options.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)), options);
             return services;
         }
-        public static IServiceCollection WithMySql(this IServiceCollection services, Action<DbContextOptionsBuilder> optionsAction)
+        public static ISsoConfigurationBuilder WithMySql(this ISsoConfigurationBuilder services, Action<DbContextOptionsBuilder> optionsAction)
         {
-            services.AddEntityFrameworkMySql().AddSsoContext(optionsAction);
+            services.Services.AddEntityFrameworkMySql().AddSsoContext(optionsAction);
 
             return services;
         }

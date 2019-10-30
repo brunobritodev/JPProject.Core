@@ -5,9 +5,9 @@ namespace JPProject.Sso.Infra.Data.UoW
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationIdentityContext _context;
+        private readonly ApplicationSsoContext _context;
 
-        public UnitOfWork(ApplicationIdentityContext context)
+        public UnitOfWork(ApplicationSsoContext context)
         {
             _context = context;
         }

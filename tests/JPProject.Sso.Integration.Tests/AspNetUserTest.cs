@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Bogus;
+using JPProject.Domain.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using Bogus;
-using JPProject.Domain.Core.Interfaces;
 
 namespace JPProject.Sso.Integration.Tests
 {
@@ -17,7 +17,7 @@ namespace JPProject.Sso.Integration.Tests
         public string Username { get; } = "TestUser";
         public bool IsAuthenticated() => true;
 
-        public Guid UserId { get; } = Guid.NewGuid();
+        public string UserId { get; } = Guid.NewGuid().ToString();
         public IEnumerable<Claim> GetClaimsIdentity() => new List<Claim>();
 
         public string GetRemoteIpAddress() => _faker.Internet.Ip();

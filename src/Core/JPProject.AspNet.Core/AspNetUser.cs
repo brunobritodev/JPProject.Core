@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using IdentityModel;
+﻿using IdentityModel;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.StringUtils;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace JPProject.AspNet.Core
 {
@@ -33,7 +32,7 @@ namespace JPProject.AspNet.Core
             return string.Empty;
         }
 
-        public Guid UserId => Guid.Parse(_accessor.HttpContext.User.FindFirst(JwtClaimTypes.Subject)?.Value);
+        public string UserId => _accessor.HttpContext.User.FindFirst(JwtClaimTypes.Subject)?.Value;
         public bool IsAuthenticated()
         {
             return _accessor.HttpContext.User.Identity.IsAuthenticated;

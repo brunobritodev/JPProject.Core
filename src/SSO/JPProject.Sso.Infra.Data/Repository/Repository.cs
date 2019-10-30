@@ -8,10 +8,10 @@ namespace JPProject.Sso.Infra.Data.Repository
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        protected readonly ApplicationIdentityContext Db;
+        protected readonly ApplicationSsoContext Db;
         protected readonly DbSet<TEntity> DbSet;
 
-        public Repository(ApplicationIdentityContext context)
+        public Repository(ApplicationSsoContext context)
         {
             Db = context;
             DbSet = Db.Set<TEntity>();

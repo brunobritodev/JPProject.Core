@@ -15,14 +15,14 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
     public class IdentityResourceAppServiceTests : IClassFixture<WarmupInMemory>
     {
         private readonly IIdentityResourceAppService _identityResource;
-        private readonly JpProjectContext _database;
+        private readonly JPProjectAdminUIContext _database;
         public WarmupInMemory InMemoryData { get; }
 
         public IdentityResourceAppServiceTests(WarmupInMemory inMemoryData)
         {
             InMemoryData = inMemoryData;
             _identityResource = InMemoryData.Services.GetRequiredService<IIdentityResourceAppService>();
-            _database = InMemoryData.Services.GetRequiredService<JpProjectContext>();
+            _database = InMemoryData.Services.GetRequiredService<JPProjectAdminUIContext>();
             var notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             notifications.Clear();
         }

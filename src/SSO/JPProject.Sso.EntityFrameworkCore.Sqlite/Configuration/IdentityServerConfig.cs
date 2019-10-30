@@ -1,15 +1,15 @@
-﻿using System;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Reflection;
 
 namespace JPProject.Sso.EntityFrameworkCore.Sqlite.Configuration
 {
     public static class IdentityServerConfig
     {
-        public static IServiceCollection WithSqlite(this IIdentityServerBuilder builder, string connectionString)
+        public static IServiceCollection WithSqlite<T>(this IIdentityServerBuilder builder, string connectionString)
         {
-            var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
+            var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
             builder.AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = opt => opt.UseSqlite(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));

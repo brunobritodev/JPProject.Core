@@ -1,33 +1,34 @@
-﻿using System;
-using System.Reflection;
-using JPProject.EntityFrameworkCore.Configuration;
+﻿using JPProject.EntityFrameworkCore.Configuration;
+using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Infra.Data.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Reflection;
 
 namespace JPProject.Sso.EntityFrameworkCore.SqlServer.Configuration
 {
     public static class IdentityConfig
     {
 
-        public static IServiceCollection WithSqlServer(this IServiceCollection builder, string connectionString)
+        public static ISsoConfigurationBuilder WithSqlServer<T>(this ISsoConfigurationBuilder builder, string connectionString)
         {
-            var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
-            builder.AddEntityFrameworkSqlServer().AddSsoContext(opt => opt.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
+            var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
+            builder.Services.AddEntityFrameworkSqlServer().AddSsoContext(opt => opt.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
 
             return builder;
         }
-        public static IServiceCollection AddEventStoreSqlServer(this IServiceCollection builder, string connectionString)
+        public static ISsoConfigurationBuilder AddEventStoreSqlServer<T>(this ISsoConfigurationBuilder builder, string connectionString, EventStoreMigrationOptions options = null)
         {
-            var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
-            builder.AddEventStoreContext(opt => opt.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
+            var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
+            builder.Services.AddEventStoreContext(opt => opt.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)), options);
 
             return builder;
         }
 
-        public static IServiceCollection WithSqlServer(this IServiceCollection builder, Action<DbContextOptionsBuilder> optionsAction)
+        public static ISsoConfigurationBuilder WithSqlServer(this ISsoConfigurationBuilder builder, Action<DbContextOptionsBuilder> optionsAction)
         {
-            builder.AddEntityFrameworkSqlServer().AddSsoContext(optionsAction);
+            builder.Services.AddEntityFrameworkSqlServer().AddSsoContext(optionsAction);
 
             return builder;
         }

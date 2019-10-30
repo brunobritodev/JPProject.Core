@@ -9,7 +9,7 @@ namespace JPProject.Sso.Infra.Data.Configuration
     {
         public static IServiceCollection AddSsoContext(this IServiceCollection services, Action<DbContextOptionsBuilder> optionsAction)
         {
-            services.AddDbContext<ApplicationIdentityContext>(optionsAction);
+            services.AddDbContext<ApplicationSsoContext>(optionsAction);
 
             return services;
         }

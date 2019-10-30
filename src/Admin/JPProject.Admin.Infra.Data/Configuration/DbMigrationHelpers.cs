@@ -17,7 +17,7 @@ namespace JPProject.Admin.Infra.Data.Configuration
         {
             using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
-            var id4Context = scope.ServiceProvider.GetRequiredService<JpProjectContext>();
+            var id4Context = scope.ServiceProvider.GetRequiredService<JPProjectAdminUIContext>();
             var storeDb = scope.ServiceProvider.GetRequiredService<EventStoreContext>();
 
             if (id4Context.Database.IsInMemory() || storeDb.Database.IsInMemory())
@@ -29,10 +29,10 @@ namespace JPProject.Admin.Infra.Data.Configuration
             await ConfigureEventStoreContext(storeDb);
         }
 
-        private static async Task ValidateIs4Context(JpDatabaseOptions options, JpProjectContext id4Context)
+        private static async Task ValidateIs4Context(JpDatabaseOptions options, JPProjectAdminUIContext id4AdminUiContext)
         {
-            var configurationDatabaseExist = await CheckTableExists<Client>(id4Context);
-            var operationalDatabaseExist = await CheckTableExists<PersistedGrant>(id4Context);
+            var configurationDatabaseExist = await CheckTableExists<Client>(id4AdminUiContext);
+            var operationalDatabaseExist = await CheckTableExists<PersistedGrant>(id4AdminUiContext);
             var isDatabaseExist = configurationDatabaseExist && operationalDatabaseExist;
 
             if (!isDatabaseExist && options.MustThrowExceptionIfDatabaseDontExist)

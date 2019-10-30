@@ -2,6 +2,8 @@
 using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Sso.Application.Configuration;
+using JPProject.Sso.Application.Configuration.DependencyInjection;
+using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Infra.Data.Context;
 using JPProject.Sso.Infra.Identity.Models.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -13,22 +15,22 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class SSOBootstrapper
 #pragma warning restore S101 // Types should be named in PascalCase
     {
-        public static IServiceCollection ConfigureUserIdentity<THttpUser>(this IServiceCollection services)
+        public static ISsoConfigurationBuilder ConfigureUserIdentity<THttpUser>(this IServiceCollection builder)
             where THttpUser : class, ISystemUser
         {
 
-            services
+            builder
                 .BaseSsoConfiguration<THttpUser>()
                 .AddIdentity<UserIdentity, IdentityRole>(AccountOptions.NistAccountOptions())
-                .AddEntityFrameworkStores<ApplicationIdentityContext>()
+                .AddEntityFrameworkStores<ApplicationSsoContext>()
                 .AddDefaultTokenProviders();
-            return services;
+            return new SsoBuilder(builder);
         }
 
 
-        public static IIdentityServerBuilder ConfigureIdentityServer(this IServiceCollection services)
+        public static IIdentityServerBuilder ConfigureIdentityServer(this ISsoConfigurationBuilder builder)
         {
-            var is4Builder = services.AddIdentityServer(
+            var is4Builder = builder.Services.AddIdentityServer(
                     options =>
                     {
                         options.Events.RaiseErrorEvents = true;
