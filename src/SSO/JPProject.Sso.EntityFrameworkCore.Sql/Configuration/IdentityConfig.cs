@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using JPProject.EntityFrameworkCore.Configuration;
 using JPProject.Sso.Infra.Data.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,13 @@ namespace JPProject.Sso.EntityFrameworkCore.SqlServer.Configuration
         {
             var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
             builder.AddEntityFrameworkSqlServer().AddSsoContext(opt => opt.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
+
+            return builder;
+        }
+        public static IServiceCollection AddEventStoreSqlServer(this IServiceCollection builder, string connectionString)
+        {
+            var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
+            builder.AddEventStoreContext(opt => opt.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
 
             return builder;
         }

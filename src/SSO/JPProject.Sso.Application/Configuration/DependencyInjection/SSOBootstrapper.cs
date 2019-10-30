@@ -1,12 +1,13 @@
-﻿using JPProject.Domain.Core.Bus;
+﻿using IdentityServer4.Services;
+using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
+using JPProject.Sso.Application.Configuration;
 using JPProject.Sso.Infra.Data.Context;
 using JPProject.Sso.Infra.Identity.Models.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace JPProject.Sso.Application.Configuration.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection
 {
 #pragma warning disable S101 // Types should be named in PascalCase
     public static class SSOBootstrapper
@@ -46,6 +47,7 @@ namespace JPProject.Sso.Application.Configuration.DependencyInjection
             // Domain Bus (Mediator)
             services.TryAddScoped<IMediatorHandler, InMemoryBus>();
             services.TryAddScoped<ISystemUser, T>();
+            services.AddScoped<IEventSink, IdentityServerEventStore>();
 
             services
                 .AddApplicationServices()

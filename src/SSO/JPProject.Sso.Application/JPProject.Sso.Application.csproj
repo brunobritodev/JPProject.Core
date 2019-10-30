@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Authors>Bruno Brito</Authors>
+    <Company>Jp Project</Company>
+    <Product>JP Project Quickstart SSO</Product>
+    <Description>Package to bootstrap IdentityServer4 SSO</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIconUrl>https://jpproject.blob.core.windows.net/images/jplogo-min.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/brunohbrito/JPProject.IdentityServer4.SSO</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>identity identityserver4 oauth2 jpproject</PackageTags>
+    <NeutralLanguage>English</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
