@@ -12,7 +12,7 @@ namespace JPProject.Sso.Application.AutoMapper
     {
         public DomainToViewModelMappingProfile()
         {
-            CreateMap<User, UserViewModel>(MemberList.Destination);//.ForMember(x => x.LockoutEnd, opt => opt.MapFrom(src => src.LockoutEnd != null ? src.LockoutEnd.Value.DateTime.ToShortDateString() : string.Empty));
+            CreateMap<User, UserViewModel>(MemberList.Destination).ForMember(x => x.LockoutEnd, opt => opt.MapFrom(src => src.LockoutEnd != null ? src.LockoutEnd.Value.DateTime.ToShortDateString() : string.Empty));
             CreateMap<User, UserListViewModel>(MemberList.Destination);
 
             CreateMap<StoredEvent, EventHistoryData>().ConstructUsing(a => new EventHistoryData(a.Message, a.Id.ToString(), a.Details, a.Timestamp.ToString(CultureInfo.InvariantCulture), a.User, a.MessageType, a.RemoteIpAddress));

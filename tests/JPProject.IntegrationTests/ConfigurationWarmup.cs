@@ -1,5 +1,5 @@
-﻿using System.IO;
-using AutoMapper;
+﻿using AutoMapper;
+using AutoMapper.Configuration;
 using JPProject.Admin.Application.AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
+using System.IO;
 
 namespace JPProject.Admin.IntegrationTests
 {
@@ -24,8 +25,10 @@ namespace JPProject.Admin.IntegrationTests
             var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
             this.ServiceCollection = new ServiceCollection();
 
-            var mappings = AdminUiMapperConfiguration.RegisterMappings();
-            var automapperConfig = new MapperConfiguration(mappings);
+            var configurationExpression = new MapperConfigurationExpression();
+            AdminUiMapperConfiguration.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));
+            var automapperConfig = new MapperConfiguration(configurationExpression);
+
             ServiceCollection.TryAddSingleton(automapperConfig.CreateMapper());
             ServiceCollection.AddMediatR(typeof(WarmupInMemory));
             ServiceCollection.TryAddSingleton<IHttpContextAccessor>(mockHttpContextAccessor.Object);

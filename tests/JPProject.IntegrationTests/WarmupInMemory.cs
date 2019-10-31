@@ -1,4 +1,5 @@
 using AutoMapper;
+using AutoMapper.Configuration;
 using JPProject.Admin.Application.AutoMapper;
 using JPProject.Admin.Fakers.Test;
 using JPProject.Admin.Infra.Data.Context;
@@ -22,8 +23,10 @@ namespace JPProject.Admin.IntegrationTests
             var serviceCollection = new ServiceCollection();
 
 
-            var mappings = AdminUiMapperConfiguration.RegisterMappings();
-            var automapperConfig = new MapperConfiguration(mappings);
+            var configurationExpression = new MapperConfigurationExpression();
+            AdminUiMapperConfiguration.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));
+            var automapperConfig = new MapperConfiguration(configurationExpression);
+
 
             void Options(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
 

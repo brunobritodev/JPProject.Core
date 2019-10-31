@@ -1,4 +1,5 @@
 using AutoMapper;
+using AutoMapper.Configuration;
 using JPProject.EntityFrameworkCore.Configuration;
 using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.EntityFrameworkCore.SqlServer.Configuration;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using System.IO;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace JPProject.Sso.Integration.Tests
 {
@@ -42,8 +44,10 @@ namespace JPProject.Sso.Integration.Tests
 
                 .AddEventStoreContext(DatabaseOptions);
 
-            var mappings = SsoMapperConfig.RegisterMappings();
-            var automapperConfig = new MapperConfiguration(mappings);
+            var configurationExpression = new MapperConfigurationExpression();
+            SsoMapperConfig.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));
+            var automapperConfig = new MapperConfiguration(configurationExpression);
+
             serviceCollection.TryAddSingleton(automapperConfig.CreateMapper());
             serviceCollection.AddMediatR(typeof(WarmupInMemory));
             serviceCollection.TryAddSingleton<IHttpContextAccessor>(mockHttpContextAccessor.Object);

@@ -1,5 +1,4 @@
 ﻿using JPProject.Domain.Core.Events;
-using JPProject.Domain.Core.Exceptions;
 using JPProject.EntityFrameworkCore.Context;
 using JPProject.EntityFrameworkCore.MigrationHelper;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +19,7 @@ namespace JPProject.EntityFrameworkCore.Configuration
             if (storeDb.Database.IsInMemory())
                 return;
 
+            await DbHealthChecker.TestConnection(storeDb);
             await ConfigureEventStoreContext(storeDb);
         }
 
@@ -48,28 +48,6 @@ namespace JPProject.EntityFrameworkCore.Configuration
             {
                 return false;
             }
-        }
-
-
-        private static async Task WaitForDb(DbContext context)
-        {
-            var maxAttemps = 3;
-            var delay = 5000;
-
-            var healthChecker = new DbHealthChecker();
-            for (int i = 0; i < maxAttemps; i++)
-            {
-                var canConnect = healthChecker.TestConnection(context);
-                if (canConnect)
-                {
-                    return;
-                }
-                await Task.Delay(delay);
-            }
-
-            // after a few attemps we give up
-            throw new DatabaseNotFoundException("Error wating database. Check ConnectionString and ensure database exist");
-
         }
     }
 }

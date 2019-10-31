@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
-using AutoMapper.Configuration;
+using System.Collections.Generic;
 
 namespace JPProject.Sso.Application.AutoMapper
 {
     public class SsoMapperConfig
     {
-        public static MapperConfigurationExpression RegisterMappings(params Profile[] customProfiles)
+        public static List<Profile> RegisterMappings()
         {
-            var cfg = new MapperConfigurationExpression();
-            cfg.AddProfile(new DomainToViewModelMappingProfile());
-            cfg.AddProfile(new ViewModelToDomainMappingProfile());
+            var cfg = new List<Profile> { new DomainToViewModelMappingProfile(), new ViewModelToDomainMappingProfile() };
             return cfg;
         }
     }

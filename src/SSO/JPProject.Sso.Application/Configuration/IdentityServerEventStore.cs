@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using IdentityServer4.Events;
+﻿using IdentityServer4.Events;
 using IdentityServer4.Services;
 using JPProject.Domain.Core.Events;
 using JPProject.Domain.Core.Interfaces;
+using System.Threading.Tasks;
 using EventTypes = JPProject.Domain.Core.Events.EventTypes;
 using Is4Event = IdentityServer4.Events.Event;
 

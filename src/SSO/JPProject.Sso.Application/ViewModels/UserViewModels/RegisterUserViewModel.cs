@@ -44,7 +44,7 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
 
         public bool ContainsFederationGateway()
         {
-            return Provider.IsMissing() && ProviderId.IsMissing();
+            return Provider.IsPresent() && ProviderId.IsPresent();
 
         }
 

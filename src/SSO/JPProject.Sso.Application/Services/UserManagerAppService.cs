@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.ViewModels;
@@ -14,6 +10,10 @@ using JPProject.Sso.Application.ViewModels.UserViewModels;
 using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JPProject.Sso.Application.Services
 {
@@ -95,6 +95,11 @@ namespace JPProject.Sso.Application.Services
             return new ListOf<UserListViewModel>(_mapper.Map<IEnumerable<UserListViewModel>>(users), total);
         }
 
+        public async Task<IEnumerable<UserListViewModel>> GetUsersById(params string[] id)
+        {
+            var users = await _userService.GetByIdAsync(id);
+            return _mapper.Map<IEnumerable<UserListViewModel>>(users);
+        }
         public async Task<UserViewModel> GetUserDetails(string username)
         {
             var users = await _userService.FindByNameAsync(username);

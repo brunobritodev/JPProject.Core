@@ -34,5 +34,6 @@ namespace JPProject.Sso.Application.Interfaces
         Task<IEnumerable<UserListViewModel>> GetUsersInRole(string role);
         Task ResetPassword(AdminChangePasswordViewodel model);
         Task<ListOf<UserListViewModel>> GetUsers(PagingViewModel page);
+        Task<IEnumerable<UserListViewModel>> GetUsersById(params string[] id);
     }
 }

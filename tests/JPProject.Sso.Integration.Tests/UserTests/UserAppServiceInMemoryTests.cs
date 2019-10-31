@@ -17,6 +17,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         private readonly IUserAppService _userAppService;
         private readonly ApplicationSsoContext _database;
         private readonly Faker _faker;
+        private IUserManageAppService _userManagerAppService;
         public WarmupInMemory InMemoryData { get; }
 
         public UserAppServiceInMemoryTests(WarmupInMemory inMemory)
@@ -24,6 +25,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             _faker = new Faker();
             InMemoryData = inMemory;
             _userAppService = InMemoryData.Services.GetRequiredService<IUserAppService>();
+            _userManagerAppService = InMemoryData.Services.GetRequiredService<IUserManageAppService>();
             _database = InMemoryData.Services.GetRequiredService<ApplicationSsoContext>();
             var notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
 
@@ -213,5 +215,21 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             var user = await _userAppService.FindByProviderAsync(command.Provider, command.ProviderId);
             user.Should().NotBeNull();
         }
+
+
+        [Fact]
+        public async Task ShouldFindByIds()
+        {
+            var command = UserViewModelFaker.GenerateUserViewModel().Generate();
+            await _userAppService.Register(command);
+            command = UserViewModelFaker.GenerateUserViewModel().Generate();
+            await _userAppService.Register(command);
+
+            var users = _database.Users.Select(s => s.Id).ToArray();
+
+            var usersFound = await _userManagerAppService.GetUsersById(users);
+            usersFound.Should().HaveCountGreaterOrEqualTo(2);
+        }
+
     }
 }

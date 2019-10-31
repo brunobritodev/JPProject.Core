@@ -359,7 +359,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<IEnumerable<User>> GetByIdAsync(params string[] id)
         {
-            var users = await _userManager.Users.Where(w => id.Contains(w.Id.ToString())).ToListAsync();
+            var users = await _userManager.Users.Where(w => id.Contains(w.Id)).ToListAsync();
 
             return users.Select(GetUser).ToList(); ;
         }

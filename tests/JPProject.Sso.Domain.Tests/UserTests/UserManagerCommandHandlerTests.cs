@@ -83,5 +83,15 @@ namespace JPProject.Sso.Domain.Tests.UserTests
             result.Should().BeTrue();
         }
 
+
+
+        [Fact]
+        public void ShouldNotContainsFederationGateway()
+        {
+            var user = UserViewModelFaker.GenerateUserViewModel().Generate();
+
+            user.ContainsFederationGateway().Should().BeFalse();
+        }
+
     }
 }
