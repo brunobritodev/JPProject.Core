@@ -47,8 +47,7 @@ namespace JPProject.Admin.IntegrationTests.PersistedGrantTests
             await _persistedGrant.Remove(command);
 
             _database.PersistedGrants.Count().Should().Be(0);
-
-
         }
+
     }
 }
