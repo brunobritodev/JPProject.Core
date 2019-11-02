@@ -1,7 +1,7 @@
-﻿using System;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Reflection;
 
 namespace JPProject.Sso.EntityFrameworkCore.PostgreSQL.Configuration
 {
@@ -33,7 +33,7 @@ namespace JPProject.Sso.EntityFrameworkCore.PostgreSQL.Configuration
             return builder;
         }
 
-        public static IServiceCollection WithPostgreSql(this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction)
+        public static IIdentityServerBuilder WithPostgreSql(this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction)
         {
             builder.AddConfigurationStore(options =>
                 {
@@ -49,7 +49,7 @@ namespace JPProject.Sso.EntityFrameworkCore.PostgreSQL.Configuration
                     options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
                 });
 
-            return builder.Services;
+            return builder;
         }
     }
 }

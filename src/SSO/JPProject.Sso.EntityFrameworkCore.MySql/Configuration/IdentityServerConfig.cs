@@ -34,7 +34,7 @@ namespace JPProject.Sso.EntityFrameworkCore.MySql.Configuration
             return builder;
         }
 
-        public static IServiceCollection WithMySql(this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction)
+        public static IIdentityServerBuilder WithMySql(this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction)
         {
             builder.AddConfigurationStore(options =>
                 {
@@ -50,7 +50,7 @@ namespace JPProject.Sso.EntityFrameworkCore.MySql.Configuration
                     options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
                 });
 
-            return builder.Services;
+            return builder;
         }
     }
 }

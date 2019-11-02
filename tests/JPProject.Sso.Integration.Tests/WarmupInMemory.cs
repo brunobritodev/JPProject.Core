@@ -40,9 +40,9 @@ namespace JPProject.Sso.Integration.Tests
                 .WithSqlServer(DatabaseOptions)
 
                 .ConfigureIdentityServer()
-                .WithSqlServer(DatabaseOptions)
+                .WithSqlServer(DatabaseOptions);
 
-                .AddEventStoreContext(DatabaseOptions);
+            serviceCollection.AddEventStoreContext(DatabaseOptions);
 
             var configurationExpression = new MapperConfigurationExpression();
             SsoMapperConfig.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));

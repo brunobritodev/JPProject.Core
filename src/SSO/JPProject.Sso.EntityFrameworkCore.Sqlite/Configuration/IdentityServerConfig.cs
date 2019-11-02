@@ -7,7 +7,7 @@ namespace JPProject.Sso.EntityFrameworkCore.Sqlite.Configuration
 {
     public static class IdentityServerConfig
     {
-        public static IServiceCollection WithSqlite<T>(this IIdentityServerBuilder builder, string connectionString)
+        public static IIdentityServerBuilder WithSqlite<T>(this IIdentityServerBuilder builder, string connectionString)
         {
             var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
             builder.AddConfigurationStore(options =>
@@ -24,10 +24,10 @@ namespace JPProject.Sso.EntityFrameworkCore.Sqlite.Configuration
                     options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
                 });
 
-            return builder.Services;
+            return builder;
         }
 
-        public static IServiceCollection WithSqlite(this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction)
+        public static IIdentityServerBuilder WithSqlite(this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction)
         {
             builder.AddConfigurationStore(options =>
                 {
@@ -43,7 +43,7 @@ namespace JPProject.Sso.EntityFrameworkCore.Sqlite.Configuration
                     options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
                 });
 
-            return builder.Services;
+            return builder;
         }
     }
 }
