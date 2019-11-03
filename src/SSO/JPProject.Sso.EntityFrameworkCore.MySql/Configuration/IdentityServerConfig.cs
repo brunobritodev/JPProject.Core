@@ -7,11 +7,16 @@ namespace JPProject.Sso.EntityFrameworkCore.MySql.Configuration
 {
     public static class IdentityServerConfig
     {
-        public static IIdentityServerBuilder WithMySql<T>(
+        /// <summary>
+        /// Add SQL Support database
+        /// </summary>
+        /// <param name="connectionString">Connection String</param>
+        /// <returns></returns>
+        public static IIdentityServerBuilder WithMySql(
             this IIdentityServerBuilder builder,
             string connectionString)
         {
-            var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
+            var migrationsAssembly = typeof(IdentityServerConfig).GetTypeInfo().Assembly.GetName().Name;
 
             // this adds the config data from DB (clients, resources)
             builder.AddConfigurationStore(options =>

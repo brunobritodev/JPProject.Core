@@ -10,19 +10,20 @@ namespace JPProject.Sso.EntityFrameworkCore.MySql.Configuration
 {
     public static class IdentityConfig
     {
-        public static ISsoConfigurationBuilder WithMySql<T>(this ISsoConfigurationBuilder services, string connectionString)
+        public static ISsoConfigurationBuilder WithMySql(this ISsoConfigurationBuilder services, string connectionString)
         {
-            var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
+            var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
 
             services.Services.AddEntityFrameworkMySql().AddSsoContext(options => options.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
             return services;
         }
 
-        public static ISsoConfigurationBuilder AddEventStoreMySql<T>(this ISsoConfigurationBuilder services, string connectionString, EventStoreMigrationOptions options = null)
+        public static ISsoConfigurationBuilder AddEventStoreMySql(this ISsoConfigurationBuilder services, string connectionString, EventStoreMigrationOptions options = null)
         {
-            var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
+            var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
 
-            services.Services.AddEventStoreContext(options => options.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)), options);
+            services.Services.AddEventStoreContext(opt => opt.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)), options);
+
             return services;
         }
         public static ISsoConfigurationBuilder WithMySql(this ISsoConfigurationBuilder services, Action<DbContextOptionsBuilder> optionsAction)
@@ -31,5 +32,6 @@ namespace JPProject.Sso.EntityFrameworkCore.MySql.Configuration
 
             return services;
         }
+
     }
 }

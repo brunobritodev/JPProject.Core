@@ -7,9 +7,9 @@ namespace JPProject.Sso.EntityFrameworkCore.SqlServer.Configuration
 {
     public static class IdentityServerConfig
     {
-        public static IIdentityServerBuilder WithSqlServer<T>(this IIdentityServerBuilder builder, string connectionString)
+        public static IIdentityServerBuilder WithSqlServer(this IIdentityServerBuilder builder, string connectionString)
         {
-            var migrationsAssembly = typeof(T).GetTypeInfo().Assembly.GetName().Name;
+            var migrationsAssembly = typeof(IdentityServerConfig).GetTypeInfo().Assembly.GetName().Name;
             builder.AddConfigurationStore(options =>
             {
                 options.ConfigureDbContext = opt => opt.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));

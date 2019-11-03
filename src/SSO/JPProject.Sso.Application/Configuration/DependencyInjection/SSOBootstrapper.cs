@@ -15,6 +15,11 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class SSOBootstrapper
 #pragma warning restore S101 // Types should be named in PascalCase
     {
+        /// <summary>
+        /// Configure User Identity - ASP.NET Identity
+        /// </summary>
+        /// <typeparam name="THttpUser">Implementation of ISystemUser</typeparam>
+        /// <returns></returns>
         public static ISsoConfigurationBuilder ConfigureUserIdentity<THttpUser>(this IServiceCollection builder)
             where THttpUser : class, ISystemUser
         {
@@ -38,10 +43,12 @@ namespace Microsoft.Extensions.DependencyInjection
                         options.Events.RaiseFailureEvents = true;
                         options.Events.RaiseSuccessEvents = true;
                     })
-                .AddAspNetIdentity<UserIdentity>();
+                .AddAspNetIdentity<UserIdentity>()
+                ;
 
             return is4Builder;
         }
+
 
         private static IServiceCollection BaseSsoConfiguration<T>(this IServiceCollection services)
             where T : class, ISystemUser
