@@ -9,7 +9,7 @@ namespace JPProject.EntityFrameworkCore.MigrationHelper
     {
         public static async Task TestConnection(DbContext context)
         {
-            var maxAttemps = 3;
+            var maxAttemps = 10;
             var delay = 5000;
 
             for (int i = 0; i < maxAttemps; i++)
