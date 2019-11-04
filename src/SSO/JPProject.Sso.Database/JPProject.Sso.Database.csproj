@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Authors>Bruno Brito</Authors>
+    <Company>Jp Project</Company>
+    <Product>JP Project Quickstart SSO</Product>
+    <Description>Multi database support package for Jp Project SSO</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIconUrl>https://jpproject.blob.core.windows.net/images/jplogo-min.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/brunohbrito/JPProject.IdentityServer4.SSO</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>identity identityserver4 oauth2 jpproject sso entityframework mysql sqlserver sqlite postgre</PackageTags>
+    <NeutralLanguage>English</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\JPProject.EntityFrameworkCore\JPProject.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\JPProject.Sso.Domain\JPProject.Sso.Domain.csproj" />
+    <ProjectReference Include="..\JPProject.Sso.EntityFrameworkCore.MySql\JPProject.Sso.EntityFrameworkCore.MySql.csproj" />
+    <ProjectReference Include="..\JPProject.Sso.EntityFrameworkCore.PostgreSQL\JPProject.Sso.EntityFrameworkCore.PostgreSQL.csproj" />
+    <ProjectReference Include="..\JPProject.Sso.EntityFrameworkCore.Sqlite\JPProject.Sso.EntityFrameworkCore.Sqlite.csproj" />
+    <ProjectReference Include="..\JPProject.Sso.EntityFrameworkCore.Sql\JPProject.Sso.EntityFrameworkCore.SqlServer.csproj" />
+  </ItemGroup>
+
+</Project>

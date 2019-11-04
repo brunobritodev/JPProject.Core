@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Authors>Bruno Brito</Authors>
+    <Company>Jp Project</Company>
+    <Product>Jp Project</Product>
+    <description>Aditional classes for aspnet core support</description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIconUrl>https://jpproject.blob.core.windows.net/images/jplogo-min.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/JPInside/JPProject.Admin</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>identityserver4 oauth2 jpproject aspnet</PackageTags>
+    <NeutralLanguage>English</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IdentityModel" Version="4.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JPProject.Domain.Core\JPProject.Domain.Core.csproj" />
+  </ItemGroup>
+
+</Project>

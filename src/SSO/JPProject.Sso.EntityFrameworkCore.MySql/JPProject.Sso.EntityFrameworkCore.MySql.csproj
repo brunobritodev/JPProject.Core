@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Authors>Bruno Brito</Authors>
+    <Company>Jp Project</Company>
+    <Product>JP Project Quickstart SSO</Product>
+    <Description>MySql support package for Jp Project SSO</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIconUrl>https://jpproject.blob.core.windows.net/images/jplogo-min.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/brunohbrito/JPProject.IdentityServer4.SSO</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>identity identityserver4 oauth2 jpproject sso entityframework mysql</PackageTags>
+    <NeutralLanguage>English</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IdentityServer4.EntityFramework" Version="3.0.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.0.0-rc1.final" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\JPProject.EntityFrameworkCore\JPProject.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\JPProject.Sso.Infra.Data\JPProject.Sso.Infra.Data.csproj" />
+  </ItemGroup>
+
+</Project>

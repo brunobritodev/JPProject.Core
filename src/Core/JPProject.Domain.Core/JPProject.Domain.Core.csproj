@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Authors>Bruno Brito</Authors>
+    <Company>Jp Project</Company>
+    <Product>Jp Project</Product>
+    <Description>Core classes</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIconUrl>https://jpproject.blob.core.windows.net/images/jplogo-min.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/JPInside/JPProject.Admin</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>identity identityserver4 oauth2 jpproject</PackageTags>
+    <NeutralLanguage>English</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="mediatr" Version="7.0.0" />
+    <PackageReference Include="FluentValidation" Version="8.5.0" />
+  </ItemGroup>
+
+</Project>
