@@ -10,22 +10,26 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace JPProject.Admin.IntegrationTests.ClientTests
 {
     public class ClientAppServiceInMemoryTest : IClassFixture<WarmupInMemory>
     {
+        private readonly ITestOutputHelper _output;
         private readonly IClientAppService _clientAppService;
         private readonly JPProjectAdminUIContext _database;
+        private readonly DomainNotificationHandler _notifications;
 
         public WarmupInMemory InMemoryData { get; }
-        public ClientAppServiceInMemoryTest(WarmupInMemory inMemoryData)
+        public ClientAppServiceInMemoryTest(WarmupInMemory inMemoryData, ITestOutputHelper output)
         {
+            _output = output;
             InMemoryData = inMemoryData;
             _clientAppService = InMemoryData.Services.GetRequiredService<IClientAppService>();
             _database = InMemoryData.Services.GetRequiredService<JPProjectAdminUIContext>();
-            var notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
-            notifications.Clear();
+            _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
+            _notifications.Clear();
         }
 
         [Fact]
@@ -95,8 +99,8 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             var firstCall = await _clientAppService.Save(command);
             var result = await _clientAppService.Save(command);
 
-            firstCall.Should().BeTrue();
-            result.Should().BeFalse();
+            firstCall.Should().BeTrue(becauseArgs: _notifications.GetNotificationsByKey());
+            result.Should().BeFalse(becauseArgs: _notifications.GetNotificationsByKey());
         }
 
         [Fact]
@@ -123,7 +127,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             var result = await _clientAppService.SaveSecret(secret);
 
             _database.ClientSecrets.Include(i => i.Client).Where(f => f.Client.ClientId == command.ClientId).Should().NotBeNull();
-            result.Should().BeFalse();
+            result.Should().BeFalse(becauseArgs: _notifications.GetNotificationsByKey());
         }
 
         [Fact]
@@ -149,8 +153,11 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
             var result = await _clientAppService.SaveProperty(property);
 
+            _notifications.GetNotifications().Select(s => s.Value).ToList().ForEach(_output.WriteLine);
+
             _database.ClientProperties.Include(i => i.Client).Where(f => f.Client.ClientId == command.ClientId).Should().NotBeNull();
-            result.Should().BeFalse();
+
+            result.Should().BeFalse(becauseArgs: _notifications.GetNotificationsByKey());
         }
 
         [Fact]
@@ -177,7 +184,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             var result = await _clientAppService.SaveClaim(property);
 
             _database.ClientClaims.Include(i => i.Client).Where(f => f.Client.ClientId == command.ClientId).Should().NotBeNull();
-            result.Should().BeFalse();
+            result.Should().BeFalse(becauseArgs: _notifications.GetNotificationsByKey());
         }
     }
 }

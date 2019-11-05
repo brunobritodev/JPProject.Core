@@ -13,7 +13,7 @@ namespace JPProject.Admin.Fakers.Test.ApiResourceFakers
                 .RuleFor(a => a.ApiSecrets, f => GenerateSecret().Generate(f.Random.Int(0, 2)))
                 .RuleFor(a => a.Scopes, f => GenerateScope().Generate(f.Random.Int(0, 2)))
                 .RuleFor(a => a.Enabled, f => f.Random.Bool())
-                .RuleFor(a => a.Name, f => f.Lorem.Word())
+                .RuleFor(a => a.Name, f => f.Internet.DomainName())
                 .RuleFor(a => a.DisplayName, f => f.Lorem.Word())
                 .RuleFor(a => a.Description, f => f.Lorem.Word())
                 .RuleFor(a => a.UserClaims, f => f.PickRandom(IdentityHelpers.Claims, f.Random.Int(0, 3)).ToList());

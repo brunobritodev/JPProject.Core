@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels.ApiResouceViewModels;
 using JPProject.Admin.Fakers.Test.ApiResourceFakers;
@@ -9,23 +7,29 @@ using JPProject.Domain.Core.Notifications;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace JPProject.Admin.IntegrationTests.ApiResourceTests
 {
     public class ApiResourceAppServiceInMemoryTest : IClassFixture<WarmupInMemory>
     {
+        private readonly ITestOutputHelper _output;
         private readonly IApiResourceAppService _apiResourceAppService;
         private readonly JPProjectAdminUIContext _database;
+        private DomainNotificationHandler _notifications;
         public WarmupInMemory InMemoryData { get; }
 
-        public ApiResourceAppServiceInMemoryTest(WarmupInMemory inMemoryData)
+        public ApiResourceAppServiceInMemoryTest(WarmupInMemory inMemoryData, ITestOutputHelper output)
         {
+            _output = output;
             InMemoryData = inMemoryData;
             _apiResourceAppService = InMemoryData.Services.GetRequiredService<IApiResourceAppService>();
             _database = InMemoryData.Services.GetRequiredService<JPProjectAdminUIContext>();
-            var notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
-            notifications.Clear();
+            _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
+            _notifications.Clear();
         }
 
         [Fact]
@@ -77,6 +81,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
 
             var firstCall = await _apiResourceAppService.Save(command);
             var result = await _apiResourceAppService.Save(command);
+            _notifications.GetNotifications().Select(s => s.Value).ToList().ForEach(_output.WriteLine);
             firstCall.Should().BeTrue();
             result.Should().BeFalse();
         }
@@ -120,6 +125,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
 
             var result = await _apiResourceAppService.SaveSecret(secret);
 
+            _notifications.GetNotifications().Select(s => s.Value).ToList().ForEach(_output.WriteLine);
             _database.ApiSecrets.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
             result.Should().BeFalse();
         }
