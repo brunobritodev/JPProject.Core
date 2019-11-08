@@ -1,4 +1,5 @@
 ﻿using JPProject.Domain.Core.Commands;
+using System;
 
 namespace JPProject.Sso.Domain.Commands.UserManagement
 {
@@ -12,5 +13,7 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
         public string Company { get; protected set; }
         public string Bio { get; protected set; }
         public string JobTitle { get; protected set; }
+        public string SocialNumber { get; set; }
+        public DateTime Birthdate { get; set; }
     }
 }

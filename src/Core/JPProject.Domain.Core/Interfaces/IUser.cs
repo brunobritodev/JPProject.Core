@@ -24,5 +24,7 @@ namespace JPProject.Domain.Core.Interfaces
         string Company { get; }
         string Bio { get; }
         string JobTitle { get; }
+        string SocialNumber { get; }
+        DateTime? Birthdate { get; }
     }
 }

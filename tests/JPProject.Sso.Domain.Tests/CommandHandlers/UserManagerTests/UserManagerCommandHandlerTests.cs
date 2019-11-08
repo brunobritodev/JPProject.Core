@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace JPProject.Sso.Domain.Tests.UserTests
+namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
 {
     public class UserManagerCommandHandlerTests
     {
@@ -93,5 +93,12 @@ namespace JPProject.Sso.Domain.Tests.UserTests
             user.ContainsFederationGateway().Should().BeFalse();
         }
 
+
+        [Fact]
+        public async Task ShouldNotHaveAFutureBirthdate()
+        {
+            var user = UserViewModelFaker.GenerateUserViewModel(birthdate: _faker.Date.Future()).Generate();
+
+        }
     }
 }

@@ -38,5 +38,7 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
         public string SecurityStamp { get; set; }
+        public string SocialNumber { get; private set; }
+        public DateTime Birthdate { get; private set; }
     }
 }

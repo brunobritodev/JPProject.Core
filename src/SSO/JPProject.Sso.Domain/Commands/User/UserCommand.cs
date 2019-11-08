@@ -21,6 +21,8 @@ namespace JPProject.Sso.Domain.Commands.User
         public bool LockoutEnabled { get; protected set; }
         public int AccessFailedCount { get; protected set; }
         public string Code { get; protected set; }
+        public DateTime? Birthdate { get; protected set; }
+        public string SocialNumber { get; protected set; }
 
     }
 }

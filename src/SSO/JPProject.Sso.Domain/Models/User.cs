@@ -79,6 +79,17 @@ namespace JPProject.Sso.Domain.Models
         public string Company { get; private set; }
         public string Bio { get; private set; }
         public string JobTitle { get; private set; }
+        /// <summary>
+        /// Country unique number
+        /// e.g:
+        /// Social Security Number (USA)
+        /// RG or Cpf (Brazil)
+        /// Burgerservicenumber (Netherlands)
+        /// Henkilötunnus (Finnish)
+        /// NIF (Portugal)
+        /// </summary>
+        public string SocialNumber { get; private set; }
+        public DateTime Birthdate { get; private set; }
 
 
         public void UpdateInfo(UpdateUserCommand request)

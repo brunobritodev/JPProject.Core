@@ -1,5 +1,6 @@
 ﻿using JPProject.Domain.Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace JPProject.Sso.Infra.Identity.Models.Identity
 {
@@ -11,5 +12,16 @@ namespace JPProject.Sso.Infra.Identity.Models.Identity
         public string Company { get; set; }
         public string Bio { get; set; }
         public string JobTitle { get; set; }
+        /// <summary>
+        /// Country unique number
+        /// e.g:
+        /// Social Security Number (USA)
+        /// RG or Cpf (Brazil)
+        /// Burgerservicenumber (Netherlands)
+        /// Henkilötunnus (Finnish)
+        /// NIF (Portugal)
+        /// </summary>
+        public string SocialNumber { get; set; }
+        public DateTime Birthdate { get; set; }
     }
 }

@@ -144,5 +144,15 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
 
             result.Should().BeFalse();
         }
+
+        [Fact]
+        public async Task ShouldNotRegisterUserWithAFutureBirthdate()
+        {
+            var command = UserCommandFaker.GenerateRegisterNewUserCommand(birthdate: _faker.Date.Future()).Generate();
+
+            var result = await _commandHandler.Handle(command, CancellationToken.None);
+
+            result.Should().BeFalse();
+        }
     }
 }
