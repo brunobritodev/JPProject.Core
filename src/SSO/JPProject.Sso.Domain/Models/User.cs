@@ -89,7 +89,7 @@ namespace JPProject.Sso.Domain.Models
         /// NIF (Portugal)
         /// </summary>
         public string SocialNumber { get; private set; }
-        public DateTime Birthdate { get; private set; }
+        public DateTime? Birthdate { get; private set; }
 
 
         public void UpdateInfo(UpdateUserCommand request)

@@ -1,4 +1,6 @@
-﻿using Bogus;
+﻿using System;
+using Bogus;
+using Bogus.Extensions.UnitedStates;
 using JPProject.Sso.Domain.Commands.User;
 
 namespace JPProject.Sso.Fakers.Test.Users
@@ -19,7 +21,7 @@ namespace JPProject.Sso.Fakers.Test.Users
             );
         }
 
-        public static Faker<RegisterNewUserCommand> GenerateRegisterNewUserCommand(string confirmPassword = null)
+        public static Faker<RegisterNewUserCommand> GenerateRegisterNewUserCommand(string confirmPassword = null, DateTime? birthdate = null, string socialNumber = null)
         {
             var password = new Faker().Internet.Password();
             return new Faker<RegisterNewUserCommand>().CustomInstantiator(
@@ -29,7 +31,9 @@ namespace JPProject.Sso.Fakers.Test.Users
                     f.Person.FullName,
                     f.Image.PicsumUrl(),
                     password,
-                    confirmPassword ?? password
+                    confirmPassword ?? password,
+                    birthdate ?? f.Person.DateOfBirth,
+                    socialNumber ?? f.Person.Ssn()
                 )
             );
         }

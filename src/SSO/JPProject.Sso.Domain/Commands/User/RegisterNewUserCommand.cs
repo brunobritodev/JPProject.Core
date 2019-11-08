@@ -20,7 +20,7 @@ namespace JPProject.Sso.Domain.Commands.User
         }
         public override bool IsValid()
         {
-            ValidationResult = new RegisterNewUserCommandValidation().Validate(this);
+            ValidationResult = new RegisterNewUserCommandValidation(this).Validate(this);
             return ValidationResult.IsValid;
         }
     }

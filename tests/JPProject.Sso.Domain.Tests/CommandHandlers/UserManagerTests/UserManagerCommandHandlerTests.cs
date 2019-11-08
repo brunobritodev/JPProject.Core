@@ -94,11 +94,5 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
         }
 
 
-        [Fact]
-        public async Task ShouldNotHaveAFutureBirthdate()
-        {
-            var user = UserViewModelFaker.GenerateUserViewModel(birthdate: _faker.Date.Future()).Generate();
-
-        }
     }
 }

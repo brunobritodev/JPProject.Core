@@ -22,6 +22,6 @@ namespace JPProject.Sso.Infra.Identity.Models.Identity
         /// NIF (Portugal)
         /// </summary>
         public string SocialNumber { get; set; }
-        public DateTime Birthdate { get; set; }
+        public DateTime? Birthdate { get; set; }
     }
 }
