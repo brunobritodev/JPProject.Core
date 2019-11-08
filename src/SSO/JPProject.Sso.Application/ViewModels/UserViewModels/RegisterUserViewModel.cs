@@ -5,12 +5,15 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
 {
     public class RegisterUserViewModel
     {
+
         [Required]
+        [Display(Name = "Username")]
+        public string Username { get; set; }
+
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
@@ -25,14 +28,8 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
         [Display(Name = "Telephone")]
         public string PhoneNumber { get; set; }
 
-        [Required]
-        [Display(Name = "Username")]
+        [Display(Name = "Name")]
         public string Name { get; set; }
-
-        [Required]
-        [Display(Name = "Username")]
-        public string Username { get; set; }
-
         [Display(Name = "Picture")]
         public string Picture { get; set; }
 
