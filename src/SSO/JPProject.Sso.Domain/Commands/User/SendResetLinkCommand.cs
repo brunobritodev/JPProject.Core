@@ -2,17 +2,17 @@
 
 namespace JPProject.Sso.Domain.Commands.User
 {
-    public class SendResetLinkCommand: UserCommand
+    public class SendResetLinkCommand : UserCommand
     {
-        public SendResetLinkCommand(string email, string username)
+
+        public SendResetLinkCommand(string emailOrUsername)
         {
-            Email = email;
-            Username = username;
+            EmailOrUsername = emailOrUsername;
         }
 
         public override bool IsValid()
         {
-            ValidationResult = new SendResetLinkCommandValidation().Validate(this);
+            ValidationResult = new SendResetLinkCommandValidation(this).Validate(this);
             return ValidationResult.IsValid;
         }
     }

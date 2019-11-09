@@ -28,6 +28,13 @@ namespace JPProject.Sso.Domain.Validations.User
                 .Length(2, 50).WithMessage("The Username must have between 2 and 50 characters");
         }
 
+        protected void ValidateUsernameOrEmail()
+        {
+            RuleFor(c => c.EmailOrUsername)
+                .NotEmpty().WithMessage("Please ensure you have entered the Username")
+                .Length(2, 50).WithMessage("The Username must have between 2 and 50 characters");
+        }
+
         protected void ValidatePassword()
         {
             RuleFor(c => c.Password)

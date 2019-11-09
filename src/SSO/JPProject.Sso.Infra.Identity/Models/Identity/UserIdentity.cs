@@ -1,4 +1,5 @@
 ﻿using JPProject.Domain.Core.Interfaces;
+using JPProject.Sso.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 
@@ -23,5 +24,30 @@ namespace JPProject.Sso.Infra.Identity.Models.Identity
         /// </summary>
         public string SocialNumber { get; set; }
         public DateTime? Birthdate { get; set; }
+
+        public User ToUser()
+        {
+            return new User(
+                Id,
+                Email,
+                EmailConfirmed,
+                Name,
+                SecurityStamp,
+                AccessFailedCount,
+                Bio,
+                Company,
+                JobTitle,
+                LockoutEnabled,
+                LockoutEnd,
+                PhoneNumber,
+                PhoneNumberConfirmed,
+                Picture,
+                TwoFactorEnabled,
+                Url,
+                UserName,
+                Birthdate,
+                SocialNumber
+            );
+        }
     }
 }

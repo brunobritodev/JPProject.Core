@@ -777,6 +777,9 @@ namespace JPProject.Sso.EntityFrameworkCore.SqlServer.Migrations.SSO
                     b.Property<string>("Bio")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("Birthdate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Company")
                         .HasColumnType("nvarchar(max)");
 
@@ -824,6 +827,9 @@ namespace JPProject.Sso.EntityFrameworkCore.SqlServer.Migrations.SSO
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SocialNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")

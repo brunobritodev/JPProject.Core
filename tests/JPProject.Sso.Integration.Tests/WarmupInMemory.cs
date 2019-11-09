@@ -25,7 +25,8 @@ namespace JPProject.Sso.Integration.Tests
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("app.json", optional: true, reloadOnChange: true);
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddUserSecrets<WarmupInMemory>();
 
             //Mock IHttpContextAccessor
             var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();

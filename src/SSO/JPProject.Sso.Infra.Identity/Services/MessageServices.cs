@@ -1,5 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 using MimeKit.Text;
 using System.Threading.Tasks;
@@ -9,10 +10,12 @@ namespace JPProject.Sso.Infra.Identity.Services
 
     public class AuthEmailMessageSender : IEmailSender
     {
+        private readonly ILogger<AuthEmailMessageSender> _logger;
         private readonly IEmailConfiguration _emailConfiguration;
 
-        public AuthEmailMessageSender(IConfiguration config)
+        public AuthEmailMessageSender(IConfiguration config, ILogger<AuthEmailMessageSender> logger)
         {
+            _logger = logger;
             _emailConfiguration = config.GetSection("EmailConfiguration").Get<EmailConfiguration>();
         }
         public async Task SendEmailAsync(string email, string subject, string message)
@@ -32,6 +35,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             };
 
             //Be careful that the SmtpClient class is the one from Mailkit not the framework!
+            _logger.LogInformation($"Sending e-mail to {email}");
             using (var client = new SmtpClient())
             {
                 client.ServerCertificateValidationCallback = (s, c, h, e) => true;
@@ -43,7 +47,7 @@ namespace JPProject.Sso.Infra.Identity.Services
                 await client.SendAsync(mimeMessage);
                 client.Disconnect(true);
             }
-
+            _logger.LogInformation($"E-mail to {email}: sent!");
         }
     }
 

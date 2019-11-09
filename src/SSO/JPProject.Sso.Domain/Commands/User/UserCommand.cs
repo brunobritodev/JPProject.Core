@@ -23,6 +23,7 @@ namespace JPProject.Sso.Domain.Commands.User
         public string Code { get; protected set; }
         public DateTime? Birthdate { get; protected set; }
         public string SocialNumber { get; protected set; }
+        public string EmailOrUsername { get; protected set; }
 
     }
 }

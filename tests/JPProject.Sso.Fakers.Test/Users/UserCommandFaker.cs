@@ -1,7 +1,7 @@
-﻿using System;
-using Bogus;
+﻿using Bogus;
 using Bogus.Extensions.UnitedStates;
 using JPProject.Sso.Domain.Commands.User;
+using System;
 
 namespace JPProject.Sso.Fakers.Test.Users
 {
@@ -49,13 +49,10 @@ namespace JPProject.Sso.Fakers.Test.Users
             );
         }
 
-        public static Faker<SendResetLinkCommand> GenerateSendResetLinkCommand(string username = null, string email = null)
+        public static Faker<SendResetLinkCommand> GenerateSendResetLinkCommand(string username = null)
         {
             return new Faker<SendResetLinkCommand>().CustomInstantiator(
-                f => new SendResetLinkCommand(
-                    email ?? f.Person.Email,
-                    f.Person.UserName
-                )
+                f => new SendResetLinkCommand(username ?? f.Person.Email)
             );
         }
 
