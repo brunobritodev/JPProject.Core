@@ -7,22 +7,26 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
     public class UserViewModel
     {
         [Required]
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Phone] [Display(Name = "Telephone")] public string PhoneNumber { get; set; }
+        [Phone]
+        [Display(Name = "Telephone")]
+        public string PhoneNumber { get; set; }
 
         [Required]
         [Display(Name = "Name")]
         public string Name { get; set; }
 
 
-        [Display(Name = "Picture")] public string Picture { get; set; }
+        [Display(Name = "Picture")]
+        public string Picture { get; set; }
 
-        [Required]
-        [Display(Name = "Username")]
-        public string UserName { get; set; }
 
         public string Url { get; set; }
         public string Company { get; set; }
@@ -38,5 +42,7 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
         public string SecurityStamp { get; set; }
+        public string SocialNumber { get; set; }
+        public DateTime Birthdate { get; set; }
     }
 }

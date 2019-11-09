@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using JPProject.Sso.Domain.Commands.User;
+using System;
 
 namespace JPProject.Sso.Domain.Validations.User
 {
@@ -23,6 +24,13 @@ namespace JPProject.Sso.Domain.Validations.User
         protected void ValidateUsername()
         {
             RuleFor(c => c.Username)
+                .NotEmpty().WithMessage("Please ensure you have entered the Username")
+                .Length(2, 50).WithMessage("The Username must have between 2 and 50 characters");
+        }
+
+        protected void ValidateUsernameOrEmail()
+        {
+            RuleFor(c => c.EmailOrUsername)
                 .NotEmpty().WithMessage("Please ensure you have entered the Username")
                 .Length(2, 50).WithMessage("The Username must have between 2 and 50 characters");
         }
@@ -51,6 +59,13 @@ namespace JPProject.Sso.Domain.Validations.User
         {
             RuleFor(c => c.Code)
                 .NotEmpty();
+        }
+
+        protected void ValidateBirthdate()
+        {
+            RuleFor(c => c.Birthdate)
+                .NotNull()
+                .Must(time => time < DateTime.Now.Date);
         }
     }
 }

@@ -125,22 +125,22 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         }
 
         [Fact]
-        public async Task ShouldNotGenerateResetLinkIfNotProvideUsername()
+        public async Task ShouldNotGenerateResetLinkIfNotProvideUsernameOrEmail()
         {
-            var command = UserCommandFaker.GenerateSendResetLinkCommand(email: string.Empty).Generate();
+            var command = UserCommandFaker.GenerateSendResetLinkCommand().Generate();
 
             var result = await _commandHandler.Handle(command, _tokenSource.Token);
 
 
             result.Should().BeFalse();
         }
+
         [Fact]
-        public async Task ShouldNotGenerateResetLinkIfNotProvideEmail()
+        public async Task ShouldNotRegisterUserWithAFutureBirthdate()
         {
-            var command = UserCommandFaker.GenerateSendResetLinkCommand(username: string.Empty).Generate();
+            var command = UserCommandFaker.GenerateRegisterNewUserCommand(birthdate: _faker.Date.Future()).Generate();
 
-            var result = await _commandHandler.Handle(command, _tokenSource.Token);
-
+            var result = await _commandHandler.Handle(command, CancellationToken.None);
 
             result.Should().BeFalse();
         }

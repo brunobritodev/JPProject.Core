@@ -15,5 +15,6 @@ namespace JPProject.Sso.Fakers.Test.Users
                 )
             );
         }
+
     }
 }

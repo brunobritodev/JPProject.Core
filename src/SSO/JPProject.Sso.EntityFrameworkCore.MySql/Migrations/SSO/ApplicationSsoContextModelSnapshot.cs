@@ -756,6 +756,9 @@ namespace JPProject.Sso.EntityFrameworkCore.MySql.Migrations.SSO
                     b.Property<string>("Bio")
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime?>("Birthdate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Company")
                         .HasColumnType("longtext");
 
@@ -803,6 +806,9 @@ namespace JPProject.Sso.EntityFrameworkCore.MySql.Migrations.SSO
                         .HasColumnType("longtext");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SocialNumber")
                         .HasColumnType("longtext");
 
                     b.Property<bool>("TwoFactorEnabled")

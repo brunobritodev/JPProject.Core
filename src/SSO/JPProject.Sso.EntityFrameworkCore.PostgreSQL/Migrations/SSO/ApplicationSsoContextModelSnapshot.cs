@@ -777,6 +777,9 @@ namespace JPProject.Sso.EntityFrameworkCore.PostgreSQL.Migrations.SSO
                     b.Property<string>("Bio")
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("Birthdate")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("Company")
                         .HasColumnType("text");
 
@@ -824,6 +827,9 @@ namespace JPProject.Sso.EntityFrameworkCore.PostgreSQL.Migrations.SSO
                         .HasColumnType("text");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SocialNumber")
                         .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")

@@ -4,10 +4,9 @@ namespace JPProject.Sso.Domain.Validations.User
 {
     public class SendResetLinkCommandValidation : UserValidation<SendResetLinkCommand>
     {
-        public SendResetLinkCommandValidation()
+        public SendResetLinkCommandValidation(SendResetLinkCommand sendResetLinkCommand)
         {
-            ValidateUsername();
-            ValidateEmail();
+            ValidateUsernameOrEmail();
         }
     }
 }

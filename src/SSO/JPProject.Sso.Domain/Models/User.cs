@@ -8,13 +8,15 @@ namespace JPProject.Sso.Domain.Models
     {
         // EF Constructor
         public User() { }
-        public User(string email, string name, string userName, string phoneNumber, string picture)
+        public User(string email, string name, string userName, string phoneNumber, string picture, string socialNumber, DateTime? birthdate)
         {
             Email = email;
             Name = name;
             UserName = userName;
             PhoneNumber = phoneNumber;
             Picture = picture;
+            SocialNumber = socialNumber;
+            Birthdate = birthdate;
         }
 
         public User(string id, string email, bool emailConfirmed, string passwordHash, string securityStamp, string phoneNumber, bool phoneNumberConfirmed, bool twoFactorEnabled, DateTimeOffset? lockoutEnd, bool lockoutEnabled, int accessFailedCount, string userName, string picture, string url, string name, string company, string bio, string jobTitle)
@@ -39,7 +41,7 @@ namespace JPProject.Sso.Domain.Models
             JobTitle = jobTitle;
         }
 
-        public User(string id, string email, bool emailConfirmed, string name, string securityStamp, int accessFailedCount, string bio, string company, string jobTitle, bool lockoutEnabled, DateTimeOffset? lockoutEnd, string phoneNumber, bool phoneNumberConfirmed, string picture, bool twoFactorEnabled, string url, string userName)
+        public User(string id, string email, bool emailConfirmed, string name, string securityStamp, int accessFailedCount, string bio, string company, string jobTitle, bool lockoutEnabled, DateTimeOffset? lockoutEnd, string phoneNumber, bool phoneNumberConfirmed, string picture, bool twoFactorEnabled, string url, string userName, DateTime? birthdate, string socialNumber)
         {
             Id = id;
             Email = email;
@@ -79,6 +81,17 @@ namespace JPProject.Sso.Domain.Models
         public string Company { get; private set; }
         public string Bio { get; private set; }
         public string JobTitle { get; private set; }
+        /// <summary>
+        /// Country unique number
+        /// e.g:
+        /// Social Security Number (USA)
+        /// RG or Cpf (Brazil)
+        /// Burgerservicenumber (Netherlands)
+        /// Henkilötunnus (Finnish)
+        /// NIF (Portugal)
+        /// </summary>
+        public string SocialNumber { get; private set; }
+        public DateTime? Birthdate { get; private set; }
 
 
         public void UpdateInfo(UpdateUserCommand request)

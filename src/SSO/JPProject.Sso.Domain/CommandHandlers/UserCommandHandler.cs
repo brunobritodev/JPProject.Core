@@ -45,7 +45,9 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 name: request.Name,
                 userName: request.Username,
                 phoneNumber: request.PhoneNumber,
-                picture: request.Picture
+                picture: request.Picture,
+                socialNumber: request.SocialNumber,
+                birthdate: request.Birthdate
             );
 
             var emailAlreadyExist = await _userService.FindByEmailAsync(user.Email);
@@ -84,7 +86,9 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 name: request.Name,
                 userName: request.Username,
                 phoneNumber: request.PhoneNumber,
-                picture: request.Picture
+                picture: request.Picture,
+                request.SocialNumber,
+                request.Birthdate
             );
 
             var emailAlreadyExist = await _userService.FindByEmailAsync(user.Email);
@@ -123,7 +127,9 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 name: request.Name,
                 userName: request.Username,
                 phoneNumber: request.PhoneNumber,
-                picture: request.Picture);
+                picture: request.Picture,
+                request.SocialNumber,
+                request.Birthdate);
 
             var id = await _userService.CreateUserWithProviderAndPass(user, request.Password, request.Provider, request.ProviderId);
             if (id != null)
@@ -142,7 +148,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var emailSent = await _userService.SendResetLink(request.Email, request.Username);
+            var emailSent = await _userService.SendResetLink(request.EmailOrUsername);
 
             if (emailSent != null)
             {

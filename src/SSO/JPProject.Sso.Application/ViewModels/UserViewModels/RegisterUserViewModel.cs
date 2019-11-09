@@ -1,4 +1,5 @@
 ﻿using JPProject.Domain.Core.StringUtils;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace JPProject.Sso.Application.ViewModels.UserViewModels
@@ -38,6 +39,19 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
 
         [Display(Name = "ProviderId")]
         public string ProviderId { get; set; }
+
+        public DateTime Birthdate { get; set; }
+
+        /// <summary>
+        /// Country unique number
+        /// e.g:
+        /// Social Security Number (USA)
+        /// RG or Cpf (Brazil)
+        /// Burgerservicenumber (Netherlands)
+        /// Henkilötunnus (Finnish)
+        /// NIF (Portugal)
+        /// </summary>
+        public string SocialNumber { get; set; }
 
         public bool ContainsFederationGateway()
         {

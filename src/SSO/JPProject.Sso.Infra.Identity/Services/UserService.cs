@@ -160,14 +160,13 @@ namespace JPProject.Sso.Infra.Identity.Services
             return GetUser(model);
         }
 
-        public async Task<string> SendResetLink(string requestEmail, string requestUsername)
+        public async Task<string> SendResetLink(string emailOrUsername)
         {
-            var user = await _userManager.FindByEmailAsync(requestEmail);
-            if (user == null)
-            {
-                // Don't reveal that the user does not exist or is not confirmed
-                user = await _userManager.FindByNameAsync(requestUsername);
-            }
+            UserIdentity user;
+            if (emailOrUsername.IsEmail())
+                user = await _userManager.FindByEmailAsync(emailOrUsername);
+            else
+                user = await _userManager.FindByNameAsync(emailOrUsername);
 
             if (user == null)
                 return null;
@@ -352,7 +351,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<bool> HasPassword(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId);
 
             return await _userManager.HasPasswordAsync(user);
         }
@@ -364,29 +363,9 @@ namespace JPProject.Sso.Infra.Identity.Services
             return users.Select(GetUser).ToList(); ;
         }
 
-        private User GetUser(UserIdentity s)
+        private static User GetUser(UserIdentity s)
         {
-            if (s == null)
-                return null;
-            return new User(
-                s.Id,
-                s.Email,
-                s.EmailConfirmed,
-                s.Name,
-                s.SecurityStamp,
-                s.AccessFailedCount,
-                s.Bio,
-                s.Company,
-                s.JobTitle,
-                s.LockoutEnabled,
-                s.LockoutEnd,
-                s.PhoneNumber,
-                s.PhoneNumberConfirmed,
-                s.Picture,
-                s.TwoFactorEnabled,
-                s.Url,
-                s.UserName
-            );
+            return s?.ToUser();
         }
 
         public async Task<IEnumerable<User>> GetUsers(PagingViewModel paging)
@@ -406,7 +385,7 @@ namespace JPProject.Sso.Infra.Identity.Services
                         w.Name.Contains(search);
         }
 
-        private async Task<bool> AddLoginAsync(UserIdentity user, string provider, string providerUserId)
+        private async Task AddLoginAsync(UserIdentity user, string provider, string providerUserId)
         {
             var result = await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, providerUserId, provider));
 
@@ -414,8 +393,6 @@ namespace JPProject.Sso.Infra.Identity.Services
             {
                 await _bus.RaiseEvent(new DomainNotification(result.ToString(), error.Description));
             }
-
-            return result.Succeeded;
         }
 
         public async Task<User> FindByEmailAsync(string email)

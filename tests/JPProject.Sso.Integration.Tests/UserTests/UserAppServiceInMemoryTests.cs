@@ -2,6 +2,7 @@
 using FluentAssertions;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Application.Interfaces;
+using JPProject.Sso.Application.ViewModels.UserViewModels;
 using JPProject.Sso.Fakers.Test.Users;
 using JPProject.Sso.Infra.Data.Context;
 using MediatR;
@@ -9,27 +10,31 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace JPProject.Sso.Integration.Tests.UserTests
 {
     public class UserAppServiceInMemoryTests : IClassFixture<WarmupInMemory>
     {
+        private readonly ITestOutputHelper _output;
         private readonly IUserAppService _userAppService;
         private readonly ApplicationSsoContext _database;
         private readonly Faker _faker;
-        private IUserManageAppService _userManagerAppService;
+        private readonly IUserManageAppService _userManagerAppService;
+        private readonly DomainNotificationHandler _notifications;
         public WarmupInMemory InMemoryData { get; }
 
-        public UserAppServiceInMemoryTests(WarmupInMemory inMemory)
+        public UserAppServiceInMemoryTests(WarmupInMemory inMemory, ITestOutputHelper output)
         {
+            _output = output;
             _faker = new Faker();
             InMemoryData = inMemory;
             _userAppService = InMemoryData.Services.GetRequiredService<IUserAppService>();
             _userManagerAppService = InMemoryData.Services.GetRequiredService<IUserManageAppService>();
             _database = InMemoryData.Services.GetRequiredService<ApplicationSsoContext>();
-            var notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
+            _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
 
-            notifications.Clear();
+            _notifications.Clear();
         }
 
         [Fact]
@@ -229,6 +234,33 @@ namespace JPProject.Sso.Integration.Tests.UserTests
 
             var usersFound = await _userManagerAppService.GetUsersById(users);
             usersFound.Should().HaveCountGreaterOrEqualTo(2);
+        }
+
+        [Fact]
+        public async Task ShouldSendResetLinkByUsername()
+        {
+            var command = UserViewModelFaker.GenerateUserViewModel().Generate();
+            await _userAppService.Register(command);
+
+            var emailSent = await _userAppService.SendResetLink(new ForgotPasswordViewModel(command.Username));
+            _notifications.GetNotifications().Select(s => s.Value).ToList().ForEach(_output.WriteLine);
+
+            emailSent.Should().BeTrue();
+
+        }
+
+        [Fact]
+        public async Task ShouldSendResetLinkByEmail()
+        {
+            var command = UserViewModelFaker.GenerateUserViewModel().Generate();
+            await _userAppService.Register(command);
+
+            var emailSent = await _userAppService.SendResetLink(new ForgotPasswordViewModel(command.Email));
+            _notifications.GetNotifications().Select(s => s.Value).ToList().ForEach(_output.WriteLine);
+
+            emailSent.Should().BeTrue();
+
+
         }
 
     }

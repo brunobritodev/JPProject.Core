@@ -17,7 +17,7 @@ namespace JPProject.Sso.Domain.Interfaces
         Task<bool> UsernameExist(string userName);
         Task<bool> EmailExist(string email);
         Task<User> FindByLoginAsync(string provider, string providerUserId);
-        Task<string> SendResetLink(string email, string username);
+        Task<string> SendResetLink(string emailOrUsername);
         Task<string> ResetPassword(ResetPasswordCommand request);
         Task<string> ConfirmEmailAsync(string email, string code);
         Task<bool> UpdateProfileAsync(UpdateProfileCommand command);
