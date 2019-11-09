@@ -9,6 +9,11 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
             Type = type;
             Value = value;
         }
+        public RemoveUserClaimViewModel(string username, string type, string value)
+        {
+            Type = type;
+            Value = value;
+        }
 
         [Required]
         public string Type { get; set; }
