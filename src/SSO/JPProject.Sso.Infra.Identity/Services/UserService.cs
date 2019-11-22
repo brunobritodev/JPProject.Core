@@ -8,7 +8,7 @@ using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
-using JPProject.Sso.Infra.Identity.Extensions;
+using JPProject.Sso.Domain.ViewModels.User;
 using JPProject.Sso.Infra.Identity.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,41 +27,38 @@ namespace JPProject.Sso.Infra.Identity.Services
     public class UserService : IUserService
     {
         private readonly UserManager<UserIdentity> _userManager;
-        private readonly IEmailSender _emailSender;
         private readonly IMediatorHandler _bus;
         private readonly ILogger _logger;
         private readonly IConfiguration _config;
 
         public UserService(
             UserManager<UserIdentity> userManager,
-            IEmailSender emailSender,
             IMediatorHandler bus,
             ILoggerFactory loggerFactory,
             IConfiguration config)
         {
             _userManager = userManager;
-            _emailSender = emailSender;
             _bus = bus;
             _config = config;
-            _logger = loggerFactory.CreateLogger<UserService>(); ;
+            _logger = loggerFactory.CreateLogger<UserService>();
         }
 
-        public Task<string> CreateUserWithPass(IDomainUser user, string password)
+        public Task<AccountResult?> CreateUserWithPass(IDomainUser user, string password)
         {
             return CreateUser(user, password, null, null);
         }
 
-        public Task<string> CreateUserWithProvider(IDomainUser user, string provider, string providerUserId)
+        public Task<AccountResult?> CreateUserWithProvider(IDomainUser user, string provider, string providerUserId)
         {
             return CreateUser(user, null, provider, providerUserId);
         }
 
-        public Task<string> CreateUserWithProviderAndPass(IDomainUser user, string password, string provider, string providerId)
+        public Task<AccountResult?> CreateUserWithProviderAndPass(IDomainUser user, string password, string provider, string providerId)
         {
             return CreateUser(user, password, provider, providerId);
         }
 
-        private async Task<string> CreateUser(IDomainUser user, string password, string provider, string providerId)
+        private async Task<AccountResult?> CreateUser(IDomainUser user, string password, string provider, string providerId)
         {
             var newUser = new UserIdentity
             {
@@ -91,9 +88,7 @@ namespace JPProject.Sso.Infra.Identity.Services
                 //await _userManager.AddClaimAsync(newUser, new Claim("User", "Write"));
 
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-                var callbackUrl = $"{_config.GetValue<string>("ApplicationSettings:UserManagementURL")}/confirm-email?user={user.Email.UrlEncode()}&code={code.UrlEncode()}";
-                await _emailSender.SendEmailConfirmationAsync(user.Email, callbackUrl);
-
+                var callbackUrl = $"{_config.GetValue<string>("ApplicationSettings:UserManagementURL")}/confirm-email?userId={user.Email.UrlEncode()}&code={code.UrlEncode()}";
 
                 await AddClaims(newUser);
 
@@ -106,7 +101,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
                 if (provider.IsPresent())
                     _logger.LogInformation($"Provider {provider} associated.");
-                return newUser.Id;
+                return new AccountResult(newUser.Id, code, callbackUrl);
             }
 
             foreach (var error in result.Errors)
@@ -160,14 +155,9 @@ namespace JPProject.Sso.Infra.Identity.Services
             return GetUser(model);
         }
 
-        public async Task<string> SendResetLink(string emailOrUsername)
+        public async Task<AccountResult?> GenerateResetPasswordLink(string emailOrUsername)
         {
-            UserIdentity user;
-            if (emailOrUsername.IsEmail())
-                user = await _userManager.FindByEmailAsync(emailOrUsername);
-            else
-                user = await _userManager.FindByNameAsync(emailOrUsername);
-
+            var user = await GetUserByEmailOrUsername(emailOrUsername);
             if (user == null)
                 return null;
 
@@ -177,10 +167,10 @@ namespace JPProject.Sso.Infra.Identity.Services
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
             var callbackUrl = $"{_config.GetValue<string>("ApplicationSettings:UserManagementURL")}/reset-password?email={user.Email.UrlEncode()}&code={code.UrlEncode()}";
 
-            await _emailSender.SendEmailAsync(user.Email, "Reset Password", $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+            //await _emailService.SendEmailAsync(user.Email, "Reset Password", $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+            //_logger.LogInformation("Reset link sended to userId.");
 
-            _logger.LogInformation("Reset link sended to user.");
-            return user.Id;
+            return new AccountResult(user.Id, code, callbackUrl);
         }
 
         public async Task<string> ResetPassword(ResetPasswordCommand request)
@@ -188,7 +178,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
             {
-                // Don't reveal that the user does not exist
+                // Don't reveal that the userId does not exist
                 return null;
             }
 
@@ -215,7 +205,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                await _bus.RaiseEvent(new DomainNotification("Email", $"Unable to load user with ID '{email}'."));
+                await _bus.RaiseEvent(new DomainNotification("Email", $"Unable to load userId with ID '{email}'."));
                 return null;
             }
 
@@ -235,7 +225,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<bool> UpdateProfileAsync(UpdateProfileCommand command)
         {
-            var user = await _userManager.FindByIdAsync(command.Id.ToString());
+            var user = await _userManager.FindByIdAsync(command.Id);
 
             user.Name = command.Name;
             user.Bio = command.Bio;
@@ -264,7 +254,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<bool> UpdateProfilePictureAsync(UpdateProfilePictureCommand command)
         {
-            var user = await _userManager.FindByIdAsync(command.Id.ToString());
+            var user = await _userManager.FindByIdAsync(command.Id);
 
             user.Picture = command.Picture;
 
@@ -302,7 +292,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             {
                 /*
                  * DO NOT display the reason.
-                 * if this happen is because user are trying to hack.
+                 * if this happen is because userId are trying to hack.
                  */
                 throw new Exception("Unknown error");
             }
@@ -360,7 +350,7 @@ namespace JPProject.Sso.Infra.Identity.Services
         {
             var users = await _userManager.Users.Where(w => id.Contains(w.Id)).ToListAsync();
 
-            return users.Select(GetUser).ToList(); ;
+            return users.Select(GetUser).ToList();
         }
 
         private static User GetUser(UserIdentity s)
@@ -370,7 +360,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<IEnumerable<User>> GetUsers(PagingViewModel paging)
         {
-            List<UserIdentity> users = null;
+            List<UserIdentity> users;
             if (paging.Search.IsPresent())
                 users = await _userManager.Users.Where(UserFind(paging.Search)).Skip(paging.Offset).Take(paging.Limit).ToListAsync();
             else
@@ -413,9 +403,9 @@ namespace JPProject.Sso.Infra.Identity.Services
             return GetUser(user);
         }
 
-        public async Task<User> GetUserAsync(string user)
+        public async Task<User> FindByUserId(string userId)
         {
-            var userDb = await _userManager.FindByIdAsync(user.ToString());
+            var userDb = await _userManager.FindByIdAsync(userId);
             return GetUser(userDb);
         }
 
@@ -444,7 +434,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<bool> SaveClaim(string userDbId, Claim claim)
         {
-            var user = await _userManager.FindByIdAsync(userDbId.ToString());
+            var user = await _userManager.FindByIdAsync(userDbId);
             var result = await _userManager.AddClaimAsync(user, claim);
 
             foreach (var error in result.Errors)
@@ -457,7 +447,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<bool> RemoveClaim(string userId, string claimType, string value)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId);
             var claims = await _userManager.GetClaimsAsync(user);
 
             var claimToRemove = value.IsMissing() ?
@@ -482,7 +472,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<bool> RemoveRole(string userDbId, string requestRole)
         {
-            var user = await _userManager.FindByIdAsync(userDbId.ToString());
+            var user = await _userManager.FindByIdAsync(userDbId);
             var result = await _userManager.RemoveFromRoleAsync(user, requestRole);
 
             foreach (var error in result.Errors)
@@ -496,7 +486,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<bool> SaveRole(string userId, string role)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId);
             var result = await _userManager.AddToRoleAsync(user, role);
 
             foreach (var error in result.Errors)
@@ -516,7 +506,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<bool> RemoveLogin(string userId, string loginProvider, string providerKey)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId);
             var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
             foreach (var error in result.Errors)
             {
@@ -571,5 +561,23 @@ namespace JPProject.Sso.Infra.Identity.Services
 
             return user.Id;
         }
+
+
+        public async Task<User> FindByUsernameOrEmail(string emailOrUsername)
+        {
+            var user = await GetUserByEmailOrUsername(emailOrUsername);
+            return GetUser(user);
+        }
+
+        private async Task<UserIdentity> GetUserByEmailOrUsername(string emailOrUsername)
+        {
+            UserIdentity user;
+            if (emailOrUsername.IsEmail())
+                user = await _userManager.FindByEmailAsync(emailOrUsername);
+            else
+                user = await _userManager.FindByNameAsync(emailOrUsername);
+            return user;
+        }
+
     }
 }

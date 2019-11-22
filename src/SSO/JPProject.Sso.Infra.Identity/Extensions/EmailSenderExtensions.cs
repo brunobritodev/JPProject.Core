@@ -1,15 +1,16 @@
-using JPProject.Sso.Infra.Identity.Services;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+using MimeKit;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JPProject.Sso.Infra.Identity.Extensions
 {
     public static class EmailSenderExtensions
     {
-        public static Task SendEmailConfirmationAsync(this IEmailSender emailSender, string email, string link)
+        public static IEnumerable<MailboxAddress> ToMailboxAddress(this string[] recipients)
         {
-            return emailSender.SendEmailAsync(email, "Confirm your email",
-                $"Please confirm your account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>");
+            return recipients.Select(s => new MailboxAddress(s));
+            //return emailService.SendEmailAsync(email, "Confirm your email",
+            //    $"Please confirm your account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>");
         }
     }
 }

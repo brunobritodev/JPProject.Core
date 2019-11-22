@@ -51,7 +51,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
                         It.Is<string>(c => c.IsMissing())))
                 .ReturnsAsync(true);
 
-            _uow.Setup(s => s.Commit()).Returns(true);
+            _uow.Setup(s => s.Commit()).ReturnsAsync(true);
 
             var result = await _commandHandler.Handle(command, _tokenSource.Token);
 
@@ -74,7 +74,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
                     It.Is<string>(c => c.Equals(command.Value))))
                 .ReturnsAsync(true);
 
-            _uow.Setup(s => s.Commit()).Returns(true);
+            _uow.Setup(s => s.Commit()).ReturnsAsync(true);
 
             var result = await _commandHandler.Handle(command, _tokenSource.Token);
 

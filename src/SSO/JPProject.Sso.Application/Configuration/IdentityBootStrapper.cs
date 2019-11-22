@@ -11,9 +11,6 @@ namespace JPProject.Sso.Application.Configuration
         public static IServiceCollection AddIdentityServices(this IServiceCollection services)
         {
             // Infra - Identity Services
-
-            services.AddTransient<IEmailSender, AuthEmailMessageSender>();
-            services.AddTransient<ISmsSender, AuthSMSMessageSender>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddSingleton<IImageStorage, AzureImageStoreService>();

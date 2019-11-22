@@ -3,6 +3,8 @@ using JPProject.Domain.Core.Interfaces;
 using JPProject.EntityFrameworkCore.Context;
 using JPProject.EntityFrameworkCore.EventSourcing;
 using JPProject.EntityFrameworkCore.Repository;
+using JPProject.Sso.Domain.Interfaces;
+using JPProject.Sso.Infra.Data.Repository;
 using JPProject.Sso.Infra.Data.UoW;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +18,8 @@ namespace JPProject.Sso.Application.Configuration
 
             // Infra - Data EventSourcing
             services.AddScoped<IEventStoreRepository, EventStoreRepository>();
+            services.AddScoped<ITemplateRepository, TemplateRepository>();
+            services.AddScoped<IEmailRepository, EmailRepository>();
             services.AddScoped<IEventStore, SqlEventStore>();
             services.AddScoped<EventStoreContext>();
 

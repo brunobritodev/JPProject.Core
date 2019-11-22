@@ -1,5 +1,7 @@
 ﻿using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.Services;
+using JPProject.Sso.Domain.Interfaces;
+using JPProject.Sso.Infra.Identity.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JPProject.Sso.Application.Configuration
@@ -11,6 +13,10 @@ namespace JPProject.Sso.Application.Configuration
             services.AddScoped<IUserAppService, UserAppService>();
             services.AddScoped<IUserManageAppService, UserManagerAppService>();
             services.AddScoped<IRoleManagerAppService, RoleManagerAppService>();
+            services.AddScoped<IEmailAppService, EmailAppService>();
+
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<ISmsSender, AuthSmsMessageSender>();
 
             return services;
         }

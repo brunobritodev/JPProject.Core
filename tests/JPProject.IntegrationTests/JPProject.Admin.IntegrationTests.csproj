@@ -31,7 +31,7 @@
     <ProjectReference Include="..\..\src\Admin\JPProject.Admin.Application\JPProject.Admin.Application.csproj" />
     <ProjectReference Include="..\..\src\Admin\JPProject.Admin.EntityFrameworkCore.Sql\JPProject.Admin.EntityFrameworkCore.Sql.csproj" />
     <ProjectReference Include="..\..\src\Core\JPProject.AspNet.Core\JPProject.AspNet.Core.csproj" />
-    <ProjectReference Include="..\JPProject.Fakers.Test\JPProject.Admin.Fakers.Test.csproj" />
+    <ProjectReference Include="..\JPProject.Admin.Fakers.Test\JPProject.Admin.Fakers.Test.csproj" />
   </ItemGroup>
 
   <ItemGroup>

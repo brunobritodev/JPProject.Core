@@ -43,8 +43,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         options.Events.RaiseFailureEvents = true;
                         options.Events.RaiseSuccessEvents = true;
                     })
-                .AddAspNetIdentity<UserIdentity>()
-                ;
+                .AddAspNetIdentity<UserIdentity>();
 
             return is4Builder;
         }

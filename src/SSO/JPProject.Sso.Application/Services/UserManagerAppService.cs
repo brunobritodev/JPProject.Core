@@ -108,7 +108,7 @@ namespace JPProject.Sso.Application.Services
 
         public async Task<UserViewModel> GetUserAsync(string value)
         {
-            var users = await _userService.GetUserAsync(value);
+            var users = await _userService.FindByUserId(value);
             return _mapper.Map<UserViewModel>(users);
         }
 

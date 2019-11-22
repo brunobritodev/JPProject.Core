@@ -23,5 +23,18 @@ namespace JPProject.Sso.Domain.Commands.User
             ValidationResult = new RegisterNewUserCommandValidation(this).Validate(this);
             return ValidationResult.IsValid;
         }
+
+        public Models.User ToModel()
+        {
+            return new Models.User(
+                Email,
+                Name,
+                Username,
+                PhoneNumber,
+                Picture,
+                SocialNumber,
+                Birthdate
+            );
+        }
     }
 }

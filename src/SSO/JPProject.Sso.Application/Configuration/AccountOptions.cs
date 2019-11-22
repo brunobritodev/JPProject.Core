@@ -16,7 +16,6 @@ namespace JPProject.Sso.Application.Configuration
                 options.SignIn.RequireConfirmedEmail = true;
                 options.User.RequireUniqueEmail = true;
 
-
                 options.Lockout.MaxFailedAccessAttempts = 10;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireDigit = false;

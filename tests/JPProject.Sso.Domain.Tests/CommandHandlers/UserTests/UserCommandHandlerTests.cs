@@ -23,6 +23,8 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         private readonly Mock<DomainNotificationHandler> _notifications;
         private readonly UserCommandHandler _commandHandler;
         private readonly Mock<IUserService> _userService;
+        private readonly Mock<IEmailService> _emailService;
+        private readonly Mock<IEmailRepository> _emailRepository;
 
         public UserCommandHandlerTests()
         {
@@ -32,7 +34,9 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
             _mediator = new Mock<IMediatorHandler>();
             _notifications = new Mock<DomainNotificationHandler>();
             _userService = new Mock<IUserService>();
-            _commandHandler = new UserCommandHandler(_uow.Object, _mediator.Object, _notifications.Object, _userService.Object);
+            _emailService = new Mock<IEmailService>();
+            _emailRepository = new Mock<IEmailRepository>();
+            _commandHandler = new UserCommandHandler(_uow.Object, _mediator.Object, _notifications.Object, _userService.Object, _emailService.Object, _emailRepository.Object);
 
         }
 

@@ -2,7 +2,9 @@
 using IdentityServer4.EntityFramework.Extensions;
 using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.EntityFramework.Options;
+using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Infra.Data.Constants;
+using JPProject.Sso.Infra.Data.Mappings;
 using JPProject.Sso.Infra.Identity.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -51,19 +53,24 @@ namespace JPProject.Sso.Infra.Data.Context
             builder.ConfigureClientContext(_storeOptions);
             builder.ConfigureResourcesContext(_storeOptions);
             builder.ConfigurePersistedGrantContext(_operationalOptions);
+
+
+            builder.ApplyConfiguration(new EmailMap());
+            builder.ApplyConfiguration(new TemplateMap());
         }
 
         public Task<int> SaveChangesAsync()
         {
-            return Task.FromResult(this.SaveChanges());
+            return base.SaveChangesAsync();
         }
 
         public DbSet<Client> Clients { get; set; }
         public DbSet<IdentityResource> IdentityResources { get; set; }
         public DbSet<ApiResource> ApiResources { get; set; }
-
         public DbSet<PersistedGrant> PersistedGrants { get; set; }
         public DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
+        public DbSet<Template> Templates { get; set; }
+        public DbSet<Email> Emails { get; set; }
     }
 
 }

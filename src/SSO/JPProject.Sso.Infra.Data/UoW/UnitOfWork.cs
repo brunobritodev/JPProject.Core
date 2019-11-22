@@ -1,5 +1,6 @@
 ﻿using JPProject.Domain.Core.Interfaces;
 using JPProject.Sso.Infra.Data.Context;
+using System.Threading.Tasks;
 
 namespace JPProject.Sso.Infra.Data.UoW
 {
@@ -12,9 +13,10 @@ namespace JPProject.Sso.Infra.Data.UoW
             _context = context;
         }
 
-        public bool Commit()
+        public async Task<bool> Commit()
         {
-            return _context.SaveChanges() > 0;
+            var linesModified = await _context.SaveChangesAsync();
+            return linesModified > 0;
         }
 
         public void Dispose()

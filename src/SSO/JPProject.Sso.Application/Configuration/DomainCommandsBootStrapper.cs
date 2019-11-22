@@ -1,4 +1,5 @@
 ﻿using JPProject.Sso.Domain.CommandHandlers;
+using JPProject.Sso.Domain.Commands.Email;
 using JPProject.Sso.Domain.Commands.Role;
 using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
@@ -45,6 +46,14 @@ namespace JPProject.Sso.Application.Configuration
             services.AddScoped<IRequestHandler<SaveUserRoleCommand, bool>, UserManagementCommandHandler>();
             services.AddScoped<IRequestHandler<RemoveUserRoleCommand, bool>, UserManagementCommandHandler>();
             services.AddScoped<IRequestHandler<AdminChangePasswordCommand, bool>, UserManagementCommandHandler>();
+
+
+            /*
+             * Template
+             */
+            services.AddScoped<IRequestHandler<SaveTemplateCommand, bool>, EmailCommandHandler>();
+            services.AddScoped<IRequestHandler<UpdateTemplateCommand, bool>, EmailCommandHandler>();
+            services.AddScoped<IRequestHandler<SaveEmailCommand, bool>, EmailCommandHandler>();
 
             return services;
         }

@@ -10,6 +10,7 @@ using MediatR;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using JPProject.Domain.Core.Commands;
 
 namespace JPProject.Sso.Domain.CommandHandlers
 {
