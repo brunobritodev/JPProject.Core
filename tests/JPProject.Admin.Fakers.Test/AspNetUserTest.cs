@@ -16,6 +16,10 @@ namespace JPProject.Admin.Fakers.Test
         }
         public string Username { get; } = "TestUser";
         public bool IsAuthenticated() => true;
+        public bool IsInRole(string role)
+        {
+            return _faker.Random.Bool();
+        }
 
         public string UserId { get; } = Guid.NewGuid().ToString();
         public IEnumerable<Claim> GetClaimsIdentity() => new List<Claim>();

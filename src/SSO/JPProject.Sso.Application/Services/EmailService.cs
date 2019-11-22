@@ -1,35 +1,35 @@
-﻿using System.Threading.Tasks;
-using JPProject.Sso.Domain.Interfaces;
+﻿using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.ViewModels.User;
 using JPProject.Sso.Infra.Identity.Extensions;
-using JPProject.Sso.Infra.Identity.Services;
 using MailKit.Net.Smtp;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using MimeKit.Text;
+using System.Threading.Tasks;
 
 namespace JPProject.Sso.Application.Services
 {
     public class EmailService : IEmailService
     {
         private readonly ILogger<EmailService> _logger;
-        private readonly IEmailConfiguration _emailConfiguration;
+        private readonly IGlobalConfigurationSettingsService _globalConfigurationSettingsService;
 
-        public EmailService(IConfiguration config, ILogger<EmailService> logger)
+        public EmailService(ILogger<EmailService> logger, IGlobalConfigurationSettingsService globalConfigurationSettingsService)
         {
             _logger = logger;
-            _emailConfiguration = config.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+            _globalConfigurationSettingsService = globalConfigurationSettingsService;
         }
 
         public async Task SendEmailAsync(EmailMessage message)
         {
-            if (_emailConfiguration == null || !_emailConfiguration.SendEmail)
+            var emailConfiguration = await _globalConfigurationSettingsService.GetPrivateSettings();
+
+            if (emailConfiguration == null || !emailConfiguration.SendEmail)
                 return;
 
             var mimeMessage = new MimeMessage();
             mimeMessage.To.Add(new MailboxAddress(message.Email));
-            mimeMessage.From.Add(new MailboxAddress(_emailConfiguration.FromName, _emailConfiguration.FromAddress));
+            mimeMessage.From.Add(new MailboxAddress(message.Sender.Name, message.Sender.Address));
 
             if (message.Bcc.IsValid())
                 mimeMessage.To.AddRange(message.Bcc.Recipients.ToMailboxAddress());
@@ -47,9 +47,9 @@ namespace JPProject.Sso.Application.Services
             {
                 client.ServerCertificateValidationCallback = (s, c, h, e) => true;
 
-                client.Connect(_emailConfiguration.SmtpServer, _emailConfiguration.SmtpPort, _emailConfiguration.UseSsl);
+                client.Connect(emailConfiguration.Smtp.Server, emailConfiguration.Smtp.Port, emailConfiguration.Smtp.UseSsl);
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
-                client.Authenticate(_emailConfiguration.SmtpUsername, _emailConfiguration.SmtpPassword);
+                client.Authenticate(emailConfiguration.Smtp.Username, emailConfiguration.Smtp.Password);
 
                 await client.SendAsync(mimeMessage);
                 client.Disconnect(true);

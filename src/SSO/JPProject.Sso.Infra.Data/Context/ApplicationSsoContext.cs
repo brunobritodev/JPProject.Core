@@ -71,6 +71,7 @@ namespace JPProject.Sso.Infra.Data.Context
         public DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
         public DbSet<Template> Templates { get; set; }
         public DbSet<Email> Emails { get; set; }
+        public DbSet<GlobalConfigurationSettings> GlobalConfigurationSettings { get; set; }
     }
 
 }
