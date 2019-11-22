@@ -6,6 +6,8 @@ using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.CommandHandlers;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
+using JPProject.Sso.Domain.ViewModels.User;
+using JPProject.Sso.Fakers.Test.Email;
 using JPProject.Sso.Fakers.Test.Users;
 using Moq;
 using System.Threading;
@@ -147,6 +149,20 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
             var result = await _commandHandler.Handle(command, CancellationToken.None);
 
             result.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task ShouldSendEmailAfterSuccessfullRegistration()
+        {
+            _emailRepository.Setup(s => s.GetByType(It.IsAny<EmailType>())).ReturnsAsync(EmailFaker.GenerateEmail());
+            _userService.Setup(s => s.CreateUserWithPass(It.IsAny<User>(), It.IsAny<string>())).ReturnsAsync(new AccountResult(_faker.Random.Guid().ToString(), _faker.Random.String(), _faker.Internet.Url()));
+
+            var command = UserCommandFaker.GenerateRegisterNewUserCommand().Generate();
+
+            var result = await _commandHandler.Handle(command, _tokenSource.Token);
+
+            result.Should().BeTrue();
+            _emailService.Verify(e => e.SendEmailAsync(It.IsAny<EmailMessage>()), Times.Once);
         }
     }
 }

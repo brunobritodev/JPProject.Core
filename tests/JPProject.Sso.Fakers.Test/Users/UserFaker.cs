@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using JPProject.Sso.Domain.Models;
+using JPProject.Sso.Domain.ViewModels.User;
 
 namespace JPProject.Sso.Fakers.Test.Users
 {
@@ -26,5 +27,6 @@ namespace JPProject.Sso.Fakers.Test.Users
                 .RuleFor(u => u.Bio, f => f.Lorem.Sentence())
                 .RuleFor(u => u.JobTitle, f => f.Lorem.Word());
         }
+
     }
 }

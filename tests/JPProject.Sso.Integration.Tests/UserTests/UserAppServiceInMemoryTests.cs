@@ -255,12 +255,11 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             await _userAppService.Register(command);
 
+
             var emailSent = await _userAppService.SendResetLink(new ForgotPasswordViewModel(command.Email));
             _notifications.GetNotifications().Select(s => s.Value).ToList().ForEach(_output.WriteLine);
 
             emailSent.Should().BeTrue();
-
-
         }
 
     }

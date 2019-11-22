@@ -45,9 +45,11 @@ namespace JPProject.Sso.Domain.Models
                 Sender);
         }
 
-
         private string GetFormatedContent(string content, User user, AccountResult created, UserCommand command)
         {
+            if (content is null)
+                return string.Empty;
+
             return content
                 .Replace("{{picture}}", user.Picture)
                 .Replace("{{name}}", user.Name)

@@ -29,7 +29,7 @@ namespace JPProject.Sso.Fakers.Test.Users
                     f.Person.UserName,
                     f.Person.Email,
                     f.Person.FullName,
-                    f.Image.PicsumUrl(),
+                    f.Person.Phone,
                     password,
                     confirmPassword ?? password,
                     birthdate ?? f.Person.DateOfBirth,
