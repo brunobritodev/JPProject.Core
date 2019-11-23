@@ -26,7 +26,7 @@ namespace JPProject.Sso.Domain.Commands.Email
 
         public Template ToModel()
         {
-            return new Template(Content, Subject, Name, true, UserName);
+            return new Template(Content, Subject, Name, UserName);
         }
     }
 }

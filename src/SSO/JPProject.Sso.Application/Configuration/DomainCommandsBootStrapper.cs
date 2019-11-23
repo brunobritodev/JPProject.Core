@@ -54,6 +54,7 @@ namespace JPProject.Sso.Application.Configuration
             services.AddScoped<IRequestHandler<SaveTemplateCommand, bool>, EmailCommandHandler>();
             services.AddScoped<IRequestHandler<UpdateTemplateCommand, bool>, EmailCommandHandler>();
             services.AddScoped<IRequestHandler<SaveEmailCommand, bool>, EmailCommandHandler>();
+            services.AddScoped<IRequestHandler<RemoveTemplateCommand, bool>, EmailCommandHandler>();
 
             return services;
         }

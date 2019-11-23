@@ -19,7 +19,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
         private readonly ApplicationSsoContext _database;
         private readonly Faker _faker;
         private readonly DomainNotificationHandler _notifications;
-        private IEmailAppService _emailAppService;
+        private readonly IEmailAppService _emailAppService;
         public WarmupInMemory InMemoryData { get; }
 
         public EmailAppServiceInMemoryTests(WarmupInMemory inMemory, ITestOutputHelper output)
@@ -96,5 +96,18 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
             _database.Templates.FirstOrDefault(f => f.Name == command.Name).Should().NotBeNull();
         }
 
+        [Fact]
+        public async Task ShouldRemoveTemplate()
+        {
+            var command = EmailFaker.GenerateTemplateViewModel().Generate();
+            var result = await _emailAppService.SaveTemplate(command);
+
+            result.Should().BeTrue();
+
+            result = await _emailAppService.RemoveTemplate(command.Name);
+
+            result.Should().BeTrue(becauseArgs: _notifications.GetNotificationsByKey());
+            _database.Templates.FirstOrDefault(f => f.Name == command.Name).Should().BeNull();
+        }
     }
 }

@@ -8,6 +8,7 @@ using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Fakers.Test.Email;
 using Moq;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,20 +19,20 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.EmailTests
     {
         private Faker _faker;
         private readonly CancellationTokenSource _tokenSource;
-        private readonly Mock<IUnitOfWork> _uow;
+        private readonly Mock<ISsoUnitOfWork> _uow;
         private readonly Mock<IMediatorHandler> _mediator;
         private readonly Mock<DomainNotificationHandler> _notifications;
         private readonly EmailCommandHandler _commandHandler;
         private readonly Mock<IUserService> _userService;
         private readonly Mock<ISystemUser> _systemUser;
         private readonly Mock<ITemplateRepository> _templateRepository;
-        private Mock<IEmailRepository> _emailRepository;
+        private readonly Mock<IEmailRepository> _emailRepository;
 
         public EmailCommandHandlerTests()
         {
             _faker = new Faker();
             _tokenSource = new CancellationTokenSource();
-            _uow = new Mock<IUnitOfWork>();
+            _uow = new Mock<ISsoUnitOfWork>();
             _mediator = new Mock<IMediatorHandler>();
             _notifications = new Mock<DomainNotificationHandler>();
             _templateRepository = new Mock<ITemplateRepository>();
@@ -43,7 +44,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.EmailTests
         [Fact]
         public async Task ShouldSaveTemplate()
         {
-            var template = EmailCommandFaker.GenerateSaveTemplateCommand().Generate();
+            var template = EmailCommandFaker.GenerateSaveTemplateCommand("test-email-ok").Generate();
 
             _templateRepository.Setup(s => s.Add(It.Is<Template>(m => !string.IsNullOrEmpty(m.Username))));
             _uow.Setup(s => s.Commit()).ReturnsAsync(true);
@@ -64,6 +65,19 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.EmailTests
 
             var result = await _commandHandler.Handle(template, CancellationToken.None);
 
+            _uow.Verify(v => v.Commit(), Times.Never);
+
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task ShouldNotSaveTemplateWhenNameContainsBlankSpace()
+        {
+            var template = EmailCommandFaker.GenerateSaveTemplateCommand(name: "Teste with blank space").Generate();
+
+            var result = await _commandHandler.Handle(template, CancellationToken.None);
+
+            _templateRepository.Verify(s => s.Exist(It.IsAny<string>()), Times.Never());
             _uow.Verify(v => v.Commit(), Times.Never);
 
             result.Should().BeFalse();
@@ -117,6 +131,26 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.EmailTests
 
             result.Should().BeTrue();
         }
+
+        [Fact]
+        public async Task ShoulhRemoveTemplate()
+        {
+            var emailCommand = EmailCommandFaker.GenerateRemoveTemplateCommand().Generate();
+            var templateToRemove = EmailFaker.GenerateTemplate().Generate();
+            _uow.Setup(s => s.Commit()).ReturnsAsync(true);
+
+            _templateRepository.Setup(s => s.GetByName(It.Is<string>(m => m == emailCommand.Name))).ReturnsAsync(templateToRemove);
+            _templateRepository.Setup(s => s.Remove(It.Is<Guid>(m => m == templateToRemove.Id)));
+
+            var result = await _commandHandler.Handle(emailCommand, CancellationToken.None);
+
+
+            _templateRepository.Verify(v => v.Remove(It.IsAny<Guid>()), Times.Once);
+
+            result.Should().BeTrue();
+        }
+
+
     }
 }
 

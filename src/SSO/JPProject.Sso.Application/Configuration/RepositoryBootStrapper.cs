@@ -14,7 +14,7 @@ namespace JPProject.Sso.Application.Configuration
     {
         public static IServiceCollection AddStores(this IServiceCollection services)
         {
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ISsoUnitOfWork, UnitOfWork>();
 
             // Infra - Data EventSourcing
             services.AddScoped<IEventStoreRepository, EventStoreRepository>();

@@ -21,7 +21,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
         private readonly IUserService _userService;
 
         public RoleCommandHandler(
-            IUnitOfWork uow,
+            ISsoUnitOfWork uow,
             IMediatorHandler bus,
             INotificationHandler<DomainNotification> notifications,
             IRoleService roleService,

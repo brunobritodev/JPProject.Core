@@ -8,6 +8,7 @@ namespace JPProject.Sso.Domain.Validations.Email
         {
             ValidateName();
             ValidateContent();
+            
         }
     }
 }

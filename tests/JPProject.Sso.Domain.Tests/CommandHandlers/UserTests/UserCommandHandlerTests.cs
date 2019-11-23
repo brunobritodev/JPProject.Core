@@ -20,7 +20,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
     {
         private readonly Faker _faker;
         private readonly CancellationTokenSource _tokenSource;
-        private readonly Mock<IUnitOfWork> _uow;
+        private readonly Mock<ISsoUnitOfWork> _uow;
         private readonly Mock<IMediatorHandler> _mediator;
         private readonly Mock<DomainNotificationHandler> _notifications;
         private readonly UserCommandHandler _commandHandler;
@@ -32,7 +32,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         {
             _faker = new Faker();
             _tokenSource = new CancellationTokenSource();
-            _uow = new Mock<IUnitOfWork>();
+            _uow = new Mock<ISsoUnitOfWork>();
             _mediator = new Mock<IMediatorHandler>();
             _notifications = new Mock<DomainNotificationHandler>();
             _userService = new Mock<IUserService>();

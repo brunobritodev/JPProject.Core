@@ -9,6 +9,7 @@ namespace JPProject.Sso.Domain.Commands.Email
         public string Name { get; protected set; }
         public string OldName { get; protected set; }
         public string UserName { get; protected set; }
+        public bool Active { get; protected set; }
 
     }
 }

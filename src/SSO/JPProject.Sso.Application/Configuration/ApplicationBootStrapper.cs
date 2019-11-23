@@ -18,7 +18,6 @@ namespace JPProject.Sso.Application.Configuration
 
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IGlobalConfigurationSettingsService, GlobalConfigurationSettingsService>();
-            services.AddTransient<ISmsSender, AuthSmsMessageSender>();
 
             return services;
         }

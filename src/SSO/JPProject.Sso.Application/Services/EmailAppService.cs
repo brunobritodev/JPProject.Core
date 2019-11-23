@@ -42,11 +42,21 @@ namespace JPProject.Sso.Application.Services
             return Bus.SendCommand(registerCommand);
         }
 
-        public async Task<IEnumerable<TemplateViewModel>> List()
+        public async Task<IEnumerable<TemplateViewModel>> ListTemplates()
         {
             return _mapper.Map<IEnumerable<TemplateViewModel>>(await _templateRepository.All());
         }
-        
+
+        public async Task<TemplateViewModel> GetTemplate(string name)
+        {
+            return _mapper.Map<TemplateViewModel>(await _templateRepository.GetByName(name));
+        }
+
+        public Task<bool> RemoveTemplate(string name)
+        {
+            return Bus.SendCommand(new RemoveTemplateCommand(name));
+        }
+
         public Task<bool> SaveTemplate(TemplateViewModel model)
         {
             var registerCommand = _mapper.Map<SaveTemplateCommand>(model);

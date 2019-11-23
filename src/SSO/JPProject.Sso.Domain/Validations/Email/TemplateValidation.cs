@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using JPProject.Sso.Domain.Commands.Email;
+using System;
 
 namespace JPProject.Sso.Domain.Validations.Email
 {
@@ -21,7 +22,8 @@ namespace JPProject.Sso.Domain.Validations.Email
         protected void ValidateName()
         {
             RuleFor(c => c.Name)
-                .NotEmpty();
+                .NotEmpty()
+                .Must(a => !a.Contains(" ") && Uri.IsWellFormedUriString(a, UriKind.RelativeOrAbsolute));
         }
         protected void ValidateOldName()
         {

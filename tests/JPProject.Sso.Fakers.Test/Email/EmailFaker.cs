@@ -6,12 +6,11 @@ namespace JPProject.Sso.Fakers.Test.Email
 {
     public static class EmailFaker
     {
-        public static Faker<Template> GenerateTemplate()
+        public static Faker<Template> GenerateTemplate(bool? active = null)
         {
             return new Faker<Template>()
                 .RuleFor(t => t.Content, f => f.Lorem.Word())
                 .RuleFor(t => t.Name, f => f.Lorem.Word())
-                .RuleFor(t => t.Active, f => f.Random.Bool())
                 .RuleFor(t => t.Username, f => f.Lorem.Word())
                 .RuleFor(t => t.Created, f => f.Date.Past())
                 .RuleFor(t => t.Id, f => f.Random.Uuid());

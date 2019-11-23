@@ -31,7 +31,7 @@ namespace JPProject.Sso.Application.Services
             mimeMessage.To.Add(new MailboxAddress(message.Email));
             mimeMessage.From.Add(new MailboxAddress(message.Sender.Name, message.Sender.Address));
 
-            if (message.Bcc.IsValid())
+            if (message.Bcc != null && message.Bcc.IsValid())
                 mimeMessage.To.AddRange(message.Bcc.Recipients.ToMailboxAddress());
 
             mimeMessage.Subject = message.Subject;

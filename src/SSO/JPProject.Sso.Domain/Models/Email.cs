@@ -9,7 +9,7 @@ namespace JPProject.Sso.Domain.Models
     public class Email : Entity
     {
         public Email() { }
-        public Email(string content, string subject, Sender sender, EmailType type, BlindCarbonCopy bcc)
+        public Email(string content, string subject, Sender sender, EmailType type, BlindCarbonCopy bcc = null)
         {
             Id = Guid.NewGuid();
             Content = content;

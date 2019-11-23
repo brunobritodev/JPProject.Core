@@ -1,6 +1,5 @@
 ﻿using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Commands;
-using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.Commands.Email;
 using JPProject.Sso.Domain.Events.Email;
@@ -15,13 +14,14 @@ namespace JPProject.Sso.Domain.CommandHandlers
         CommandHandler,
         IRequestHandler<SaveTemplateCommand, bool>,
         IRequestHandler<UpdateTemplateCommand, bool>,
-        IRequestHandler<SaveEmailCommand, bool>
+        IRequestHandler<SaveEmailCommand, bool>,
+        IRequestHandler<RemoveTemplateCommand, bool>
     {
         private readonly ITemplateRepository _templateRepository;
         private readonly IEmailRepository _emailRepository;
 
         public EmailCommandHandler(
-            IUnitOfWork uow,
+            ISsoUnitOfWork uow,
             IMediatorHandler bus,
             INotificationHandler<DomainNotification> notifications,
             ITemplateRepository templateRepository,
@@ -114,5 +114,33 @@ namespace JPProject.Sso.Domain.CommandHandlers
 
             return false;
         }
+
+        public async Task<bool> Handle(RemoveTemplateCommand request, CancellationToken cancellationToken)
+        {
+            if (!request.IsValid())
+            {
+                NotifyValidationErrors(request);
+                return false;
+            }
+
+            var template = await _templateRepository.GetByName(request.Name);
+            if (template == null)
+            {
+                await Bus.RaiseEvent(new DomainNotification("Template", "Template not found."));
+                return false;
+            }
+
+            _templateRepository.Remove(template.Id);
+
+            if (await Commit())
+            {
+                await Bus.RaiseEvent(new TemplateRemovedEvent(template.Id));
+                return true;
+            }
+
+            return false;
+        }
+
     }
+
 }

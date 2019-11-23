@@ -16,7 +16,7 @@ namespace JPProject.Sso.EntityFrameworkCore.PostgreSQL.Migrations.SSO
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.0.0")
+                .HasAnnotation("ProductVersion", "3.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ApiResource", b =>
@@ -766,6 +766,90 @@ namespace JPProject.Sso.EntityFrameworkCore.PostgreSQL.Migrations.SSO
                     b.ToTable("PersistedGrants");
                 });
 
+            modelBuilder.Entity("JPProject.Sso.Domain.Models.Email", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("character varying(250)")
+                        .HasMaxLength(250);
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Emails");
+                });
+
+            modelBuilder.Entity("JPProject.Sso.Domain.Models.GlobalConfigurationSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Key")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Public")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Sensitive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GlobalConfigurationSettings");
+                });
+
+            modelBuilder.Entity("JPProject.Sso.Domain.Models.Template", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasMaxLength(2147483647);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("character varying(250)")
+                        .HasMaxLength(250);
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Templates");
+                });
+
             modelBuilder.Entity("JPProject.Sso.Infra.Identity.Models.Identity.UserIdentity", b =>
                 {
                     b.Property<string>("Id")
@@ -1126,6 +1210,48 @@ namespace JPProject.Sso.EntityFrameworkCore.PostgreSQL.Migrations.SSO
                         .HasForeignKey("IdentityResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("JPProject.Sso.Domain.Models.Email", b =>
+                {
+                    b.OwnsOne("JPProject.Sso.Domain.Models.BlindCarbonCopy", "Bcc", b1 =>
+                        {
+                            b1.Property<Guid>("EmailId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("_recipientsCollection")
+                                .HasColumnType("text");
+
+                            b1.HasKey("EmailId");
+
+                            b1.ToTable("Emails");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EmailId");
+                        });
+
+                    b.OwnsOne("JPProject.Sso.Domain.Models.Sender", "Sender", b1 =>
+                        {
+                            b1.Property<Guid>("EmailId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasColumnType("character varying(250)")
+                                .HasMaxLength(250);
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("character varying(250)")
+                                .HasMaxLength(250);
+
+                            b1.HasKey("EmailId");
+
+                            b1.ToTable("Emails");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EmailId");
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

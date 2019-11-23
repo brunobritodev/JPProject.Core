@@ -3,14 +3,16 @@ using System;
 using JPProject.Sso.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JPProject.Sso.EntityFrameworkCore.Sqlite.Migrations.SSO
 {
     [DbContext(typeof(ApplicationSsoContext))]
-    partial class ApplicationSsoContextModelSnapshot : ModelSnapshot
+    [Migration("20191123065732_EmailAndGlobalSettings")]
+    partial class EmailAndGlobalSettings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -27,7 +27,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
         private readonly IEmailRepository _emailRepository;
 
         public UserCommandHandler(
-            IUnitOfWork uow,
+            ISsoUnitOfWork uow,
             IMediatorHandler bus,
             INotificationHandler<DomainNotification> notifications,
             IUserService userService,

@@ -6,12 +6,12 @@ namespace JPProject.Sso.Fakers.Test.Email
 {
     public static class EmailCommandFaker
     {
-        public static Faker<SaveTemplateCommand> GenerateSaveTemplateCommand()
+        public static Faker<SaveTemplateCommand> GenerateSaveTemplateCommand(string name = null)
         {
             return new Faker<SaveTemplateCommand>().CustomInstantiator(f => new SaveTemplateCommand(
                 f.Lorem.Text(),
                 f.Lorem.Paragraphs(),
-                f.Internet.DomainName(),
+                name ?? f.Internet.DomainName(),
                 f.Person.UserName
             ));
         }
@@ -36,6 +36,11 @@ namespace JPProject.Sso.Fakers.Test.Email
                 f.Person.Email,
                 f.Person.UserName
             ));
+        }
+
+        public static Faker<RemoveTemplateCommand> GenerateRemoveTemplateCommand()
+        {
+            return new Faker<RemoveTemplateCommand>().CustomInstantiator(f => new RemoveTemplateCommand(f.Internet.DomainName()));
         }
     }
 }
