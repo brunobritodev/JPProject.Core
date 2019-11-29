@@ -4,7 +4,6 @@
     {
         NewUser,
         NewUserWithoutPassword,
-        RecoverPassword,
-        ConfirmEmail
+        RecoverPassword
     }
 }

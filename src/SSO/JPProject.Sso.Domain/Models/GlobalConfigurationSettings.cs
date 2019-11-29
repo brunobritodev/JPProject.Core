@@ -25,15 +25,13 @@ namespace JPProject.Sso.Domain.Models
 
         public void Update(string value, in bool isPublic, in bool sensitive)
         {
+            if (value.Contains("Sensitive Data"))
+                return;
+
             Value = value;
             Public = isPublic;
             Sensitive = sensitive;
         }
 
-        public void UpdateSensitive()
-        {
-            if (Sensitive)
-                Value = "**Sensitive Data**";
-        }
     }
 }

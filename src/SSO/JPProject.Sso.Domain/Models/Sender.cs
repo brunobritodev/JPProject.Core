@@ -11,5 +11,10 @@
 
         public string Address { get; }
         public string Name { get; }
+
+        public bool IsValid()
+        {
+            return !string.IsNullOrEmpty(Name) || !string.IsNullOrEmpty(Address);
+        }
     }
 }

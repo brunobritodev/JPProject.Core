@@ -2,6 +2,7 @@
 using FluentAssertions;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Application.Interfaces;
+using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Fakers.Test.Email;
 using JPProject.Sso.Infra.Data.Context;
 using MediatR;
@@ -56,6 +57,38 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
             var email = _database.Emails.FirstOrDefault(f => f.Type == command.Type);
 
             email.Bcc.Recipients.Should().Contain(s => s.Equals(emailBcc));
+        }
+
+        [Fact]
+        public async Task ShouldSaveEmailWithNullBcc()
+        {
+            var command = EmailFaker.GenerateEmailViewModel().Generate();
+
+            command.Bcc = null;
+
+            var result = await _emailAppService.SaveEmail(command);
+            result.Should().BeTrue(becauseArgs: _notifications.GetNotificationsByKey());
+            var email = _database.Emails.FirstOrDefault(f => f.Type == command.Type);
+            email.Should().NotBeNull();
+        }
+
+
+        [Fact]
+        public async Task ShouldUpdateEmailWithNullBcc()
+        {
+            var command = EmailFaker.GenerateEmailViewModel().Generate();
+
+            var result = await _emailAppService.SaveEmail(command);
+            result.Should().BeTrue(becauseArgs: _notifications.GetNotificationsByKey());
+            var email = _database.Emails.FirstOrDefault(f => f.Type == command.Type);
+            email.Should().NotBeNull();
+
+            command.Bcc = new BlindCarbonCopy();
+            command.Content = _faker.Lorem.Paragraphs();
+
+            await _emailAppService.SaveEmail(command);
+            email = _database.Emails.FirstOrDefault(f => f.Type == command.Type);
+            email.Should().NotBeNull();
         }
 
         [Fact]

@@ -1,11 +1,12 @@
-﻿using System.Globalization;
-using AutoMapper;
+﻿using AutoMapper;
 using JPProject.Domain.Core.Events;
 using JPProject.Sso.Application.EventSourcedNormalizers;
+using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Application.ViewModels.EmailViewModels;
 using JPProject.Sso.Application.ViewModels.RoleViewModels;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
 using JPProject.Sso.Domain.Models;
+using System.Globalization;
 
 namespace JPProject.Sso.Application.AutoMapper
 {
@@ -22,6 +23,7 @@ namespace JPProject.Sso.Application.AutoMapper
             CreateMap<UserLogin, UserLoginViewModel>(MemberList.Destination);
             CreateMap<Email, EmailViewModel>(MemberList.Destination);
             CreateMap<Template, TemplateViewModel>(MemberList.Destination);
+            CreateMap<GlobalConfigurationSettings, ConfigurationViewModel>(MemberList.Destination).ForMember(m => m.IsSensitive, opt => opt.MapFrom(src => src.Sensitive));
 
         }
     }

@@ -1,4 +1,5 @@
-﻿using JPProject.Domain.Core.Interfaces;
+﻿using AutoMapper;
+using JPProject.Domain.Core.Interfaces;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Domain.Interfaces;
@@ -10,15 +11,18 @@ using System.Threading.Tasks;
 
 namespace JPProject.Sso.Application.Services
 {
-    public class GlobalConfigurationSettingsService : IGlobalConfigurationSettingsAppService
+    public class GlobalConfigurationAppService : IGlobalConfigurationAppService
     {
+        private readonly IMapper _mapper;
         private readonly IGlobalConfigurationSettingsRepository _globalConfigurationSettingsRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public GlobalConfigurationSettingsService(
+        public GlobalConfigurationAppService(
+            IMapper mapper,
             IGlobalConfigurationSettingsRepository globalConfigurationSettingsRepository,
             ISsoUnitOfWork unitOfWork)
         {
+            _mapper = mapper;
             _globalConfigurationSettingsRepository = globalConfigurationSettingsRepository;
             _unitOfWork = unitOfWork;
         }
@@ -49,12 +53,18 @@ namespace JPProject.Sso.Application.Services
                 if (setting is null)
                     continue;
 
-                setting.Update(configurationViewModel.Value, configurationViewModel.IsPublic, configurationViewModel.IsSensitve);
+                setting.Update(configurationViewModel.Value, configurationViewModel.IsPublic, configurationViewModel.IsSensitive);
                 _globalConfigurationSettingsRepository.Update(setting);
             }
 
             await _unitOfWork.Commit();
             return true;
+        }
+
+        public async Task<IEnumerable<ConfigurationViewModel>> ListSettings()
+        {
+            var settings = await _globalConfigurationSettingsRepository.GetAll().ToListAsync();
+            return _mapper.Map<IEnumerable<ConfigurationViewModel>>(settings);
         }
     }
 }

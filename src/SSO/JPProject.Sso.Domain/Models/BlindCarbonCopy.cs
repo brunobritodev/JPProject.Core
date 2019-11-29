@@ -15,7 +15,7 @@ namespace JPProject.Sso.Domain.Models
 
         public string[] Recipients
         {
-            get => _recipientsCollection.Split(";");
+            get => _recipientsCollection?.Split(";");
             set => _recipientsCollection = value?.Join(";");
         }
 

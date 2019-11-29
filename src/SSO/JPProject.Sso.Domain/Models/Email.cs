@@ -30,7 +30,13 @@ namespace JPProject.Sso.Domain.Models
         {
             Subject = request.Subject;
             Content = request.Content;
-            Bcc = request.Bcc;
+
+            if (request.Bcc != null && request.Bcc.IsValid())
+                Bcc = request.Bcc;
+
+            if (request.Sender != null && request.Sender.IsValid())
+                Sender = request.Sender;
+
             UserName = request.Username;
             Updated = DateTime.UtcNow;
         }

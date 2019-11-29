@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace JPProject.Sso.Application.Interfaces
 {
-    public interface IGlobalConfigurationSettingsAppService : IGlobalConfigurationSettingsService
+    public interface IGlobalConfigurationAppService : IGlobalConfigurationSettingsService
     {
         Task<bool> UpdateSettings(IEnumerable<ConfigurationViewModel> configs);
+        Task<IEnumerable<ConfigurationViewModel>> ListSettings();
     }
 }

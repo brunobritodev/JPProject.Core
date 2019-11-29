@@ -14,22 +14,22 @@ using Xunit.Abstractions;
 namespace JPProject.Sso.Integration.Tests.GlobalSettings
 {
     [Collection("GlobalSettings")]
-    public class GlobalSettingsAdminTests : IClassFixture<WarmupInMemory>
+    public class GlobalSettingsTests : IClassFixture<WarmupInMemory>
     {
         private readonly ITestOutputHelper _output;
         private readonly ApplicationSsoContext _database;
         private readonly Faker _faker;
         private readonly DomainNotificationHandler _notifications;
-        private readonly IGlobalConfigurationSettingsAppService _globalSettingsAppService;
+        private readonly IGlobalConfigurationAppService _globalAppService;
         private readonly AspNetUserTest _user;
         public WarmupInMemory InMemoryData { get; }
 
-        public GlobalSettingsAdminTests(WarmupInMemory inMemory, ITestOutputHelper output)
+        public GlobalSettingsTests(WarmupInMemory inMemory, ITestOutputHelper output)
         {
             _output = output;
             _faker = new Faker();
             InMemoryData = inMemory;
-            _globalSettingsAppService = InMemoryData.Services.GetRequiredService<IGlobalConfigurationSettingsAppService>();
+            _globalAppService = InMemoryData.Services.GetRequiredService<IGlobalConfigurationAppService>();
             _database = InMemoryData.Services.GetRequiredService<ApplicationSsoContext>();
 
             _user = (AspNetUserTest)InMemoryData.Services.GetService<ISystemUser>();
@@ -47,7 +47,7 @@ namespace JPProject.Sso.Integration.Tests.GlobalSettings
             _database.GlobalConfigurationSettings.Add(anotherSetting);
             await _database.SaveChangesAsync();
 
-            var data = await _globalSettingsAppService.GetPrivateSettings();
+            var data = await _globalAppService.GetPrivateSettings();
             data.Smtp.Password.Should().NotContain("Sensitive Data");
         }
     }
