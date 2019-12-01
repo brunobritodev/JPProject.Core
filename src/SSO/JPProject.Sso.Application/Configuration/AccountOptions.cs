@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using IdentityModel;
+using Microsoft.AspNetCore.Identity;
 using System;
 
 namespace JPProject.Sso.Application.Configuration
@@ -24,6 +25,9 @@ namespace JPProject.Sso.Application.Configuration
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredUniqueChars = 0;
+
+                options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;
+                options.ClaimsIdentity.UserNameClaimType = "username";
             };
     }
 }

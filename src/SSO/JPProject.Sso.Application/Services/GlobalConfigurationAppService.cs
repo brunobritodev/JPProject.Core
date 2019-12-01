@@ -16,15 +16,18 @@ namespace JPProject.Sso.Application.Services
         private readonly IMapper _mapper;
         private readonly IGlobalConfigurationSettingsRepository _globalConfigurationSettingsRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ISystemUser _systemUser;
 
         public GlobalConfigurationAppService(
             IMapper mapper,
             IGlobalConfigurationSettingsRepository globalConfigurationSettingsRepository,
-            ISsoUnitOfWork unitOfWork)
+            ISsoUnitOfWork unitOfWork,
+            ISystemUser systemUser)
         {
             _mapper = mapper;
             _globalConfigurationSettingsRepository = globalConfigurationSettingsRepository;
             _unitOfWork = unitOfWork;
+            _systemUser = systemUser;
         }
 
         public async Task<PrivateSettings> GetPrivateSettings()
@@ -63,8 +66,15 @@ namespace JPProject.Sso.Application.Services
 
         public async Task<IEnumerable<ConfigurationViewModel>> ListSettings()
         {
-            var settings = await _globalConfigurationSettingsRepository.GetAll().ToListAsync();
-            return _mapper.Map<IEnumerable<ConfigurationViewModel>>(settings);
+            var settings = _mapper.Map<IEnumerable<ConfigurationViewModel>>(await _globalConfigurationSettingsRepository.GetAll().ToListAsync());
+            if (!_systemUser.IsInRole("Administrator"))
+            {
+                foreach (var configurationViewModel in settings)
+                {
+                    configurationViewModel.UpdateSensitive();
+                }
+            }
+            return settings;
         }
     }
 }

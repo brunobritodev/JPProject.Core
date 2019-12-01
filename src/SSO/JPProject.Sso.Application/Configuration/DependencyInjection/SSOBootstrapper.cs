@@ -23,15 +23,14 @@ namespace Microsoft.Extensions.DependencyInjection
         public static ISsoConfigurationBuilder ConfigureUserIdentity<THttpUser>(this IServiceCollection builder)
             where THttpUser : class, ISystemUser
         {
-
-            builder
-                .BaseSsoConfiguration<THttpUser>()
-                .AddIdentity<UserIdentity, IdentityRole>(AccountOptions.NistAccountOptions())
-                .AddEntityFrameworkStores<ApplicationSsoContext>()
-                .AddDefaultTokenProviders();
-            return new SsoBuilder(builder);
+            var identityBuilder =
+                builder
+                    .BaseSsoConfiguration<THttpUser>()
+                    .AddIdentity<UserIdentity, IdentityRole>(AccountOptions.NistAccountOptions())
+                    .AddEntityFrameworkStores<ApplicationSsoContext>()
+                    .AddDefaultTokenProviders();
+            return new SsoBuilder(builder, identityBuilder);
         }
-
 
         public static IIdentityServerBuilder ConfigureIdentityServer(this ISsoConfigurationBuilder builder)
         {

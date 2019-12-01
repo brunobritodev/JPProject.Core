@@ -30,8 +30,7 @@ namespace JPProject.EntityFrameworkCore.MigrationHelper
         {
             try
             {
-                context.Database.CanConnect(); // Check the database connection
-
+                context.Database.GetPendingMigrations();   // Check the database connection
                 return true;
             }
             catch

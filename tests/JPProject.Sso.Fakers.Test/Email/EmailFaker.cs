@@ -21,7 +21,7 @@ namespace JPProject.Sso.Fakers.Test.Email
             var sender = GenerateSender().Generate();
             return new Faker<Domain.Models.Email>()
                 .RuleFor(e => e.Type, f => f.PickRandom<EmailType>())
-                .RuleFor(e => e.Subject, f => f.Lorem.Word())
+                .RuleFor(e => e.Subject, f => @"{{picture}}{{name}}{{username}}{{code}}{{url}}{{provider}}{{phoneNumber}}{{email}}")
                 .RuleFor(e => e.Bcc, f => f.Internet.Email())
                 .RuleFor(e => e.UserName, f => f.Person.UserName)
                 .RuleFor(e => e.Id, f => f.Random.Uuid())
