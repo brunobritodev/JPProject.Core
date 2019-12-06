@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4.EntityFramework.Storage" Version="3.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.0" />
   </ItemGroup>
 
 

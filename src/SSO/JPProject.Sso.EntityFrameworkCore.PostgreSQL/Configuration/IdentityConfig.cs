@@ -23,7 +23,7 @@ namespace JPProject.Sso.EntityFrameworkCore.PostgreSQL.Configuration
             var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
 
 
-            services.Services.AddEventStoreContext(options => options.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)), options);
+            services.Services.AddEventStoreContext(opt => opt.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)), options);
 
             return services;
         }
