@@ -97,6 +97,23 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
 
         [Fact]
+        public async Task ShouldAddClientServer()
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient(clientType: ClientType.Machine).Generate();
+            command.ClientUri = null;
+            command.LogoUri = null;
+            command.LogoutUri = null;
+
+            await _clientAppService.Save(command);
+
+            var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
+            client.Should().NotBeNull();
+            client.RedirectUris.Should().BeEmpty();
+        }
+
+
+
+        [Fact]
         public async Task ShouldAddDefaultLogoutUriIfNull()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
