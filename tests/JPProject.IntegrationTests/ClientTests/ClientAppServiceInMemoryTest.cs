@@ -71,10 +71,13 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             }
         }
 
-        [Fact]
-        public async Task ShouldAddCors()
+        [Theory]
+        [InlineData(ClientType.Spa)]
+        [InlineData(ClientType.WebHybrid)]
+        [InlineData(ClientType.WebImplicit)]
+        public async Task ShouldAddCors(ClientType clientType)
         {
-            var command = ClientViewModelFaker.GenerateSaveClient().Generate();
+            var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
 
             await _clientAppService.Save(command);
 
@@ -83,10 +86,13 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             client.AllowedCorsOrigins.Should().Contain(origin => origin.Origin.Equals(command.ClientUri));
         }
 
-        [Fact]
-        public async Task ShouldAddDefaultRedirectUri()
+        [Theory]
+        [InlineData(ClientType.Spa)]
+        [InlineData(ClientType.WebHybrid)]
+        [InlineData(ClientType.WebImplicit)]
+        public async Task ShouldAddDefaultRedirectUri(ClientType clientType)
         {
-            var command = ClientViewModelFaker.GenerateSaveClient().Generate();
+            var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
 
             await _clientAppService.Save(command);
 
@@ -109,14 +115,18 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
             client.Should().NotBeNull();
             client.RedirectUris.Should().BeEmpty();
+            client.RequireConsent.Should().BeFalse();
         }
 
 
 
-        [Fact]
-        public async Task ShouldAddDefaultLogoutUriIfNull()
+        [Theory]
+        [InlineData(ClientType.Spa)]
+        [InlineData(ClientType.WebHybrid)]
+        [InlineData(ClientType.WebImplicit)]
+        public async Task ShouldAddDefaultLogoutUriIfNull(ClientType clientType)
         {
-            var command = ClientViewModelFaker.GenerateSaveClient().Generate();
+            var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
             command.LogoutUri = null;
 
             await _clientAppService.Save(command);

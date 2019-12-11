@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using Bogus;
+﻿using Bogus;
 using IdentityServer4.Models;
 using JPProject.Admin.Application.ViewModels.ApiResouceViewModels;
+using System.Linq;
 
 namespace JPProject.Admin.Fakers.Test.ApiResourceFakers
 {
@@ -11,7 +11,6 @@ namespace JPProject.Admin.Fakers.Test.ApiResourceFakers
         {
             return new Faker<ApiResource>()
                 .RuleFor(a => a.ApiSecrets, f => GenerateSecret().Generate(f.Random.Int(0, 2)))
-                .RuleFor(a => a.Scopes, f => GenerateScope().Generate(f.Random.Int(0, 2)))
                 .RuleFor(a => a.Enabled, f => f.Random.Bool())
                 .RuleFor(a => a.Name, f => f.Internet.DomainName())
                 .RuleFor(a => a.DisplayName, f => f.Lorem.Word())
