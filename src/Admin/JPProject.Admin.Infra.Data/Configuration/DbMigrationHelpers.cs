@@ -18,15 +18,14 @@ namespace JPProject.Admin.Infra.Data.Configuration
             using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
             var id4Context = scope.ServiceProvider.GetRequiredService<JPProjectAdminUIContext>();
-            var storeDb = scope.ServiceProvider.GetRequiredService<EventStoreContext>();
 
-            if (id4Context.Database.IsInMemory() || storeDb.Database.IsInMemory())
+            if (id4Context.Database.IsInMemory())
                 return;
 
             await DbHealthChecker.TestConnection(id4Context);
             await ValidateIs4Context(options, id4Context);
 
-            await ConfigureEventStoreContext(storeDb);
+
         }
 
         private static async Task ValidateIs4Context(JpDatabaseOptions options, JPProjectAdminUIContext id4AdminUiContext)
@@ -39,7 +38,7 @@ namespace JPProject.Admin.Infra.Data.Configuration
                 throw new DatabaseNotFoundException("IdentityServer4 Database doesn't exist. Ensure it was created before.'");
         }
 
-        private static async Task ConfigureEventStoreContext(EventStoreContext storeDb)
+        public static async Task ConfigureEventStoreContext(EventStoreContext storeDb)
         {
             var storeDbExist = await DbHealthChecker.CheckTableExists<StoredEvent>(storeDb);
             if (!storeDbExist)

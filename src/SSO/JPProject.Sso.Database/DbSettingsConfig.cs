@@ -1,5 +1,4 @@
 ﻿using JPProject.Domain.Core.ViewModels;
-using JPProject.EntityFrameworkCore.Configuration;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.EntityFrameworkCore.MySql.Configuration;
 using JPProject.Sso.EntityFrameworkCore.PostgreSQL.Configuration;
@@ -16,16 +15,16 @@ namespace JPProject.Sso.Database
             switch (database)
             {
                 case DatabaseType.MySql:
-                    services.WithMySql(connString).AddEventStoreMySql(connString, EventStoreMigrationOptions.Get().ShouldMigrate(false));
+                    services.WithMySql(connString).AddEventStoreMySql(connString);
                     break;
                 case DatabaseType.SqlServer:
-                    services.WithSqlServer(connString).AddEventStoreSqlServer(connString, EventStoreMigrationOptions.Get().ShouldMigrate(false));
+                    services.WithSqlServer(connString).AddEventStoreSqlServer(connString);
                     break;
                 case DatabaseType.Postgre:
-                    services.WithPostgreSql(connString).AddEventStorePostgreSql(connString, EventStoreMigrationOptions.Get().ShouldMigrate(false));
+                    services.WithPostgreSql(connString).AddEventStorePostgreSql(connString);
                     break;
                 case DatabaseType.Sqlite:
-                    services.WithSqlite(connString).AddEventStoreSqlite(connString, EventStoreMigrationOptions.Get().ShouldMigrate(false));
+                    services.WithSqlite(connString).AddEventStoreSqlite(connString);
                     break;
             }
 

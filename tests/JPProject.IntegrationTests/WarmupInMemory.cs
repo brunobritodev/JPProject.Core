@@ -4,6 +4,7 @@ using JPProject.Admin.Application.AutoMapper;
 using JPProject.Admin.Fakers.Test;
 using JPProject.Admin.Infra.Data.Context;
 using JPProject.EntityFrameworkCore.Configuration;
+using JPProject.EntityFrameworkCore.Context;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +35,7 @@ namespace JPProject.Admin.IntegrationTests
                 .ConfigureJpAdmin<AspNetUserTest>()
                 .WithSqlServer(Options);
 
-            serviceCollection.AddEventStoreContext(Options);
+            serviceCollection.AddDbContext<EventStoreContext>(Options);
             serviceCollection.TryAddSingleton(automapperConfig.CreateMapper());
             serviceCollection.AddMediatR(typeof(WarmupInMemory));
             serviceCollection.TryAddSingleton(mockHttpContextAccessor.Object);

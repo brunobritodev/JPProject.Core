@@ -1,6 +1,8 @@
-﻿using FluentAssertions;
+﻿using Bogus;
+using FluentAssertions;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels.ClientsViewModels;
+using JPProject.Admin.Domain.Commands.Clients;
 using JPProject.Admin.Fakers.Test.ClientFakers;
 using JPProject.Admin.Infra.Data.Context;
 using JPProject.Domain.Core.Notifications;
@@ -20,10 +22,12 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         private readonly IClientAppService _clientAppService;
         private readonly JPProjectAdminUIContext _database;
         private readonly DomainNotificationHandler _notifications;
+        private Faker _faker;
 
         public WarmupInMemory InMemoryData { get; }
         public ClientAppServiceInMemoryTest(WarmupInMemory inMemoryData, ITestOutputHelper output)
         {
+            _faker = new Faker();
             _output = output;
             InMemoryData = inMemoryData;
             _clientAppService = InMemoryData.Services.GetRequiredService<IClientAppService>();
@@ -44,20 +48,130 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             _database.ClientPostLogoutRedirectUris.Include(w => w.Client).Where(w => w.Client.ClientId == command.ClientId).Should().NotBeNull();
         }
 
-        [Fact]
-        public async Task ShouldAddNewClientWithoutPostLogoutUri()
+
+        [Theory]
+        [InlineData(ClientType.Spa, new[] { "openid", "profile" })]
+        [InlineData(ClientType.WebHybrid, new[] { "openid", "profile" })]
+        [InlineData(ClientType.WebImplicit, new[] { "openid", "profile" })]
+        [InlineData(ClientType.Device, new[] { "openid" })]
+        [InlineData(ClientType.Machine, new[] { "openid" })]
+        [InlineData(ClientType.Native, new[] { "openid", "profile" })]
+        public async Task ShouldAddDefaultScopes(ClientType clientType, string[] scopeName)
         {
-            var command = ClientViewModelFaker.GenerateSaveClient().Generate();
+            var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
+
+            await _clientAppService.Save(command);
+
+            var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
+            client.Should().NotBeNull();
+
+            foreach (var s in scopeName)
+            {
+                client?.AllowedScopes.Should().Contain(scope => scope.Scope.Equals(s));
+            }
+        }
+
+        [Theory]
+        [InlineData(ClientType.Spa)]
+        [InlineData(ClientType.WebHybrid)]
+        [InlineData(ClientType.WebImplicit)]
+        public async Task ShouldAddCors(ClientType clientType)
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
+
+            await _clientAppService.Save(command);
+
+            var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
+            client.Should().NotBeNull();
+            client.AllowedCorsOrigins.Should().Contain(origin => origin.Origin.Equals(command.ClientUri));
+        }
+
+        [Theory]
+        [InlineData(ClientType.Spa)]
+        [InlineData(ClientType.WebHybrid)]
+        [InlineData(ClientType.WebImplicit)]
+        public async Task ShouldAddDefaultRedirectUri(ClientType clientType)
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
+
+            await _clientAppService.Save(command);
+
+            var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
+            client.Should().NotBeNull();
+            client.RedirectUris.Should().Contain(origin => origin.RedirectUri.Equals(command.ClientUri));
+        }
+
+
+        [Fact]
+        public async Task ShouldAddClientServer()
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient(clientType: ClientType.Machine).Generate();
+            command.ClientUri = null;
+            command.LogoUri = null;
             command.LogoutUri = null;
 
             await _clientAppService.Save(command);
 
             var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
             client.Should().NotBeNull();
-            _database.Clients.Include(w => w.PostLogoutRedirectUris).FirstOrDefault(w => w.ClientId == command.ClientId)
-                .PostLogoutRedirectUris.Should().BeEmpty();
+            client.RedirectUris.Should().BeEmpty();
+            client.RequireConsent.Should().BeFalse();
         }
 
+
+
+        [Theory]
+        [InlineData(ClientType.Spa)]
+        [InlineData(ClientType.WebHybrid)]
+        [InlineData(ClientType.WebImplicit)]
+        public async Task ShouldAddDefaultLogoutUriIfNull(ClientType clientType)
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
+            command.LogoutUri = null;
+
+            await _clientAppService.Save(command);
+
+            var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
+            client.Should().NotBeNull();
+            client.PostLogoutRedirectUris.Should().Contain(origin => origin.PostLogoutRedirectUri.Equals(command.ClientUri));
+        }
+
+
+        [Theory]
+        [InlineData(ClientType.Spa)]
+        [InlineData(ClientType.WebImplicit)]
+        public async Task ShouldAddAlwaysIncludeUserClaimsInIdTokenWhenImplicity(ClientType clientType)
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
+            command.LogoutUri = null;
+
+            await _clientAppService.Save(command);
+
+            var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
+            client.Should().NotBeNull();
+            client.AlwaysIncludeUserClaimsInIdToken.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task ShouldNotSaveClientWithPostLogoutUriWithTrailingSlash()
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient(logoutUri: $"{_faker.Internet.Url()}/").Generate();
+            await _clientAppService.Save(command);
+
+            var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
+            client.Should().BeNull();
+        }
+
+
+        [Fact]
+        public async Task ShouldNotSaveClientWithClientUriWithTrailingSlash()
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient(clientUri: $"{_faker.Internet.Url()}/").Generate();
+            await _clientAppService.Save(command);
+
+            var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
+            client.Should().BeNull();
+        }
         [Fact]
         public async Task ShouldRemoveClient()
         {

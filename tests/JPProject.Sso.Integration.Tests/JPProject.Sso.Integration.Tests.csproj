@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bogus" Version="28.4.3" />
-    <PackageReference Include="FluentAssertions" Version="5.9.0" />
-    <PackageReference Include="IdentityServer4" Version="3.0.2" />
-    <PackageReference Include="IdentityServer4.EntityFramework" Version="3.0.2" />
-    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="3.0.2" />
+    <PackageReference Include="Bogus" Version="28.4.4" />
+    <PackageReference Include="FluentAssertions" Version="5.10.0" />
+    <PackageReference Include="IdentityServer4" Version="3.1.0" />
+    <PackageReference Include="IdentityServer4.EntityFramework" Version="3.1.0" />
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="3.1.0" />
     <PackageReference Include="JetBrains.DotMemoryUnit" Version="3.0.20171219.105559" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />

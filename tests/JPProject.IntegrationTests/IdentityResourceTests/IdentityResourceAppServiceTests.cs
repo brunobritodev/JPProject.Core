@@ -39,7 +39,9 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
 
             await _identityResource.Save(command);
 
-            _database.IdentityResources.FirstOrDefault(s => s.Name == command.Name).Should().NotBeNull();
+            var idrs = _database.IdentityResources.FirstOrDefault(s => s.Name == command.Name);
+            idrs.Should().NotBeNull();
+            
         }
 
         [Fact]

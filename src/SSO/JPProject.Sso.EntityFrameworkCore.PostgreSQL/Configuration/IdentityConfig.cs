@@ -1,4 +1,4 @@
-﻿using JPProject.EntityFrameworkCore.Configuration;
+﻿using JPProject.EntityFrameworkCore.Context;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Infra.Data.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +18,12 @@ namespace JPProject.Sso.EntityFrameworkCore.PostgreSQL.Configuration
 
             return services;
         }
-        public static ISsoConfigurationBuilder AddEventStorePostgreSql(this ISsoConfigurationBuilder services, string connectionString, EventStoreMigrationOptions options = null)
+        public static ISsoConfigurationBuilder AddEventStorePostgreSql(this ISsoConfigurationBuilder services, string connectionString)
         {
             var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
 
 
-            services.Services.AddEventStoreContext(opt => opt.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)), options);
+            services.Services.AddDbContext<EventStoreContext>(opt => opt.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
 
             return services;
         }

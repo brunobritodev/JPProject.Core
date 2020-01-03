@@ -1,4 +1,4 @@
-﻿using JPProject.EntityFrameworkCore.Configuration;
+﻿using JPProject.EntityFrameworkCore.Context;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Infra.Data.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -25,11 +25,11 @@ namespace JPProject.Sso.EntityFrameworkCore.Sqlite.Configuration
             return services;
         }
 
-        public static ISsoConfigurationBuilder AddEventStoreSqlite(this ISsoConfigurationBuilder services, string connectionString, EventStoreMigrationOptions options = null)
+        public static ISsoConfigurationBuilder AddEventStoreSqlite(this ISsoConfigurationBuilder services, string connectionString)
         {
             var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
 
-            services.Services.AddEventStoreContext(opt => opt.UseSqlite(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)), options);
+            services.Services.AddDbContext<EventStoreContext>(opt => opt.UseSqlite(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
 
             return services;
         }
