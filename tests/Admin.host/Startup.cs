@@ -1,11 +1,18 @@
+using AutoMapper;
+using AutoMapper.Configuration;
+using JPProject.Admin.Application.AutoMapper;
 using JPProject.Admin.Database;
 using JPProject.AspNet.Core;
 using JPProject.Domain.Core.ViewModels;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace Admin.host
 {
@@ -28,6 +35,17 @@ namespace Admin.host
             services
                 .ConfigureJpAdmin<AspNetUser>()
                 .AddDatabase(database, connString);
+
+
+            var configurationExpression = new MapperConfigurationExpression();
+            AdminUiMapperConfiguration.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));
+            var automapperConfig = new MapperConfiguration(configurationExpression);
+
+            services.TryAddSingleton(automapperConfig.CreateMapper());
+            // Adding MediatR for Domain Events and Notifications
+            services.AddMediatR(typeof(Startup));
+
+            RegisterServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +66,12 @@ namespace Admin.host
             {
                 endpoints.MapControllers();
             });
+        }
+        private void RegisterServices(IServiceCollection services)
+        {
+            // Adding dependencies from another layers (isolated from Presentation)
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
         }
     }
 }

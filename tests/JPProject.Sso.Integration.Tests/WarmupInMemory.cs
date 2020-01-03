@@ -1,6 +1,6 @@
 using AutoMapper;
 using AutoMapper.Configuration;
-using JPProject.EntityFrameworkCore.Configuration;
+using JPProject.EntityFrameworkCore.Context;
 using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.EntityFrameworkCore.SqlServer.Configuration;
 using JPProject.Sso.Infra.Data.Context;
@@ -43,7 +43,7 @@ namespace JPProject.Sso.Integration.Tests
                 .ConfigureIdentityServer()
                 .WithSqlServer(DatabaseOptions);
 
-            serviceCollection.AddEventStoreContext(DatabaseOptions);
+            serviceCollection.AddDbContext<EventStoreContext>(DatabaseOptions);
 
             var configurationExpression = new MapperConfigurationExpression();
             SsoMapperConfig.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));

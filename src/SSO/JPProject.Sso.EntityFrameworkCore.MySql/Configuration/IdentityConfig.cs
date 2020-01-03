@@ -1,4 +1,4 @@
-﻿using JPProject.EntityFrameworkCore.Configuration;
+﻿using JPProject.EntityFrameworkCore.Context;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Infra.Data.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -18,11 +18,11 @@ namespace JPProject.Sso.EntityFrameworkCore.MySql.Configuration
             return services;
         }
 
-        public static ISsoConfigurationBuilder AddEventStoreMySql(this ISsoConfigurationBuilder services, string connectionString, EventStoreMigrationOptions options = null)
+        public static ISsoConfigurationBuilder AddEventStoreMySql(this ISsoConfigurationBuilder services, string connectionString)
         {
             var migrationsAssembly = typeof(IdentityConfig).GetTypeInfo().Assembly.GetName().Name;
 
-            services.Services.AddEventStoreContext(opt => opt.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)), options);
+            services.Services.AddDbContext<EventStoreContext>(opt => opt.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly)));
 
             return services;
         }
