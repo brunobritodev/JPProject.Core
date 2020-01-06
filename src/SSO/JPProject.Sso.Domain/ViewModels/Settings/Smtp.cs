@@ -14,10 +14,10 @@
             if (bool.TryParse(useSsl, out _))
                 UseSsl = bool.Parse(useSsl);
         }
-        public string Server { get; set; }
-        public int Port { get; set; }
-        public bool UseSsl { get; set; }
-        public string Password { get; set; }
-        public string Username { get; set; }
+        public string Server { get; }
+        public int Port { get; }
+        public bool UseSsl { get; }
+        public string Password { get; }
+        public string Username { get; }
     }
 }

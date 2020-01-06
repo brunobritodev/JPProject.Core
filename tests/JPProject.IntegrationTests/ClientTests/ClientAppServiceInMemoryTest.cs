@@ -9,6 +9,7 @@ using JPProject.Domain.Core.Notifications;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -48,6 +49,19 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             _database.ClientPostLogoutRedirectUris.Include(w => w.Client).Where(w => w.Client.ClientId == command.ClientId).Should().NotBeNull();
         }
 
+
+        [Fact]
+        public async Task ShouldAddNewClientWithoutPostLogout()
+        {
+            //var command = JsonConvert.DeserializeObject<SaveClientViewModel>("{\"ClientId\":\"aoeu123\",\"ClientName\":\"aoe\",\"LogoUri\":\"https://localhost:5000/storage/1200px-Jenkins_logo.svg.png\",\"ClientType\":\"WebImplicit\"}");
+            var command = JsonConvert.DeserializeObject<SaveClientViewModel>("{\"ClientId\":\"aoeu123\",\"ClientName\":\"aoe\",\"ClientType\":\"WebImplicit\"}");
+
+            await _clientAppService.Save(command);
+
+            var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
+            client.Should().NotBeNull();
+            _database.ClientPostLogoutRedirectUris.Include(w => w.Client).Where(w => w.Client.ClientId == command.ClientId).Should().NotBeNull();
+        }
 
         [Theory]
         [InlineData(ClientType.Spa, new[] { "openid", "profile" })]

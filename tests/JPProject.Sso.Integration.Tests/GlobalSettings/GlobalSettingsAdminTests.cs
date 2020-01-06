@@ -50,5 +50,6 @@ namespace JPProject.Sso.Integration.Tests.GlobalSettings
             var data = await _globalAppService.GetPrivateSettings();
             data.Smtp.Password.Should().NotContain("Sensitive Data");
         }
+
     }
 }
