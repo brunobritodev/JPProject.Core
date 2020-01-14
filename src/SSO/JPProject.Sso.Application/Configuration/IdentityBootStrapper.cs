@@ -13,7 +13,7 @@ namespace JPProject.Sso.Application.Configuration
             // Infra - Identity Services
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRoleService, RoleService>();
-            services.AddSingleton<IImageStorage, AzureImageStoreService>();
+            services.AddScoped<IStorage, StorageService>();
 
             return services;
         }

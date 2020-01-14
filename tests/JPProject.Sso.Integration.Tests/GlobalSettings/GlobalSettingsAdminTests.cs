@@ -3,10 +3,12 @@ using FluentAssertions;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Application.Interfaces;
+using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Fakers.Test.GlobalSettings;
 using JPProject.Sso.Infra.Data.Context;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -50,5 +52,32 @@ namespace JPProject.Sso.Integration.Tests.GlobalSettings
             var data = await _globalAppService.GetPrivateSettings();
             data.Smtp.Password.Should().NotContain("Sensitive Data");
         }
+
+
+        [Fact]
+        public async Task ShouldUpdateWhenConfigurationExist()
+        {
+            var setting = GlobalSettingsFaker.GenerateSetting(key: "Smtp:Password").Generate();
+            var oldSetting = setting.Value;
+            _database.GlobalConfigurationSettings.Add(setting);
+            await _database.SaveChangesAsync();
+
+            var anotherSetting = GlobalSettingsFaker.GenerateSettingViewModel(key: "Smtp:Password").Generate();
+
+            await _globalAppService.UpdateSettings(new List<ConfigurationViewModel>() { anotherSetting });
+            var data = await _globalAppService.GetPrivateSettings();
+            data.Smtp.Password.Should().NotBeEquivalentTo(oldSetting);
+        }
+
+        [Fact]
+        public async Task ShouldSaveConfigurationWhenItDoesntExist()
+        {
+            var anotherSetting = GlobalSettingsFaker.GenerateSettingViewModel(key: "Smtp:Password", isPublic: false).Generate();
+
+            await _globalAppService.UpdateSettings(new List<ConfigurationViewModel>() { anotherSetting });
+            var data = await _globalAppService.GetPrivateSettings();
+            data.Smtp.Password.Should().NotBeEmpty();
+        }
+
     }
 }

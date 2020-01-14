@@ -1,20 +1,20 @@
-﻿using JPProject.Sso.Domain.Interfaces;
+﻿using System.Threading.Tasks;
+using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.ViewModels.User;
 using JPProject.Sso.Infra.Identity.Extensions;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using MimeKit.Text;
-using System.Threading.Tasks;
 
-namespace JPProject.Sso.Application.Services
+namespace JPProject.Sso.Application.CloudServices.Email
 {
-    public class EmailService : IEmailService
+    public class GeneralSmtpService : IEmailService
     {
-        private readonly ILogger<EmailService> _logger;
+        private readonly ILogger<GeneralSmtpService> _logger;
         private readonly IGlobalConfigurationSettingsService _globalConfigurationSettingsService;
 
-        public EmailService(ILogger<EmailService> logger, IGlobalConfigurationSettingsService globalConfigurationSettingsService)
+        public GeneralSmtpService(ILogger<GeneralSmtpService> logger, IGlobalConfigurationSettingsService globalConfigurationSettingsService)
         {
             _logger = logger;
             _globalConfigurationSettingsService = globalConfigurationSettingsService;

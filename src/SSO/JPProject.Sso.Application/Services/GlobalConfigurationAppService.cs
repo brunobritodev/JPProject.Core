@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels;
+using JPProject.Sso.Domain.Commands.GlobalConfiguration;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.ViewModels.Settings;
 using Microsoft.EntityFrameworkCore;
@@ -13,20 +15,22 @@ namespace JPProject.Sso.Application.Services
 {
     public class GlobalConfigurationAppService : IGlobalConfigurationAppService
     {
+        public IMediatorHandler Bus { get; }
         private readonly IMapper _mapper;
         private readonly IGlobalConfigurationSettingsRepository _globalConfigurationSettingsRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        
         private readonly ISystemUser _systemUser;
 
         public GlobalConfigurationAppService(
             IMapper mapper,
             IGlobalConfigurationSettingsRepository globalConfigurationSettingsRepository,
-            ISsoUnitOfWork unitOfWork,
-            ISystemUser systemUser)
+            ISystemUser systemUser,
+            IMediatorHandler bus)
         {
+            Bus = bus;
             _mapper = mapper;
             _globalConfigurationSettingsRepository = globalConfigurationSettingsRepository;
-            _unitOfWork = unitOfWork;
+        
             _systemUser = systemUser;
         }
 
@@ -49,19 +53,14 @@ namespace JPProject.Sso.Application.Services
 
         public async Task<bool> UpdateSettings(IEnumerable<ConfigurationViewModel> configs)
         {
-            var settings = await _globalConfigurationSettingsRepository.GetAll().ToListAsync();
+            var success = true;
             foreach (var configurationViewModel in configs)
             {
-                var setting = settings.FirstOrDefault(f => f.Key.Equals(configurationViewModel.Key));
-                if (setting is null)
-                    continue;
-
-                setting.Update(configurationViewModel.Value, configurationViewModel.IsPublic, configurationViewModel.IsSensitive);
-                _globalConfigurationSettingsRepository.Update(setting);
+                success = await Bus.SendCommand(_mapper.Map<ManageConfigurationCommand>(configurationViewModel));
+                if (!success)
+                    break;
             }
-
-            await _unitOfWork.Commit();
-            return true;
+            return success;
         }
 
         public async Task<IEnumerable<ConfigurationViewModel>> ListSettings()

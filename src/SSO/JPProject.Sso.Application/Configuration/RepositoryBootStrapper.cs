@@ -22,6 +22,7 @@ namespace JPProject.Sso.Application.Configuration
             services.AddScoped<IGlobalConfigurationSettingsRepository, GlobalConfigurationSettingsRepository>();
             services.AddScoped<IEmailRepository, EmailRepository>();
             services.AddScoped<IEventStore, SqlEventStore>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<EventStoreContext>();
 
             return services;

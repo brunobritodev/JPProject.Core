@@ -22,23 +22,22 @@ namespace JPProject.Sso.Application.Services
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IEventStoreRepository _eventStoreRepository;
-        private readonly IImageStorage _imageStorage;
+        private readonly IStorage _storage;
         private readonly IMediatorHandler Bus;
 
         public UserManagerAppService(IMapper mapper,
             IUserService userService,
             IMediatorHandler bus,
             IEventStoreRepository eventStoreRepository,
-            IImageStorage imageStorage
+            IStorage storage
             )
         {
             _mapper = mapper;
             _userService = userService;
             Bus = bus;
             _eventStoreRepository = eventStoreRepository;
-            _imageStorage = imageStorage;
+            _storage = storage;
         }
-
 
         public void Dispose()
         {
@@ -53,7 +52,8 @@ namespace JPProject.Sso.Application.Services
 
         public async Task UpdateProfilePicture(ProfilePictureViewModel model)
         {
-            model.Picture = await _imageStorage.SaveAsync(model);
+            await _storage.Remove(model.Id, "images");
+            model.Picture = await _storage.Upload(model);
             var updateCommand = _mapper.Map<UpdateProfilePictureCommand>(model);
             await Bus.SendCommand(updateCommand);
         }
