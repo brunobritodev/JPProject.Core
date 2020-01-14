@@ -1,5 +1,6 @@
 ﻿using JPProject.Sso.Domain.CommandHandlers;
 using JPProject.Sso.Domain.Commands.Email;
+using JPProject.Sso.Domain.Commands.GlobalConfiguration;
 using JPProject.Sso.Domain.Commands.Role;
 using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
@@ -55,6 +56,11 @@ namespace JPProject.Sso.Application.Configuration
             services.AddScoped<IRequestHandler<UpdateTemplateCommand, bool>, EmailCommandHandler>();
             services.AddScoped<IRequestHandler<SaveEmailCommand, bool>, EmailCommandHandler>();
             services.AddScoped<IRequestHandler<RemoveTemplateCommand, bool>, EmailCommandHandler>();
+
+            /*
+            * Global Config
+            */
+            services.AddScoped<IRequestHandler<ManageConfigurationCommand, bool>, GlobalConfigurationHandler>();
 
             return services;
         }

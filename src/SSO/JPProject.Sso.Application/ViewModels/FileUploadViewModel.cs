@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace JPProject.Sso.Application.ViewModels
 {
@@ -13,5 +15,10 @@ namespace JPProject.Sso.Application.ViewModels
         public string Value { get; set; }
 
         public string VirtualLocation { get; set; }
+
+        public void Normalize()
+        {
+            Filename = $"{Guid.NewGuid()}{Path.GetExtension(Filename)}";
+        }
     }
 }

@@ -51,7 +51,7 @@ namespace JPProject.Sso.Integration.Tests
 
             serviceCollection.TryAddSingleton(automapperConfig.CreateMapper());
             serviceCollection.AddMediatR(typeof(WarmupInMemory));
-            serviceCollection.TryAddSingleton<IHttpContextAccessor>(mockHttpContextAccessor.Object);
+            serviceCollection.TryAddSingleton(mockHttpContextAccessor.Object);
 
             Services = serviceCollection.BuildServiceProvider();
         }

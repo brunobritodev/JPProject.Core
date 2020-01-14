@@ -10,7 +10,15 @@ namespace JPProject.Sso.Domain.ViewModels.Settings
                 return;
 
             Smtp = new Smtp(settings["Smtp:Server"], settings["Smtp:Port"], settings["Smtp:UseSsl"], settings["Smtp:Password"], settings["Smtp:Username"]);
-            Storage = new StorageSettings(settings["Storage:Username"], settings["Storage:Password"], settings["Storage:Service"], settings["Storage:StorageName"], settings["Storage:PhysicalPath"], settings["Storage:VirtualPath"], settings["Storage:BasePath"]);
+            Storage = new StorageSettings(
+                settings["Storage:Username"],
+                settings["Storage:Password"],
+                settings["Storage:Service"],
+                settings["Storage:StorageName"],
+                settings["Storage:PhysicalPath"],
+                settings["Storage:VirtualPath"],
+                settings["Storage:BasePath"],
+                        settings["Storage:Region"]);
 
             if (bool.TryParse(settings["SendEmail"], out _))
                 SendEmail = bool.Parse(settings["SendEmail"]);
