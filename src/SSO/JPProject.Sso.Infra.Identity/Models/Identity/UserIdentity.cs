@@ -1,4 +1,5 @@
 ﻿using JPProject.Domain.Core.Interfaces;
+using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -48,6 +49,32 @@ namespace JPProject.Sso.Infra.Identity.Models.Identity
                 Birthdate,
                 SocialNumber
             );
+        }
+        public void UpdateInfo(UpdateUserCommand user)
+        {
+            Email = user.Email;
+            EmailConfirmed = user.EmailConfirmed;
+            AccessFailedCount = user.AccessFailedCount;
+            LockoutEnabled = user.LockoutEnabled;
+            LockoutEnd = user.LockoutEnd;
+            Name = user.Name;
+            TwoFactorEnabled = user.TwoFactorEnabled;
+            PhoneNumber = user.PhoneNumber;
+            PhoneNumberConfirmed = user.PhoneNumberConfirmed;
+            SocialNumber = user.SocialNumber;
+            Birthdate = user.Birthdate;
+        }
+
+        public void UpdateBio(UpdateProfileCommand command)
+        {
+            Name = command.Name;
+            Bio = command.Bio;
+            Company = command.Company;
+            JobTitle = command.JobTitle;
+            Url = command.Url;
+            PhoneNumber = command.PhoneNumber;
+            SocialNumber = command.SocialNumber;
+            Birthdate = command.Birthdate;
         }
     }
 }

@@ -142,8 +142,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 await Bus.RaiseEvent(new DomainNotification("Username", "User not found"));
                 return false;
             }
-            user.UpdateInfo(request);
-            await _userService.UpdateUserAsync(user);
+            await _userService.UpdateUserAsync(request);
 
             return true;
         }

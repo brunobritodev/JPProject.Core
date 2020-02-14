@@ -1,10 +1,8 @@
-﻿using IdentityModel;
-using JPProject.Domain.Core.Bus;
+﻿using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Domain.Core.StringUtils;
 using JPProject.Domain.Core.ViewModels;
-using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
@@ -66,7 +64,14 @@ namespace JPProject.Sso.Infra.Identity.Services
                 Email = user.Email,
                 UserName = user.UserName,
                 Name = user.Name,
-                Picture = user.Picture
+                Picture = user.Picture,
+                EmailConfirmed = user.EmailConfirmed,
+                SocialNumber = user.SocialNumber,
+                Birthdate = user.Birthdate,
+                Bio = user.Bio,
+                JobTitle = user.JobTitle,
+                LockoutEnd = null,
+                Company = user.Company,
             };
             IdentityResult result;
 
@@ -112,29 +117,30 @@ namespace JPProject.Sso.Infra.Identity.Services
             return null;
         }
 
-        private async Task AddClaims(UserIdentity user)
+        /// <summary>
+        /// Add custom claims here
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private Task AddClaims(UserIdentity user)
         {
-            var claims = new List<Claim>();
-            claims.Add(new Claim("username", user.UserName));
-            claims.Add(new Claim(JwtClaimTypes.Email, user.Email));
+            return Task.CompletedTask;
+            //var claims = new List<Claim>();
+            //claims.Add(new Claim("custom_claim_name", "any value"));
+            //claims.Add(new Claim(JwtClaimTypes.Picture, user.Picture));
+            //var result = await _userManager.AddClaimsAsync(user, claims);
 
-            if (user.Picture.IsPresent())
-                claims.Add(new Claim(JwtClaimTypes.Picture, user.Picture));
-
-            var result = await _userManager.AddClaimsAsync(user, claims);
-
-            if (result.Succeeded)
-            {
-                _logger.LogInformation("Claim created successfull.");
-            }
-            else
-            {
-                foreach (var error in result.Errors)
-                {
-                    await _bus.RaiseEvent(new DomainNotification(result.ToString(), error.Description));
-                }
-            }
-
+            //if (result.Succeeded)
+            //{
+            //    _logger.LogInformation("Claim created successfull.");
+            //}
+            //else
+            //{
+            //    foreach (var error in result.Errors)
+            //    {
+            //        await _bus.RaiseEvent(new DomainNotification(result.ToString(), error.Description));
+            //    }
+            //}
         }
 
         public async Task<bool> UsernameExist(string userName)
@@ -168,33 +174,6 @@ namespace JPProject.Sso.Infra.Identity.Services
             return new AccountResult(user.Id, code, callbackUrl);
         }
 
-        public async Task<string> ResetPassword(ResetPasswordCommand request)
-        {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null)
-            {
-                // Don't reveal that the userId does not exist
-                return null;
-            }
-
-            var result = await _userManager.ResetPasswordAsync(user, request.Code, request.Password);
-
-            if (result.Succeeded)
-            {
-                _logger.LogInformation("Password reseted successfull.");
-                return user.Id;
-            }
-            else
-            {
-                foreach (var error in result.Errors)
-                {
-                    await _bus.RaiseEvent(new DomainNotification(result.ToString(), error.Description));
-                }
-            }
-
-            return null;
-        }
-
         public async Task<string> ConfirmEmailAsync(string email, string code)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -221,13 +200,7 @@ namespace JPProject.Sso.Infra.Identity.Services
         public async Task<bool> UpdateProfileAsync(UpdateProfileCommand command)
         {
             var user = await _userManager.FindByIdAsync(command.Id);
-
-            user.Name = command.Name;
-            user.Bio = command.Bio;
-            user.Company = command.Company;
-            user.JobTitle = command.JobTitle;
-            user.Url = command.Url;
-            user.PhoneNumber = command.PhoneNumber;
+            user.UpdateBio(command);
 
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
@@ -255,11 +228,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
-            {
-                var claims = await _userManager.GetClaimsAsync(user);
-                await AddOrUpdateClaimAsync(user, claims, "picture", user.Picture);
                 return true;
-            }
 
             foreach (var error in result.Errors)
             {
@@ -273,9 +242,32 @@ namespace JPProject.Sso.Infra.Identity.Services
         {
             var customClaim = claims.FirstOrDefault(a => a.Type == key);
             if (customClaim != null)
-                await _userManager.RemoveClaimAsync(user, customClaim);
+            {
+                if (customClaim.Value.NotEqual(value))
+                    await _userManager.RemoveClaimAsync(user, customClaim);
+            }
+            else
+            {
+                await _userManager.AddClaimAsync(user, new Claim(key, value));
+            }
+        }
 
-            await _userManager.AddClaimAsync(user, new Claim(key, value));
+        public async Task<bool> UpdateUserAsync(UpdateUserCommand user)
+        {
+            var userDb = await _userManager.FindByNameAsync(user.Username);
+            userDb.UpdateInfo(user);
+            var resut = await _userManager.UpdateAsync(userDb);
+            if (!resut.Succeeded)
+            {
+                foreach (var error in resut.Errors)
+                {
+                    await _bus.RaiseEvent(new DomainNotification("User", error.Description));
+                }
+
+                return false;
+            }
+
+            return true;
         }
 
         public async Task<bool> CreatePasswordAsync(SetPasswordCommand request)
@@ -540,6 +532,39 @@ namespace JPProject.Sso.Infra.Identity.Services
 
             return result.Succeeded;
         }
+
+        public async Task<string> ResetPassword(string email, string code, string password)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                // Don't reveal that the userId does not exist
+                return null;
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, code, password);
+
+            if (result.Succeeded)
+            {
+                if (!user.EmailConfirmed)
+                {
+                    user.EmailConfirmed = true;
+                    await _userManager.UpdateAsync(user);
+                }
+                _logger.LogInformation("Password reseted successfull.");
+                return user.Id;
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    await _bus.RaiseEvent(new DomainNotification(result.ToString(), error.Description));
+                }
+            }
+
+            return null;
+        }
+
 
         public Task<int> Count(string search)
         {

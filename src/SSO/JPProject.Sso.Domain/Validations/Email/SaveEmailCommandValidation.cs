@@ -7,6 +7,9 @@ namespace JPProject.Sso.Domain.Validations.Email
         public SaveEmailCommandValidation()
         {
             ValidateSubject();
+            ValidateSubject();
+            ValidateSendAddress();
+            ValidateSendName();
         }
     }
 }

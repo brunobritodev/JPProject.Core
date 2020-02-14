@@ -7,7 +7,6 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
 {
     public class UserViewModel
     {
-        [Required]
         [Display(Name = "Username")]
         public string UserName { get; set; }
 
@@ -43,7 +42,7 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
         public string SecurityStamp { get; set; }
-        public DateTime Birthdate { get; set; }
+        public DateTime? Birthdate { get; set; }
 
         /// <summary>
         /// Country unique number

@@ -1,5 +1,5 @@
-﻿using System;
-using JPProject.Domain.Core.Commands;
+﻿using JPProject.Domain.Core.Commands;
+using System;
 
 namespace JPProject.Sso.Domain.Commands.UserManagement
 {
@@ -21,5 +21,7 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
         public DateTimeOffset? LockoutEnd { get; protected set; }
         public bool LockoutEnabled { get; protected set; }
         public int AccessFailedCount { get; protected set; }
+        public string SocialNumber { get; set; }
+        public DateTime? Birthdate { get; set; }
     }
 }

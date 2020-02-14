@@ -172,7 +172,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var emailSent = await _userService.ResetPassword(request);
+            var emailSent = await _userService.ResetPassword(request.Email, request.Code, request.Password);
 
             if (emailSent != null)
             {

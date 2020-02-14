@@ -112,7 +112,7 @@ namespace JPProject.Sso.Application.Services
             return _mapper.Map<UserViewModel>(users);
         }
 
-        public Task UpdateUser(UserViewModel model)
+        public Task<bool> UpdateUser(UserViewModel model)
         {
             var command = _mapper.Map<UpdateUserCommand>(model);
             return Bus.SendCommand(command);

@@ -21,7 +21,7 @@ namespace JPProject.Sso.Application.Interfaces
 
         Task<UserViewModel> GetUserDetails(string username);
         Task<UserViewModel> GetUserAsync(string value);
-        Task UpdateUser(UserViewModel model);
+        Task<bool> UpdateUser(UserViewModel model);
 
         Task<IEnumerable<ClaimViewModel>> GetClaims(string userName);
         Task SaveClaim(SaveUserClaimViewModel model);

@@ -6,7 +6,7 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
     public class UpdateProfileCommand : ProfileCommand
     {
 
-        public UpdateProfileCommand(string id, string url, string bio, string company, string jobTitle, string name, string phoneNumber, string socialNumber, DateTime birthdate)
+        public UpdateProfileCommand(string id, string url, string bio, string company, string jobTitle, string name, string phoneNumber, string socialNumber, DateTime? birthdate)
         {
             SocialNumber = socialNumber;
             Birthdate = birthdate;

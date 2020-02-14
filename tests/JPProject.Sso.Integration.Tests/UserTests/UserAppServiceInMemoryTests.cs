@@ -7,6 +7,7 @@ using JPProject.Sso.Fakers.Test.Users;
 using JPProject.Sso.Integration.Tests.Context;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -45,6 +46,45 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             result.Should().BeTrue();
             _database.Users.FirstOrDefault(f => f.UserName == command.Username).Should().NotBeNull();
         }
+
+        [Fact]
+        public async Task Should_Update_User()
+        {
+            var command = UserViewModelFaker.GenerateUserViewModel().Generate();
+            var result = await _userAppService.Register(command);
+            result.Should().BeTrue();
+
+            var user = await _userManagerAppService.GetUserDetails(command.Username);
+            user.Birthdate = DateTime.Now.Date.AddYears(-18);
+            result = await _userManagerAppService.UpdateUser(user);
+
+            result.Should().BeTrue();
+
+            user = await _userManagerAppService.GetUserDetails(command.Username);
+            user.Birthdate.Should().Be(DateTime.Now.Date.AddYears(-18));
+        }
+
+        [Fact]
+        public async Task Should_Save_SocialNumber()
+        {
+            var command = UserViewModelFaker.GenerateUserViewModel().Generate();
+            var result = await _userAppService.Register(command);
+            result.Should().BeTrue();
+            _database.Users.FirstOrDefault(f => f.UserName == command.Username)?.SocialNumber.Should().NotBeNull();
+        }
+
+
+        [Fact]
+        public async Task UserLockoutDate_Should_Be_Null()
+        {
+            var command = UserViewModelFaker.GenerateUserViewModel().Generate();
+            var result = await _userAppService.Register(command);
+            result.Should().BeTrue();
+
+            var savedUser = await _userManagerAppService.GetUserDetails(command.Username);
+            savedUser.LockoutEnd.Should().BeNull();
+        }
+
 
         [Fact]
         public async Task ShouldNotRegisterDuplicatedUsername()
@@ -260,6 +300,17 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             _notifications.GetNotifications().Select(s => s.Value).ToList().ForEach(_output.WriteLine);
 
             emailSent.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task ShouldRegisterNewUserWithLockOutDisabled()
+        {
+            var command = UserViewModelFaker.GenerateUserViewModel().Generate();
+            var result = await _userAppService.Register(command);
+            result.Should().BeTrue();
+            var user = _database.Users.FirstOrDefault(f => f.UserName == command.Username);
+            user.Should().NotBeNull();
+            user.LockoutEnd.Should().BeNull();
         }
 
     }

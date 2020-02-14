@@ -2,6 +2,7 @@
 using Bogus.Extensions.UnitedStates;
 using JPProject.Sso.Domain.Commands.User;
 using System;
+using JPProject.Sso.Domain.Commands.UserManagement;
 
 namespace JPProject.Sso.Fakers.Test.Users
 {
@@ -55,6 +56,22 @@ namespace JPProject.Sso.Fakers.Test.Users
                 f => new SendResetLinkCommand(username ?? f.Person.Email)
             );
         }
-
+        public static Faker<UpdateUserCommand> GenerateUpdateUserCommand()
+        {
+            return new Faker<UpdateUserCommand>().CustomInstantiator(f => new UpdateUserCommand(
+                f.Person.Email,
+                f.Person.UserName,
+                f.Person.FullName,
+                f.Person.Phone,
+                f.Random.Bool(),
+                f.Random.Bool(),
+                f.Random.Bool(),
+                f.Date.RecentOffset(),
+                f.Random.Bool(),
+                f.Random.Int(0, 5),
+                f.Person.Ssn(),
+                f.Person.DateOfBirth
+            ));
+        }
     }
 }
