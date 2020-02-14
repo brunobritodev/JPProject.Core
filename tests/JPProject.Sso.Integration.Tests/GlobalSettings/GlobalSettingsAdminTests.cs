@@ -5,7 +5,7 @@ using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Fakers.Test.GlobalSettings;
-using JPProject.Sso.Infra.Data.Context;
+using JPProject.Sso.Infra.Data.Interfaces;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace JPProject.Sso.Integration.Tests.GlobalSettings
     public class GlobalSettingsTests : IClassFixture<WarmupInMemory>
     {
         private readonly ITestOutputHelper _output;
-        private readonly ApplicationSsoContext _database;
+        private readonly ISsoContext _database;
         private readonly Faker _faker;
         private readonly DomainNotificationHandler _notifications;
         private readonly IGlobalConfigurationAppService _globalAppService;
@@ -32,7 +32,7 @@ namespace JPProject.Sso.Integration.Tests.GlobalSettings
             _faker = new Faker();
             InMemoryData = inMemory;
             _globalAppService = InMemoryData.Services.GetRequiredService<IGlobalConfigurationAppService>();
-            _database = InMemoryData.Services.GetRequiredService<ApplicationSsoContext>();
+            _database = InMemoryData.Services.GetRequiredService<ISsoContext>();
 
             _user = (AspNetUserTest)InMemoryData.Services.GetService<ISystemUser>();
             _user._isInRole = true;

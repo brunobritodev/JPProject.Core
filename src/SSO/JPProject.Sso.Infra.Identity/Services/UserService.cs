@@ -4,6 +4,7 @@ using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Domain.Core.StringUtils;
 using JPProject.Domain.Core.ViewModels;
+using JPProject.Sso.Domain.Commands.Role;
 using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Interfaces;
@@ -149,12 +150,6 @@ namespace JPProject.Sso.Infra.Identity.Services
             return user != null;
         }
 
-        public async Task<User> FindByLoginAsync(string provider, string providerUserId)
-        {
-            var model = await _userManager.FindByLoginAsync(provider, providerUserId);
-            return GetUser(model);
-        }
-
         public async Task<AccountResult?> GenerateResetPasswordLink(string emailOrUsername)
         {
             var user = await GetUserByEmailOrUsername(emailOrUsername);
@@ -200,16 +195,16 @@ namespace JPProject.Sso.Infra.Identity.Services
             return null;
         }
 
-        public async Task<string> ConfirmEmailAsync(string email, string code)
+        public async Task<string> ConfirmEmailAsync(ConfirmEmailCommand command)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(command.Email);
             if (user == null)
             {
-                await _bus.RaiseEvent(new DomainNotification("Email", $"Unable to load userId with ID '{email}'."));
+                await _bus.RaiseEvent(new DomainNotification("Email", $"Unable to load userId with ID '{command.Name}'."));
                 return null;
             }
 
-            var result = await _userManager.ConfirmEmailAsync(user, code);
+            var result = await _userManager.ConfirmEmailAsync(user, command.Code);
             if (result.Succeeded)
                 return user.Id;
 
@@ -220,7 +215,6 @@ namespace JPProject.Sso.Infra.Identity.Services
 
             return null;
         }
-
 
 
         public async Task<bool> UpdateProfileAsync(UpdateProfileCommand command)
@@ -445,14 +439,14 @@ namespace JPProject.Sso.Infra.Identity.Services
             return result.Succeeded;
         }
 
-        public async Task<bool> RemoveClaim(string userId, string claimType, string value)
+        public async Task<bool> RemoveClaim(RemoveUserClaimCommand command)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByNameAsync(command.Username);
             var claims = await _userManager.GetClaimsAsync(user);
 
-            var claimToRemove = value.IsMissing() ?
-                                    claims.First(c => c.Type.Equals(claimType)) :
-                                    claims.First(c => c.Type.Equals(claimType) && c.Value.Equals(value));
+            var claimToRemove = command.Value.IsMissing() ?
+                                    claims.First(c => c.Type.Equals(command.Type)) :
+                                    claims.First(c => c.Type.Equals(command.Type) && c.Value.Equals(command.Value));
 
             var result = await _userManager.RemoveClaimAsync(user, claimToRemove);
 
@@ -470,10 +464,10 @@ namespace JPProject.Sso.Infra.Identity.Services
             return await _userManager.GetRolesAsync(user);
         }
 
-        public async Task<bool> RemoveRole(string userDbId, string requestRole)
+        public async Task<bool> RemoveRole(RemoveUserRoleCommand command)
         {
-            var user = await _userManager.FindByIdAsync(userDbId);
-            var result = await _userManager.RemoveFromRoleAsync(user, requestRole);
+            var user = await _userManager.FindByNameAsync(command.Username);
+            var result = await _userManager.RemoveFromRoleAsync(user, command.Role);
 
             foreach (var error in result.Errors)
             {
@@ -484,10 +478,10 @@ namespace JPProject.Sso.Infra.Identity.Services
         }
 
 
-        public async Task<bool> SaveRole(string userId, string role)
+        public async Task<bool> SaveRole(SaveUserRoleCommand command)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            var result = await _userManager.AddToRoleAsync(user, role);
+            var user = await _userManager.FindByNameAsync(command.Username);
+            var result = await _userManager.AddToRoleAsync(user, command.Role);
 
             foreach (var error in result.Errors)
             {
@@ -504,10 +498,10 @@ namespace JPProject.Sso.Infra.Identity.Services
             return logins.Select(a => new UserLogin(a.LoginProvider, a.ProviderDisplayName, a.ProviderKey));
         }
 
-        public async Task<bool> RemoveLogin(string userId, string loginProvider, string providerKey)
+        public async Task<bool> RemoveLogin(RemoveUserLoginCommand command)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
+            var user = await _userManager.FindByIdAsync(command.Username);
+            var result = await _userManager.RemoveLoginAsync(user, command.LoginProvider, command.ProviderKey);
             foreach (var error in result.Errors)
             {
                 await _bus.RaiseEvent(new DomainNotification(result.ToString(), error.Description));
@@ -521,10 +515,10 @@ namespace JPProject.Sso.Infra.Identity.Services
             return (await _userManager.GetUsersInRoleAsync(role)).Select(GetUser);
         }
 
-        public async Task<bool> RemoveUserFromRole(string name, string username)
+        public async Task<bool> RemoveUserFromRole(RemoveUserFromRoleCommand command)
         {
-            var user = await _userManager.FindByNameAsync(username);
-            var result = await _userManager.RemoveFromRoleAsync(user, name);
+            var user = await _userManager.FindByNameAsync(command.Username);
+            var result = await _userManager.RemoveFromRoleAsync(user, command.Name);
             foreach (var error in result.Errors)
             {
                 await _bus.RaiseEvent(new DomainNotification(result.ToString(), error.Description));
@@ -533,11 +527,11 @@ namespace JPProject.Sso.Infra.Identity.Services
             return result.Succeeded;
         }
 
-        public async Task<bool> ResetPasswordAsync(string username, string password)
+        public async Task<bool> ResetPasswordAsync(AdminChangePasswordCommand command)
         {
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByNameAsync(command.Username);
             await _userManager.RemovePasswordAsync(user);
-            var result = await _userManager.AddPasswordAsync(user, password);
+            var result = await _userManager.AddPasswordAsync(user, command.Password);
             foreach (var error in result.Errors)
             {
                 await _bus.RaiseEvent(new DomainNotification(result.ToString(), error.Description));
@@ -551,13 +545,13 @@ namespace JPProject.Sso.Infra.Identity.Services
             return search.IsPresent() ? _userManager.Users.Where(UserFind(search)).CountAsync() : _userManager.Users.CountAsync();
         }
 
-        public async Task<string> AddLoginAsync(string email, string provider, string providerId)
+        public async Task<string> AddLoginAsync(AddLoginCommand command)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(command.Email);
             if (user == null)
                 return null;
 
-            await AddLoginAsync(user, provider, providerId);
+            await AddLoginAsync(user, command.Provider, command.ProviderId);
 
             return user.Id;
         }

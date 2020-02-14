@@ -7,7 +7,7 @@ using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Domain.ViewModels.User;
 using JPProject.Sso.Fakers.Test.Email;
 using JPProject.Sso.Fakers.Test.Users;
-using JPProject.Sso.Infra.Data.Context;
+using JPProject.Sso.Integration.Tests.Context;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
     public class EmailAppServiceInMemoryTests : IClassFixture<WarmupInMemory>
     {
         private readonly ITestOutputHelper _output;
-        private readonly ApplicationSsoContext _database;
+        private readonly SsoContext _database;
         private readonly Faker _faker;
         private readonly DomainNotificationHandler _notifications;
         private readonly IEmailAppService _emailAppService;
@@ -32,7 +32,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
             _faker = new Faker();
             InMemoryData = inMemory;
             _emailAppService = InMemoryData.Services.GetRequiredService<IEmailAppService>();
-            _database = InMemoryData.Services.GetRequiredService<ApplicationSsoContext>();
+            _database = InMemoryData.Services.GetRequiredService<SsoContext>();
             _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
 
             _notifications.Clear();
@@ -46,7 +46,6 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
             result.Should().BeTrue(becauseArgs: _notifications.GetNotificationsByKey());
             _database.Emails.FirstOrDefault(f => f.Type == command.Type).Should().NotBeNull();
         }
-
 
         [Fact]
         public async Task ShouldSaveEmailWithManyBccs()
@@ -148,7 +147,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
     public class EmailServiceInMemoryTests : IClassFixture<WarmupInMemory>
     {
         private readonly ITestOutputHelper _output;
-        private readonly ApplicationSsoContext _database;
+        private readonly SsoContext _database;
         private readonly Faker _faker;
         private readonly DomainNotificationHandler _notifications;
         private IEmailService _emailService;
@@ -160,7 +159,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
             _faker = new Faker();
             InMemoryData = inMemory;
             _emailService = InMemoryData.Services.GetRequiredService<IEmailService>();
-            _database = InMemoryData.Services.GetRequiredService<ApplicationSsoContext>();
+            _database = InMemoryData.Services.GetRequiredService<SsoContext>();
             _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
 
             _notifications.Clear();

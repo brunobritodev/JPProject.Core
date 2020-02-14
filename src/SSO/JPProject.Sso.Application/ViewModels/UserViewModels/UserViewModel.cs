@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using JPProject.Domain.Core.StringUtils;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -42,7 +43,30 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
         public string SecurityStamp { get; set; }
-        public string SocialNumber { get; set; }
         public DateTime Birthdate { get; set; }
+
+        /// <summary>
+        /// Country unique number
+        /// e.g:
+        /// Social Security Number (USA)
+        /// RG or Cpf (Brazil)
+        /// Burgerservicenumber (Netherlands)
+        /// Henkilötunnus (Finnish)
+        /// NIF (Portugal)
+        /// </summary>
+        public string SocialNumber { get; set; }
+
+        [Display(Name = "Provider")]
+        public string Provider { get; set; }
+
+        [Display(Name = "ProviderId")]
+        public string ProviderId { get; set; }
+
+        public bool ContainsFederationGateway()
+        {
+            return Provider.IsPresent() && ProviderId.IsPresent();
+
+        }
+
     }
 }

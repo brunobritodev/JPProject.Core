@@ -97,7 +97,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             }
 
             // Businness logic here
-            var result = await _userService.RemoveUserFromRole(request.Name, request.Username);
+            var result = await _userService.RemoveUserFromRole(request);
 
             if (result)
             {

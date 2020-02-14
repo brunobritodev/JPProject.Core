@@ -1,6 +1,5 @@
 ﻿using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Commands;
-using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Events.User;
@@ -191,7 +190,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var result = await _userService.ConfirmEmailAsync(request.Email, request.Code);
+            var result = await _userService.ConfirmEmailAsync(request);
             if (result != null)
             {
                 await Bus.RaiseEvent(new EmailConfirmedEvent(request.Email, request.Code, result));
@@ -208,7 +207,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var result = await _userService.AddLoginAsync(request.Email, request.Provider, request.ProviderId);
+            var result = await _userService.AddLoginAsync(request);
             if (result != null)
             {
                 await Bus.RaiseEvent(new NewLoginAddedEvent(result, request.Email, request.Provider, request.ProviderId));

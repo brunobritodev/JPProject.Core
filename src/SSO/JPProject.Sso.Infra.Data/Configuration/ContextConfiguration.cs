@@ -7,11 +7,14 @@ namespace JPProject.Sso.Infra.Data.Configuration
 {
     public static class ContextConfiguration
     {
-        public static ISsoConfigurationBuilder AddSsoContext<TContext>(this ISsoConfigurationBuilder services) where TContext : class, ISsoContext
+        public static ISsoConfigurationBuilder AddSsoContext<TContext>(this ISsoConfigurationBuilder services)
+            where TContext : class, ISsoContext
+
         {
             services.Services.AddScoped<ISsoContext, TContext>();
             services.Services.AddScoped<IJpEntityFrameworkStore, TContext>();
             return services;
         }
+
     }
 }

@@ -2,10 +2,14 @@ using AutoMapper;
 using AutoMapper.Configuration;
 using JPProject.EntityFrameworkCore.Context;
 using JPProject.Sso.Application.AutoMapper;
+using JPProject.Sso.Application.Configuration;
 using JPProject.Sso.Infra.Data.Configuration;
-using JPProject.Sso.Infra.Data.Context;
+using JPProject.Sso.Infra.Identity.Models.Identity;
+using JPProject.Sso.Infra.Identity.Services;
+using JPProject.Sso.Integration.Tests.Context;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,16 +40,32 @@ namespace JPProject.Sso.Integration.Tests
 
             void DatabaseOptions(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
 
-            serviceCollection
-                .ConfigureUserIdentity<AspNetUserTest>()
-                .AddSsoContext<ApplicationSsoContext>()
+            serviceCollection.AddDbContext<SsoContext>(DatabaseOptions);
+            serviceCollection.AddDbContext<EventStoreContext>(DatabaseOptions);
 
-                .ConfigureIdentityServer()
+
+            serviceCollection
+                .AddIdentity<UserIdentity, IdentityRole>(AccountOptions.NistAccountOptions)
+                .AddEntityFrameworkStores<SsoContext>()
+                .AddDefaultTokenProviders();
+
+            serviceCollection
+                .ConfigureSso<AspNetUserTest, UserService, RoleService>()
+                .AddSsoContext<SsoContext>();
+
+            serviceCollection
+                .AddIdentityServer(options =>
+                {
+                    options.Events.RaiseErrorEvents = true;
+                    options.Events.RaiseInformationEvents = true;
+                    options.Events.RaiseFailureEvents = true;
+                    options.Events.RaiseSuccessEvents = true;
+                })
+                .AddAspNetIdentity<UserIdentity>()
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = DatabaseOptions;
                 })
-                // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = DatabaseOptions;
@@ -55,8 +75,6 @@ namespace JPProject.Sso.Integration.Tests
                     options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
                 });
 
-            serviceCollection.AddDbContext<ApplicationSsoContext>(DatabaseOptions);
-            serviceCollection.AddDbContext<EventStoreContext>(DatabaseOptions);
 
             var configurationExpression = new MapperConfigurationExpression();
             SsoMapperConfig.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));
@@ -73,7 +91,7 @@ namespace JPProject.Sso.Integration.Tests
         public void DetachAll()
         {
 
-            var database = Services.GetService<ApplicationSsoContext>();
+            var database = Services.GetService<SsoContext>();
             foreach (var dbEntityEntry in database.ChangeTracker.Entries())
             {
                 if (dbEntityEntry.Entity != null)

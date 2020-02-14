@@ -98,12 +98,6 @@ namespace JPProject.Sso.Application.Services
             return _userService.EmailExist(email);
         }
 
-        public async Task<RegisterUserViewModel> FindByLoginAsync(string provider, string providerUserId)
-        {
-            var model = await _userService.FindByLoginAsync(provider, providerUserId);
-            return _mapper.Map<RegisterUserViewModel>(model);
-        }
-
         public void Dispose()
         {
             GC.SuppressFinalize(this);

@@ -11,7 +11,6 @@ namespace JPProject.Sso.Application.Interfaces
         Task<bool> RegisterWithoutPassword(SocialViewModel model);
         Task<bool> CheckUsername(string userName);
         Task<bool> CheckEmail(string email);
-        Task<RegisterUserViewModel> FindByLoginAsync(string provider, string providerUserId);
         Task<bool> RegisterWithProvider(RegisterUserViewModel model);
         Task<bool> SendResetLink(ForgotPasswordViewModel model);
         Task<bool> ResetPassword(ResetPasswordViewModel model);

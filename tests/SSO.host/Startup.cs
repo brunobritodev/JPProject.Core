@@ -1,14 +1,16 @@
 using AutoMapper;
 using AutoMapper.Configuration;
 using JPProject.AspNet.Core;
-using JPProject.Domain.Core.ViewModels;
 using JPProject.Sso.Application.AutoMapper;
+using JPProject.Sso.Application.Configuration;
 using JPProject.Sso.Infra.Data.Configuration;
+using JPProject.Sso.Infra.Identity.Models.Identity;
+using JPProject.Sso.Infra.Identity.Services;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -32,15 +34,29 @@ namespace SSO.host
             services.AddControllers();
 
             void DatabaseOptions(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
+
             services.AddDbContext<SsoContext>(DatabaseOptions);
+
+            // ASP.NET Identity Configuration
             services
-                .ConfigureUserIdentity<AspNetUser>()
-                .AddSsoContext<SsoContext>()
-                .ConfigureIdentityServer().AddConfigurationStore(options =>
+                .AddIdentity<UserIdentity, IdentityRole>(AccountOptions.NistAccountOptions)
+                .AddEntityFrameworkStores<SsoContext>()
+                .AddDefaultTokenProviders();
+
+            // IdentityServer4 Configuration
+            services
+                .AddIdentityServer(options =>
+                {
+                    options.Events.RaiseErrorEvents = true;
+                    options.Events.RaiseInformationEvents = true;
+                    options.Events.RaiseFailureEvents = true;
+                    options.Events.RaiseSuccessEvents = true;
+                })
+                .AddAspNetIdentity<UserIdentity>()
+                .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = DatabaseOptions;
                 })
-                // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = DatabaseOptions;
@@ -49,6 +65,12 @@ namespace SSO.host
                     options.EnableTokenCleanup = true;
                     options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
                 });
+
+            // SSO Configuration
+            services
+                .ConfigureSso<AspNetUser, UserService, RoleService>()
+                .AddSsoContext<SsoContext>();
+
 
             var configurationExpression = new MapperConfigurationExpression();
             SsoMapperConfig.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));

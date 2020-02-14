@@ -4,7 +4,7 @@ using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
 using JPProject.Sso.Fakers.Test.Users;
-using JPProject.Sso.Infra.Data.Context;
+using JPProject.Sso.Integration.Tests.Context;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
     {
         private readonly ITestOutputHelper _output;
         private readonly IUserAppService _userAppService;
-        private readonly ApplicationSsoContext _database;
+        private readonly SsoContext _database;
         private readonly Faker _faker;
         private readonly IUserManageAppService _userManagerAppService;
         private readonly DomainNotificationHandler _notifications;
@@ -31,7 +31,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             InMemoryData = inMemory;
             _userAppService = InMemoryData.Services.GetRequiredService<IUserAppService>();
             _userManagerAppService = InMemoryData.Services.GetRequiredService<IUserManageAppService>();
-            _database = InMemoryData.Services.GetRequiredService<ApplicationSsoContext>();
+            _database = InMemoryData.Services.GetRequiredService<SsoContext>();
             _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
 
             _notifications.Clear();

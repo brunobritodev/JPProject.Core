@@ -4,7 +4,6 @@ using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.EntityFramework.Options;
 using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Infra.Data.Constants;
-using JPProject.Sso.Infra.Data.Context;
 using JPProject.Sso.Infra.Data.Interfaces;
 using JPProject.Sso.Infra.Data.Mappings;
 using JPProject.Sso.Infra.Identity.Models.Identity;
@@ -24,7 +23,7 @@ namespace SSO.host.Context
         private readonly OperationalStoreOptions _operationalOptions;
 
         public SsoContext(
-            DbContextOptions<ApplicationSsoContext> options,
+            DbContextOptions<SsoContext> options,
             ConfigurationStoreOptions storeOptions,
             OperationalStoreOptions operationalOptions)
             : base(options)
