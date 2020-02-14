@@ -3,10 +3,11 @@ using AutoMapper.Configuration;
 using JPProject.AspNet.Core;
 using JPProject.Domain.Core.ViewModels;
 using JPProject.Sso.Application.AutoMapper;
-using JPProject.Sso.Database;
+using JPProject.Sso.Infra.Data.Configuration;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -32,9 +33,24 @@ namespace SSO.host
             var database = Configuration.GetValue<DatabaseType>("ApplicationSettings:DatabaseType");
             var connString = Configuration.GetConnectionString("SSOConnection");
 
+            void DatabaseOptions(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
+
             services
-                .ConfigureUserIdentity<AspNetUser>().AddDatabase(database, connString)
-                .ConfigureIdentityServer().AddOAuth2Database(database, connString);
+                .ConfigureUserIdentity<AspNetUser>()
+                .AddSsoContext(DatabaseOptions)
+                .ConfigureIdentityServer().AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = DatabaseOptions;
+                })
+                // this adds the operational data from DB (codes, tokens, consents)
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = DatabaseOptions;
+
+                    // this enables automatic token cleanup. this is optional.
+                    options.EnableTokenCleanup = true;
+                    options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
+                });
 
             var configurationExpression = new MapperConfigurationExpression();
             SsoMapperConfig.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));

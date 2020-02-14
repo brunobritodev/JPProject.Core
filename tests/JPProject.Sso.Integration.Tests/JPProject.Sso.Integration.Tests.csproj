@@ -16,6 +16,7 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
@@ -33,7 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SSO\JPProject.Sso.Application\JPProject.Sso.Application.csproj" />
-    <ProjectReference Include="..\..\src\SSO\JPProject.Sso.EntityFrameworkCore.Sql\JPProject.Sso.EntityFrameworkCore.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\SSO\JPProject.Sso.Infra.Data\JPProject.Sso.Infra.Data.csproj" />
     <ProjectReference Include="..\JPProject.Sso.Fakers.Test\JPProject.Sso.Fakers.Test.csproj" />
   </ItemGroup>
 

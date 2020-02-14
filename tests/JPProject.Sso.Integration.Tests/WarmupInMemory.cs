@@ -2,7 +2,7 @@ using AutoMapper;
 using AutoMapper.Configuration;
 using JPProject.EntityFrameworkCore.Context;
 using JPProject.Sso.Application.AutoMapper;
-using JPProject.Sso.EntityFrameworkCore.SqlServer.Configuration;
+using JPProject.Sso.Infra.Data.Configuration;
 using JPProject.Sso.Infra.Data.Context;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -38,10 +38,22 @@ namespace JPProject.Sso.Integration.Tests
 
             serviceCollection
                 .ConfigureUserIdentity<AspNetUserTest>()
-                .WithSqlServer(DatabaseOptions)
+                .AddSsoContext(DatabaseOptions)
 
                 .ConfigureIdentityServer()
-                .WithSqlServer(DatabaseOptions);
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = DatabaseOptions;
+                })
+                // this adds the operational data from DB (codes, tokens, consents)
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = DatabaseOptions;
+
+                    // this enables automatic token cleanup. this is optional.
+                    options.EnableTokenCleanup = true;
+                    options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
+                });
 
             serviceCollection.AddDbContext<EventStoreContext>(DatabaseOptions);
 

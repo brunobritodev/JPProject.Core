@@ -1,4 +1,5 @@
-﻿using JPProject.Sso.Infra.Data.Context;
+﻿using JPProject.Sso.Domain.Interfaces;
+using JPProject.Sso.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -7,9 +8,9 @@ namespace JPProject.Sso.Infra.Data.Configuration
 {
     public static class ContextConfiguration
     {
-        public static IServiceCollection AddSsoContext(this IServiceCollection services, Action<DbContextOptionsBuilder> optionsAction)
+        public static ISsoConfigurationBuilder AddSsoContext(this ISsoConfigurationBuilder services, Action<DbContextOptionsBuilder> optionsAction)
         {
-            services.AddDbContext<ApplicationSsoContext>(optionsAction);
+            services.Services.AddDbContext<ApplicationSsoContext>(optionsAction);
 
             return services;
         }
