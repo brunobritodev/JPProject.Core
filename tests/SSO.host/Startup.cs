@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using SSO.host.Context;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace SSO.host
@@ -30,14 +31,11 @@ namespace SSO.host
         {
             services.AddControllers();
 
-            var database = Configuration.GetValue<DatabaseType>("ApplicationSettings:DatabaseType");
-            var connString = Configuration.GetConnectionString("SSOConnection");
-
             void DatabaseOptions(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
-
+            services.AddDbContext<SsoContext>(DatabaseOptions);
             services
                 .ConfigureUserIdentity<AspNetUser>()
-                .AddSsoContext(DatabaseOptions)
+                .AddSsoContext<SsoContext>()
                 .ConfigureIdentityServer().AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = DatabaseOptions;

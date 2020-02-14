@@ -48,14 +48,13 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
 
-        private static IServiceCollection BaseSsoConfiguration<T>(this IServiceCollection services)
-            where T : class, ISystemUser
+        private static IServiceCollection BaseSsoConfiguration<THttpUser>(this IServiceCollection services)
+            where THttpUser : class, ISystemUser
         {
             // Domain Bus (Mediator)
             services.TryAddScoped<IMediatorHandler, InMemoryBus>();
-            services.TryAddScoped<ISystemUser, T>();
+            services.TryAddScoped<ISystemUser, THttpUser>();
             services.AddScoped<IEventSink, IdentityServerEventStore>();
-
             services
                 .AddApplicationServices()
                 .AddDomainEvents()

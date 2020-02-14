@@ -1,14 +1,14 @@
 ﻿using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
-using JPProject.Sso.Infra.Data.Context;
+using JPProject.Sso.Infra.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace JPProject.Sso.Infra.Data.Repository
 {
-    public class EmailRepository : Repository<Email>, IEmailRepository
+    public class EmailRepository : Repository<Email, ISsoContext>, IEmailRepository
     {
-        public EmailRepository(ApplicationSsoContext context) : base(context)
+        public EmailRepository(ISsoContext context) : base(context)
         {
         }
 

@@ -38,7 +38,7 @@ namespace JPProject.Sso.Integration.Tests
 
             serviceCollection
                 .ConfigureUserIdentity<AspNetUserTest>()
-                .AddSsoContext(DatabaseOptions)
+                .AddSsoContext<ApplicationSsoContext>()
 
                 .ConfigureIdentityServer()
                 .AddConfigurationStore(options =>
@@ -55,6 +55,7 @@ namespace JPProject.Sso.Integration.Tests
                     options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
                 });
 
+            serviceCollection.AddDbContext<ApplicationSsoContext>(DatabaseOptions);
             serviceCollection.AddDbContext<EventStoreContext>(DatabaseOptions);
 
             var configurationExpression = new MapperConfigurationExpression();

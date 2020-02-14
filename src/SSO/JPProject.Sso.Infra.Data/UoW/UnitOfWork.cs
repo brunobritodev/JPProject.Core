@@ -1,14 +1,15 @@
-﻿using JPProject.Sso.Domain.Interfaces;
-using JPProject.Sso.Infra.Data.Context;
+﻿using JPProject.EntityFrameworkCore.Interfaces;
+using JPProject.Sso.Domain.Interfaces;
+using JPProject.Sso.Infra.Data.Interfaces;
 using System.Threading.Tasks;
 
 namespace JPProject.Sso.Infra.Data.UoW
 {
     public class UnitOfWork : ISsoUnitOfWork
     {
-        private readonly ApplicationSsoContext _context;
+        private readonly IJpEntityFrameworkStore _context;
 
-        public UnitOfWork(ApplicationSsoContext context)
+        public UnitOfWork(ISsoContext context)
         {
             _context = context;
         }

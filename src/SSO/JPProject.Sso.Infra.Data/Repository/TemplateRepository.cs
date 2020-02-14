@@ -1,15 +1,15 @@
 ﻿using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
-using JPProject.Sso.Infra.Data.Context;
+using JPProject.Sso.Infra.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace JPProject.Sso.Infra.Data.Repository
 {
-    public class TemplateRepository : Repository<Template>, ITemplateRepository
+    public class TemplateRepository : Repository<Template, ISsoContext>, ITemplateRepository
     {
-        public TemplateRepository(ApplicationSsoContext context) : base(context)
+        public TemplateRepository(ISsoContext context) : base(context)
         {
         }
 

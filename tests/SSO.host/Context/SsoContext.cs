@@ -4,6 +4,7 @@ using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.EntityFramework.Options;
 using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Infra.Data.Constants;
+using JPProject.Sso.Infra.Data.Context;
 using JPProject.Sso.Infra.Data.Interfaces;
 using JPProject.Sso.Infra.Data.Mappings;
 using JPProject.Sso.Infra.Identity.Models.Identity;
@@ -12,18 +13,17 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace JPProject.Sso.Infra.Data.Context
+namespace SSO.host.Context
 {
-
-    public class ApplicationSsoContext : IdentityDbContext<UserIdentity>,
-        IPersistedGrantDbContext,
-        IConfigurationDbContext,
-        ISsoContext
+    public class SsoContext : IdentityDbContext<UserIdentity>,
+       IPersistedGrantDbContext,
+       IConfigurationDbContext,
+       ISsoContext
     {
         private readonly ConfigurationStoreOptions _storeOptions;
         private readonly OperationalStoreOptions _operationalOptions;
 
-        public ApplicationSsoContext(
+        public SsoContext(
             DbContextOptions<ApplicationSsoContext> options,
             ConfigurationStoreOptions storeOptions,
             OperationalStoreOptions operationalOptions)
@@ -37,7 +37,6 @@ namespace JPProject.Sso.Infra.Data.Context
         {
             base.OnModelCreating(builder);
             ConfigureIdentityContext(builder);
-
         }
 
         private void ConfigureIdentityContext(ModelBuilder builder)
@@ -76,5 +75,4 @@ namespace JPProject.Sso.Infra.Data.Context
         public DbSet<Email> Emails { get; set; }
         public DbSet<GlobalConfigurationSettings> GlobalConfigurationSettings { get; set; }
     }
-
 }

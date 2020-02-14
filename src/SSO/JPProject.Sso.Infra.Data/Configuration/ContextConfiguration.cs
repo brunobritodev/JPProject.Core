@@ -1,17 +1,16 @@
-﻿using JPProject.Sso.Domain.Interfaces;
-using JPProject.Sso.Infra.Data.Context;
-using Microsoft.EntityFrameworkCore;
+﻿using JPProject.EntityFrameworkCore.Interfaces;
+using JPProject.Sso.Domain.Interfaces;
+using JPProject.Sso.Infra.Data.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace JPProject.Sso.Infra.Data.Configuration
 {
     public static class ContextConfiguration
     {
-        public static ISsoConfigurationBuilder AddSsoContext(this ISsoConfigurationBuilder services, Action<DbContextOptionsBuilder> optionsAction)
+        public static ISsoConfigurationBuilder AddSsoContext<TContext>(this ISsoConfigurationBuilder services) where TContext : class, ISsoContext
         {
-            services.Services.AddDbContext<ApplicationSsoContext>(optionsAction);
-
+            services.Services.AddScoped<ISsoContext, TContext>();
+            services.Services.AddScoped<IJpEntityFrameworkStore, TContext>();
             return services;
         }
     }

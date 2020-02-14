@@ -1,17 +1,24 @@
-﻿using System;
-using System.Linq;
-using JPProject.Domain.Core.Interfaces;
-using JPProject.Sso.Infra.Data.Context;
+﻿using JPProject.Domain.Core.Interfaces;
+using JPProject.EntityFrameworkCore.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 
 namespace JPProject.Sso.Infra.Data.Repository
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    /// <summary>
+    /// Generic repository for <see cref="T:JPProject.EntityFrameworkCore.Interfaces.IJpEntityFrameworkStore" />
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TContext"></typeparam>
+    public class Repository<TEntity, TContext> : IRepository<TEntity>
+        where TEntity : class
+        where TContext : IJpEntityFrameworkStore
     {
-        protected readonly ApplicationSsoContext Db;
+        protected readonly TContext Db;
         protected readonly DbSet<TEntity> DbSet;
 
-        public Repository(ApplicationSsoContext context)
+        public Repository(TContext context)
         {
             Db = context;
             DbSet = Db.Set<TEntity>();

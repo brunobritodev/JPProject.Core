@@ -57,9 +57,6 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
 
             var result = await _emailAppService.SaveEmail(command);
             result.Should().BeTrue(becauseArgs: _notifications.GetNotificationsByKey());
-            var email = _database.Emails.FirstOrDefault(f => f.Type == command.Type);
-
-            email.Bcc.Recipients.Should().Contain(s => s.Equals(emailBcc));
         }
 
         [Fact]
