@@ -181,7 +181,6 @@ namespace JPProject.Sso.Domain.CommandHandlers
             }
             return false;
         }
-
         public async Task<bool> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
         {
             if (!request.IsValid())
@@ -190,7 +189,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var result = await _userService.ConfirmEmailAsync(request);
+            var result = await _userService.ConfirmEmailAsync(request.Email, request.Code);
             if (result != null)
             {
                 await Bus.RaiseEvent(new EmailConfirmedEvent(request.Email, request.Code, result));
@@ -207,7 +206,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var result = await _userService.AddLoginAsync(request);
+            var result = await _userService.AddLoginAsync(request.Email, request.Provider, request.ProviderId);
             if (result != null)
             {
                 await Bus.RaiseEvent(new NewLoginAddedEvent(result, request.Email, request.Provider, request.ProviderId));
@@ -215,8 +214,5 @@ namespace JPProject.Sso.Domain.CommandHandlers
             }
             return false;
         }
-
     }
-
-
 }

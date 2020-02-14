@@ -1,4 +1,5 @@
 ﻿using JPProject.Domain.Core.Bus;
+using JPProject.Domain.Core.Commands;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.Commands.User;
@@ -10,7 +11,6 @@ using MediatR;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using JPProject.Domain.Core.Commands;
 
 namespace JPProject.Sso.Domain.CommandHandlers
 {
@@ -190,7 +190,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var success = await _userService.RemoveClaim(request);
+            var success = await _userService.RemoveClaim(userDb.Id, request.Type, request.Value);
 
             if (success)
             {
@@ -215,7 +215,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var success = await _userService.RemoveRole(request);
+            var success = await _userService.RemoveRole(userDb.Id, request.Role);
 
             if (success)
             {
@@ -240,7 +240,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var success = await _userService.SaveRole(request);
+            var success = await _userService.SaveRole(user.Id, request.Role);
 
             if (success)
             {
@@ -265,7 +265,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var success = await _userService.RemoveLogin(request);
+            var success = await _userService.RemoveLogin(user.UserName, request.LoginProvider, request.ProviderKey);
 
             if (success)
             {
@@ -290,7 +290,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var success = await _userService.ResetPasswordAsync(request);
+            var success = await _userService.ResetPasswordAsync(request.Username, request.Password);
 
             if (success)
             {

@@ -1,6 +1,5 @@
 ﻿using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.ViewModels;
-using JPProject.Sso.Domain.Commands.Role;
 using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Models;
@@ -20,7 +19,7 @@ namespace JPProject.Sso.Domain.Interfaces
         Task<bool> EmailExist(string email);
         Task<AccountResult?> GenerateResetPasswordLink(string emailOrUsername);
         Task<string> ResetPassword(ResetPasswordCommand request);
-        Task<string> ConfirmEmailAsync(ConfirmEmailCommand command);
+        Task<string> ConfirmEmailAsync(string email, string code);
         Task<bool> UpdateProfileAsync(UpdateProfileCommand command);
         Task<bool> UpdateProfilePictureAsync(UpdateProfilePictureCommand command);
         Task<bool> CreatePasswordAsync(SetPasswordCommand request);
@@ -37,16 +36,16 @@ namespace JPProject.Sso.Domain.Interfaces
         Task UpdateUserAsync(User user);
         Task<IEnumerable<Claim>> GetClaimByName(string userName);
         Task<bool> SaveClaim(string userId, Claim claim);
-        Task<bool> RemoveClaim(RemoveUserClaimCommand command);
+        Task<bool> RemoveClaim(string userId, string claimType, string value);
         Task<IEnumerable<string>> GetRoles(string userName);
-        Task<bool> RemoveRole(RemoveUserRoleCommand command);
-        Task<bool> SaveRole(SaveUserRoleCommand command);
+        Task<bool> RemoveRole(string userDbId, string requestRole);
+        Task<bool> SaveRole(string userId, string role);
         Task<IEnumerable<UserLogin>> GetUserLogins(string userName);
-        Task<bool> RemoveLogin(RemoveUserLoginCommand command);
+        Task<bool> RemoveLogin(string userId, string requestLoginProvider, string requestProviderKey);
         Task<IEnumerable<User>> GetUserFromRole(string role);
-        Task<bool> RemoveUserFromRole(RemoveUserFromRoleCommand command);
-        Task<bool> ResetPasswordAsync(AdminChangePasswordCommand command);
-        Task<string> AddLoginAsync(AddLoginCommand command);
+        Task<bool> RemoveUserFromRole(string name, string username);
+        Task<bool> ResetPasswordAsync(string username, string password);
         Task<int> Count(string search);
+        Task<string> AddLoginAsync(string email, string provider, string providerId);
     }
 }
