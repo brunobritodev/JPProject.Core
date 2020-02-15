@@ -1,6 +1,5 @@
 using AutoMapper;
 using AutoMapper.Configuration;
-using JPProject.EntityFrameworkCore.Context;
 using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.Application.Configuration;
 using JPProject.Sso.Infra.Data.Configuration;
@@ -20,17 +19,14 @@ using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace JPProject.Sso.Integration.Tests
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class WarmupInMemory
+    public class WarmupInDifferentDb : IWarmupTest
     {
-        public WarmupInMemory()
+        public WarmupInDifferentDb()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddUserSecrets<WarmupInMemory>();
+                .AddUserSecrets<WarmupInDifferentDb>();
 
             //Mock IHttpContextAccessor
             var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -51,7 +47,7 @@ namespace JPProject.Sso.Integration.Tests
 
             serviceCollection
                 .ConfigureSso<AspNetUserTest, UserService, RoleService>()
-                .AddSsoContext<SsoContext>()
+                .AddSsoContext<SsoContext, EventStoreContext>()
                 .AddDefaultAspNetIdentityServices();
 
             serviceCollection
@@ -82,7 +78,7 @@ namespace JPProject.Sso.Integration.Tests
             var automapperConfig = new MapperConfiguration(configurationExpression);
 
             serviceCollection.TryAddSingleton(automapperConfig.CreateMapper());
-            serviceCollection.AddMediatR(typeof(WarmupInMemory));
+            serviceCollection.AddMediatR(typeof(WarmupInDifferentDb));
             serviceCollection.TryAddSingleton(mockHttpContextAccessor.Object);
 
             Services = serviceCollection.BuildServiceProvider();
@@ -92,7 +88,7 @@ namespace JPProject.Sso.Integration.Tests
         public void DetachAll()
         {
 
-            var database = Services.GetService<SsoContext>();
+            var database = Services.GetService<UnifiedContext>();
             foreach (var dbEntityEntry in database.ChangeTracker.Entries())
             {
                 if (dbEntityEntry.Entity != null)

@@ -3,8 +3,7 @@ using AutoMapper.Configuration;
 using JPProject.Admin.Application.AutoMapper;
 using JPProject.Admin.Fakers.Test;
 using JPProject.Admin.Infra.Data.Context;
-using JPProject.EntityFrameworkCore.Configuration;
-using JPProject.EntityFrameworkCore.Context;
+using JPProject.Admin.IntegrationTests.Contexts;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -31,11 +30,12 @@ namespace JPProject.Admin.IntegrationTests
 
             void Options(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
 
+            serviceCollection.AddDbContext<EventStoreContext>(Options);
             serviceCollection
                 .ConfigureJpAdmin<AspNetUserTest>()
-                .WithSqlServer(Options);
+                .AddEventStore<EventStoreContext>()
+                .AddAdminContext(Options);
 
-            serviceCollection.AddDbContext<EventStoreContext>(Options);
             serviceCollection.TryAddSingleton(automapperConfig.CreateMapper());
             serviceCollection.AddMediatR(typeof(WarmupInMemory));
             serviceCollection.TryAddSingleton(mockHttpContextAccessor.Object);

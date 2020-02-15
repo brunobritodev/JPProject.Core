@@ -1,9 +1,12 @@
-using System;
-using System.Threading.Tasks;
 using JPProject.Admin.Infra.Data.Configuration;
 using JPProject.Admin.Infra.Data.Context;
-using JPProject.EntityFrameworkCore.Context;
+using JPProject.Domain.Core.Events;
+using JPProject.EntityFrameworkCore.MigrationHelper;
+using JPProject.Sso.Integration.Tests.Context;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace Admin.host
 {
@@ -23,11 +26,12 @@ namespace Admin.host
         {
             await DbMigrationHelpers.CheckDatabases(serviceProvider, new JpDatabaseOptions() { MustThrowExceptionIfDatabaseDontExist = true });
 
-            using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var eventStoreDb = scope.ServiceProvider.GetRequiredService<EventStoreContext>();
-                await DbMigrationHelpers.ConfigureEventStoreContext(eventStoreDb);
-            }
+            using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+
+            var eventStoreDb = scope.ServiceProvider.GetRequiredService<EventStoreContext>();
+            var storeDbExist = await DbHealthChecker.CheckTableExists<StoredEvent>(eventStoreDb);
+            if (!storeDbExist)
+                await eventStoreDb.Database.MigrateAsync();
         }
     }
 }

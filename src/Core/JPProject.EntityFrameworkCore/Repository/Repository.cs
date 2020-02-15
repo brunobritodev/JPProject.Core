@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
-namespace JPProject.Sso.Infra.Data.Repository
+namespace JPProject.EntityFrameworkCore.Repository
 {
     /// <summary>
     /// Generic repository for <see cref="T:JPProject.EntityFrameworkCore.Interfaces.IJpEntityFrameworkStore" />

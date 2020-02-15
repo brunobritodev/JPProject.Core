@@ -1,6 +1,5 @@
 ﻿using JPProject.Domain.Core.Events;
 using JPProject.Domain.Core.Interfaces;
-using JPProject.EntityFrameworkCore.Context;
 using JPProject.EntityFrameworkCore.EventSourcing;
 using JPProject.EntityFrameworkCore.Repository;
 using JPProject.Sso.Domain.Interfaces;
@@ -23,7 +22,6 @@ namespace JPProject.Sso.Application.Configuration
             services.AddScoped<IEmailRepository, EmailRepository>();
             services.AddScoped<IEventStore, SqlEventStore>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<EventStoreContext>();
 
             return services;
         }

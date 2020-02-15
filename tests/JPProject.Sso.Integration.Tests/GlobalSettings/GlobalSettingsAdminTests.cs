@@ -16,7 +16,7 @@ using Xunit.Abstractions;
 namespace JPProject.Sso.Integration.Tests.GlobalSettings
 {
     [Collection("GlobalSettings")]
-    public class GlobalSettingsTests : IClassFixture<WarmupInMemory>
+    public class GlobalSettingsTests : IClassFixture<WarmupUnifiedContext>
     {
         private readonly ITestOutputHelper _output;
         private readonly ISsoContext _database;
@@ -24,19 +24,19 @@ namespace JPProject.Sso.Integration.Tests.GlobalSettings
         private readonly DomainNotificationHandler _notifications;
         private readonly IGlobalConfigurationAppService _globalAppService;
         private readonly AspNetUserTest _user;
-        public WarmupInMemory InMemoryData { get; }
+        public WarmupUnifiedContext UnifiedContextData { get; }
 
-        public GlobalSettingsTests(WarmupInMemory inMemory, ITestOutputHelper output)
+        public GlobalSettingsTests(WarmupUnifiedContext unifiedContext, ITestOutputHelper output)
         {
             _output = output;
             _faker = new Faker();
-            InMemoryData = inMemory;
-            _globalAppService = InMemoryData.Services.GetRequiredService<IGlobalConfigurationAppService>();
-            _database = InMemoryData.Services.GetRequiredService<ISsoContext>();
+            UnifiedContextData = unifiedContext;
+            _globalAppService = UnifiedContextData.Services.GetRequiredService<IGlobalConfigurationAppService>();
+            _database = UnifiedContextData.Services.GetRequiredService<ISsoContext>();
 
-            _user = (AspNetUserTest)InMemoryData.Services.GetService<ISystemUser>();
+            _user = (AspNetUserTest)UnifiedContextData.Services.GetService<ISystemUser>();
             _user._isInRole = true;
-            _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
+            _notifications = (DomainNotificationHandler)UnifiedContextData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
 
             _notifications.Clear();
         }

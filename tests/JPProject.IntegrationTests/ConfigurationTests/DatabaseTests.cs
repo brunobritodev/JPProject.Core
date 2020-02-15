@@ -1,6 +1,6 @@
 ﻿using JPProject.Admin.Fakers.Test;
+using JPProject.Admin.IntegrationTests.Contexts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -23,10 +23,16 @@ namespace JPProject.Admin.IntegrationTests.ConfigurationTests
         [Fact(
             Skip = "Database need to be configured to run. Usually works in tests scenarios"
         )]
-        public void ShouldConnectSqlServerDatabase()
+        public void ShouldCreateServiceDatabase()
         {
-            var connString = Configuration.Configuration.GetConnectionString("SqlServer");
-            Configuration.ServiceCollection.ConfigureJpAdmin<AspNetUserTest>().WithSqlServer(opt => opt.UseSqlServer(connString).EnableSensitiveDataLogging());
+            void DatabaseOptions(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
+            Configuration.ServiceCollection
+                .AddDbContext<EventStoreContext>(DatabaseOptions);
+
+            Configuration.ServiceCollection
+                .ConfigureJpAdmin<AspNetUserTest>()
+                .AddAdminContext(DatabaseOptions)
+                .AddEventStore<EventStoreContext>();
 
             Configuration.ServiceCollection.BuildServiceProvider();
 

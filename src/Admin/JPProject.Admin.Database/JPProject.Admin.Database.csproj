@@ -19,7 +19,6 @@
     <ProjectReference Include="..\JPProject.Admin.EntityFrameworkCore.MySql\JPProject.Admin.EntityFrameworkCore.MySql.csproj" />
     <ProjectReference Include="..\JPProject.Admin.EntityFrameworkCore.PostgreSQL\JPProject.Admin.EntityFrameworkCore.PostgreSQL.csproj" />
     <ProjectReference Include="..\JPProject.Admin.EntityFrameworkCore.Sqlite\JPProject.Admin.EntityFrameworkCore.Sqlite.csproj" />
-    <ProjectReference Include="..\JPProject.Admin.EntityFrameworkCore.Sql\JPProject.Admin.EntityFrameworkCore.Sql.csproj" />
     <ProjectReference Include="..\..\Core\JPProject.Domain.Core\JPProject.Domain.Core.csproj" />
   </ItemGroup>
 

@@ -13,23 +13,23 @@ using Xunit.Abstractions;
 
 namespace JPProject.Sso.Integration.Tests.EmailsTests
 {
-    public class EmailServiceInMemoryTests : IClassFixture<WarmupInMemory>
+    public class EmailServiceInMemoryTests : IClassFixture<WarmupUnifiedContext>
     {
         private readonly ITestOutputHelper _output;
-        private readonly SsoContext _database;
+        private readonly UnifiedContext _database;
         private readonly Faker _faker;
         private readonly DomainNotificationHandler _notifications;
         private IEmailService _emailService;
-        public WarmupInMemory InMemoryData { get; }
+        public WarmupUnifiedContext UnifiedContextData { get; }
 
-        public EmailServiceInMemoryTests(WarmupInMemory inMemory, ITestOutputHelper output)
+        public EmailServiceInMemoryTests(WarmupUnifiedContext unifiedContext, ITestOutputHelper output)
         {
             _output = output;
             _faker = new Faker();
-            InMemoryData = inMemory;
-            _emailService = InMemoryData.Services.GetRequiredService<IEmailService>();
-            _database = InMemoryData.Services.GetRequiredService<SsoContext>();
-            _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
+            UnifiedContextData = unifiedContext;
+            _emailService = UnifiedContextData.Services.GetRequiredService<IEmailService>();
+            _database = UnifiedContextData.Services.GetRequiredService<UnifiedContext>();
+            _notifications = (DomainNotificationHandler)UnifiedContextData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
 
             _notifications.Clear();
         }

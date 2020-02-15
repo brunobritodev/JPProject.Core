@@ -41,7 +41,7 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
 
             var idrs = _database.IdentityResources.FirstOrDefault(s => s.Name == command.Name);
             idrs.Should().NotBeNull();
-            
+
         }
 
         [Fact]

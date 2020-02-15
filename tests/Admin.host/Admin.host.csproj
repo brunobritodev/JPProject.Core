@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Admin\JPProject.Admin.Application\JPProject.Admin.Application.csproj" />
-    <ProjectReference Include="..\..\src\Admin\JPProject.Admin.Database\JPProject.Admin.Database.csproj" />
     <ProjectReference Include="..\..\src\Core\JPProject.AspNet.Core\JPProject.AspNet.Core.csproj" />
   </ItemGroup>
 

@@ -3,6 +3,7 @@ using FluentAssertions;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
+using JPProject.Sso.Domain.ViewModels.User;
 using JPProject.Sso.Fakers.Test.Users;
 using JPProject.Sso.Integration.Tests.Context;
 using MediatR;
@@ -10,31 +11,30 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using JPProject.Sso.Domain.ViewModels.User;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace JPProject.Sso.Integration.Tests.UserTests
 {
-    public class UserAppServiceInMemoryTests : IClassFixture<WarmupInMemory>
+    public abstract class UserAppServiceAbstractTests<T> : IClassFixture<T> where T : class, IWarmupTest
     {
         private readonly ITestOutputHelper _output;
         private readonly IUserAppService _userAppService;
-        private readonly SsoContext _database;
+        private readonly UnifiedContext _database;
         private readonly Faker _faker;
         private readonly IUserManageAppService _userManagerAppService;
         private readonly DomainNotificationHandler _notifications;
-        public WarmupInMemory InMemoryData { get; }
+        public T UnifiedContextData { get; }
 
-        public UserAppServiceInMemoryTests(WarmupInMemory inMemory, ITestOutputHelper output)
+        protected UserAppServiceAbstractTests(T unifiedContext, ITestOutputHelper output)
         {
             _output = output;
             _faker = new Faker();
-            InMemoryData = inMemory;
-            _userAppService = InMemoryData.Services.GetRequiredService<IUserAppService>();
-            _userManagerAppService = InMemoryData.Services.GetRequiredService<IUserManageAppService>();
-            _database = InMemoryData.Services.GetRequiredService<SsoContext>();
-            _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
+            UnifiedContextData = unifiedContext;
+            _userAppService = UnifiedContextData.Services.GetRequiredService<IUserAppService>();
+            _userManagerAppService = UnifiedContextData.Services.GetRequiredService<IUserManageAppService>();
+            _database = UnifiedContextData.Services.GetRequiredService<UnifiedContext>();
+            _notifications = (DomainNotificationHandler)UnifiedContextData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
 
             _notifications.Clear();
         }
@@ -356,5 +356,21 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             users.Collection.ToList().Count.Should().Be(users.Total);
         }
 
+    }
+
+    [Trait("Category", "Database - Unified Contexts")]
+    public class UserUnifiedContextTests : UserAppServiceAbstractTests<WarmupUnifiedContext>
+    {
+        public UserUnifiedContextTests(WarmupUnifiedContext unifiedContext, ITestOutputHelper output) : base(unifiedContext, output)
+        {
+        }
+    }
+
+    [Trait("Category", "Database - Separeted Contexts")]
+    public class UserManyContextTests : UserAppServiceAbstractTests<WarmupUnifiedContext>
+    {
+        public UserManyContextTests(WarmupUnifiedContext unifiedContext, ITestOutputHelper output) : base(unifiedContext, output)
+        {
+        }
     }
 }

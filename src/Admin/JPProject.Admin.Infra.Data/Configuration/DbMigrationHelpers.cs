@@ -1,13 +1,14 @@
-﻿using IdentityServer4.EntityFramework.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using IdentityServer4.EntityFramework.Entities;
 using JPProject.Admin.Infra.Data.Context;
 using JPProject.Domain.Core.Events;
 using JPProject.Domain.Core.Exceptions;
-using JPProject.EntityFrameworkCore.Context;
 using JPProject.EntityFrameworkCore.MigrationHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
 
 namespace JPProject.Admin.Infra.Data.Configuration
 {
@@ -37,14 +38,5 @@ namespace JPProject.Admin.Infra.Data.Configuration
             if (!isDatabaseExist && options.MustThrowExceptionIfDatabaseDontExist)
                 throw new DatabaseNotFoundException("IdentityServer4 Database doesn't exist. Ensure it was created before.'");
         }
-
-        public static async Task ConfigureEventStoreContext(EventStoreContext storeDb)
-        {
-            var storeDbExist = await DbHealthChecker.CheckTableExists<StoredEvent>(storeDb);
-            if (!storeDbExist)
-                await storeDb.Database.MigrateAsync();
-        }
-
-
     }
 }
