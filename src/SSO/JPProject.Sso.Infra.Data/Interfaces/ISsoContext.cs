@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace JPProject.Sso.Infra.Data.Interfaces
 {
 
-    public interface ISsoContext : IJpEntityFrameworkStore
+    public interface ISsoContext
     {
         DbSet<Template> Templates { get; set; }
         DbSet<Email> Emails { get; set; }
