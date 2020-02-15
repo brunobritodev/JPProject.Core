@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JPProject.Sso.Infra.Data.Repository
 {
-    public class GlobalConfigurationSettingsRepository : Repository<GlobalConfigurationSettings, ISsoContext>, IGlobalConfigurationSettingsRepository
+    public class GlobalConfigurationSettingsRepository : Repository<GlobalConfigurationSettings>, IGlobalConfigurationSettingsRepository
     {
         public GlobalConfigurationSettingsRepository(ISsoContext context) : base(context)
         {

@@ -14,6 +14,7 @@ namespace JPProject.Sso.Infra.Data.Configuration
         {
             services.Services.AddScoped<IEventStoreContext, TEventStore>();
             services.Services.AddScoped<ISsoContext, TContext>();
+            services.Services.AddStores();
             return services;
         }
         public static ISsoConfigurationBuilder AddSsoContext<TContext>(this ISsoConfigurationBuilder services)
@@ -22,6 +23,7 @@ namespace JPProject.Sso.Infra.Data.Configuration
         {
             services.Services.AddScoped<ISsoContext, TContext>();
             services.Services.AddScoped<IEventStoreContext>(s => s.GetService<TContext>());
+            services.Services.AddStores();
             return services;
         }
     }

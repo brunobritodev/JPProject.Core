@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JPProject.Sso.Infra.Data.Repository
 {
-    public class TemplateRepository : Repository<Template, ISsoContext>, ITemplateRepository
+    public class TemplateRepository : Repository<Template>, ITemplateRepository
     {
         public TemplateRepository(ISsoContext context) : base(context)
         {

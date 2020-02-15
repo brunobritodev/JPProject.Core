@@ -27,9 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\JPProject.EntityFrameworkCore\JPProject.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\JPProject.Sso.Domain\JPProject.Sso.Domain.csproj" />
-    <ProjectReference Include="..\JPProject.Sso.Infra.Data\JPProject.Sso.Infra.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -10,15 +10,13 @@ namespace JPProject.EntityFrameworkCore.Repository
     /// Generic repository for <see cref="T:JPProject.EntityFrameworkCore.Interfaces.IJpEntityFrameworkStore" />
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    /// <typeparam name="TContext"></typeparam>
-    public class Repository<TEntity, TContext> : IRepository<TEntity>
+    public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class
-        where TContext : IJpEntityFrameworkStore
     {
-        protected readonly TContext Db;
+        protected readonly IJpEntityFrameworkStore Db;
         protected readonly DbSet<TEntity> DbSet;
 
-        public Repository(TContext context)
+        public Repository(IJpEntityFrameworkStore context)
         {
             Db = context;
             DbSet = Db.Set<TEntity>();

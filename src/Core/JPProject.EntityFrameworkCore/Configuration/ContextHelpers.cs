@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace JPProject.EntityFrameworkCore.Configuration
 {
-    public static class DbMigrationHelpers
+    public static class ContextHelpers
     {
         /// <summary>
         /// Check if data table is exist in application

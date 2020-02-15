@@ -7,7 +7,7 @@ using JPProject.Sso.Infra.Data.Repository;
 using JPProject.Sso.Infra.Data.UoW;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JPProject.Sso.Application.Configuration
+namespace JPProject.Sso.Infra.Data.Configuration
 {
     internal static class RepositoryBootStrapper
     {

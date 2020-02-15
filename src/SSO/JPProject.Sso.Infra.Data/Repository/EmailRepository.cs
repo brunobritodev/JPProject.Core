@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JPProject.Sso.Infra.Data.Repository
 {
-    public class EmailRepository : Repository<Email, ISsoContext>, IEmailRepository
+    public class EmailRepository : Repository<Email>, IEmailRepository
     {
         public EmailRepository(ISsoContext context) : base(context)
         {

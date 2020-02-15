@@ -36,8 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services
                 .AddApplicationServices()
                 .AddDomainEvents()
-                .AddDomainCommands()
-                .AddStores();
+                .AddDomainCommands();
 
             return new SsoBuilder(services);
         }
