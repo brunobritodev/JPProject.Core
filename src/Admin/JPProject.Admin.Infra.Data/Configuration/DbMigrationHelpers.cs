@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using IdentityServer4.EntityFramework.Entities;
+﻿using IdentityServer4.EntityFramework.Entities;
 using JPProject.Admin.Infra.Data.Context;
-using JPProject.Domain.Core.Events;
 using JPProject.Domain.Core.Exceptions;
 using JPProject.EntityFrameworkCore.MigrationHelper;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace JPProject.Admin.Infra.Data.Configuration
 {
@@ -20,13 +16,8 @@ namespace JPProject.Admin.Infra.Data.Configuration
 
             var id4Context = scope.ServiceProvider.GetRequiredService<JPProjectAdminUIContext>();
 
-            if (id4Context.Database.IsInMemory())
-                return;
-
             await DbHealthChecker.TestConnection(id4Context);
             await ValidateIs4Context(options, id4Context);
-
-
         }
 
         private static async Task ValidateIs4Context(JpDatabaseOptions options, JPProjectAdminUIContext id4AdminUiContext)
