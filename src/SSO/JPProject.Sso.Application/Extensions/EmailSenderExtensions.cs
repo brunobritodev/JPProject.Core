@@ -1,8 +1,8 @@
-using MimeKit;
+﻿using MimeKit;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JPProject.Sso.Infra.Identity.Extensions
+namespace JPProject.Sso.Application.Extensions
 {
     public static class EmailSenderExtensions
     {

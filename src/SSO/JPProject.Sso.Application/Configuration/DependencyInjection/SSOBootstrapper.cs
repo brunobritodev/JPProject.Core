@@ -1,8 +1,10 @@
 ﻿using IdentityServer4.Services;
 using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
+using JPProject.Sso.Application.CloudServices.Storage;
 using JPProject.Sso.Application.Configuration;
 using JPProject.Sso.Application.Configuration.DependencyInjection;
+using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Domain.Interfaces;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -29,13 +31,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IEventSink, IdentityServerEventStore>();
             services.AddScoped<IUserService, TUserService>();
             services.AddScoped<IRoleService, TRoleService>();
+            services.AddScoped<IStorage, StorageService>();
 
             services
                 .AddApplicationServices()
                 .AddDomainEvents()
                 .AddDomainCommands()
-                .AddStores()
-                .AddIdentityServices();
+                .AddStores();
 
             return new SsoBuilder(services);
         }

@@ -1,5 +1,4 @@
 ﻿using JPProject.Domain.Core.StringUtils;
-using Microsoft.EntityFrameworkCore.Internal;
 using System.Linq;
 
 namespace JPProject.Sso.Domain.Models
@@ -16,7 +15,7 @@ namespace JPProject.Sso.Domain.Models
         public string[] Recipients
         {
             get => _recipientsCollection?.Split(";");
-            set => _recipientsCollection = value?.Join(";");
+            set => _recipientsCollection = string.Join(";", value);
         }
 
         public bool IsValid()

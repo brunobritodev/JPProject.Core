@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="IdentityServer4.EntityFramework" Version="3.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,6 +18,7 @@
     <ProjectReference Include="..\..\src\Core\JPProject.AspNet.Core\JPProject.AspNet.Core.csproj" />
     <ProjectReference Include="..\..\src\SSO\JPProject.Sso.Application\JPProject.Sso.Application.csproj" />
     <ProjectReference Include="..\..\src\SSO\JPProject.Sso.Infra.Data\JPProject.Sso.Infra.Data.csproj" />
+    <ProjectReference Include="..\..\src\SSO\JPProject.Sso.Infra.Identity\JPProject.Sso.Infra.Identity.csproj" />
   </ItemGroup>
 
 </Project>

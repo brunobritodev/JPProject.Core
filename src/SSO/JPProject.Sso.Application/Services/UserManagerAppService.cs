@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCore.IQueryable.Extensions;
 
 namespace JPProject.Sso.Application.Services
 {
@@ -88,12 +89,6 @@ namespace JPProject.Sso.Application.Services
             return new ListOf<EventHistoryData>(_mapper.Map<IEnumerable<EventHistoryData>>(history), total);
         }
 
-        public async Task<ListOf<UserListViewModel>> GetUsers(PagingViewModel paging)
-        {
-            var users = await _userService.GetUsers(paging);
-            var total = await _userService.Count(paging.Search);
-            return new ListOf<UserListViewModel>(_mapper.Map<IEnumerable<UserListViewModel>>(users), total);
-        }
 
         public async Task<IEnumerable<UserListViewModel>> GetUsersById(params string[] id)
         {
@@ -173,6 +168,13 @@ namespace JPProject.Sso.Application.Services
         {
             var registerCommand = _mapper.Map<AdminChangePasswordCommand>(model);
             return Bus.SendCommand(registerCommand);
+        }
+
+        public async Task<ListOf<UserListViewModel>> SearchUsers(ICustomQueryable search)
+        {
+            var users = await _userService.Search(search);
+            var total = await _userService.Count(search);
+            return new ListOf<UserListViewModel>(_mapper.Map<IEnumerable<UserListViewModel>>(users), total);
         }
     }
 }

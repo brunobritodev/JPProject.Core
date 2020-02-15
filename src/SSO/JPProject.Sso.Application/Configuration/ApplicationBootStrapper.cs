@@ -2,7 +2,6 @@
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.Services;
 using JPProject.Sso.Domain.Interfaces;
-using JPProject.Sso.Infra.Identity.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JPProject.Sso.Application.Configuration

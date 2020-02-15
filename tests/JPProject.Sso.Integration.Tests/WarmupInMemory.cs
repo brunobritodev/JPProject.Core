@@ -51,7 +51,8 @@ namespace JPProject.Sso.Integration.Tests
 
             serviceCollection
                 .ConfigureSso<AspNetUserTest, UserService, RoleService>()
-                .AddSsoContext<SsoContext>();
+                .AddSsoContext<SsoContext>()
+                .AddDefaultAspNetIdentityServices();
 
             serviceCollection
                 .AddIdentityServer(options =>

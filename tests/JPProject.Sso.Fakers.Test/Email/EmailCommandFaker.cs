@@ -26,13 +26,13 @@ namespace JPProject.Sso.Fakers.Test.Email
                 f.Person.UserName
             ));
         }
-        public static Faker<SaveEmailCommand> GenerateSaveEmailCommand()
+        public static Faker<SaveEmailCommand> GenerateSaveEmailCommand(EmailType? emailType = null)
         {
             return new Faker<SaveEmailCommand>().CustomInstantiator(f => new SaveEmailCommand(
                 f.Lorem.Paragraphs(),
-                new Sender(f.Internet.DomainName(), f.Lorem.Text()),
+                new Sender(f.Person.Email, f.Lorem.Text()),
                 f.Lorem.Paragraphs(),
-                f.PickRandom<EmailType>(),
+                emailType ?? f.PickRandom<EmailType>(),
                 f.Person.Email,
                 f.Person.UserName
             ));

@@ -1,4 +1,5 @@
-﻿using JPProject.Domain.Core.ViewModels;
+﻿using AspNetCore.IQueryable.Extensions;
+using JPProject.Domain.Core.ViewModels;
 using JPProject.Sso.Application.EventSourcedNormalizers;
 using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Application.ViewModels.RoleViewModels;
@@ -33,7 +34,9 @@ namespace JPProject.Sso.Application.Interfaces
         Task RemoveLogin(RemoveUserLoginViewModel model);
         Task<IEnumerable<UserListViewModel>> GetUsersInRole(string role);
         Task ResetPassword(AdminChangePasswordViewodel model);
-        Task<ListOf<UserListViewModel>> GetUsers(PagingViewModel page);
         Task<IEnumerable<UserListViewModel>> GetUsersById(params string[] id);
+        Task<ListOf<UserListViewModel>> SearchUsers(ICustomQueryable search);
+
+
     }
 }

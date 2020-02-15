@@ -1,4 +1,6 @@
-﻿using JPProject.Domain.Core.Bus;
+﻿using AspNetCore.IQueryable.Extensions;
+using AspNetCore.IQueryable.Extensions.Filter;
+using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Domain.Core.StringUtils;
@@ -12,7 +14,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using ServiceStack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,7 +94,7 @@ namespace JPProject.Sso.Infra.Identity.Services
                 //await _userManager.AddClaimAsync(newUser, new Claim("User", "Write"));
 
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-                var callbackUrl = $"{_config.GetValue<string>("ApplicationSettings:UserManagementURL")}/confirm-email?userId={user.Email.UrlEncode()}&code={code.UrlEncode()}";
+                var callbackUrl = $"{_config.GetValue<string>("ApplicationSettings:UserManagementURL")}/confirm-email?userId={ user.Email.UrlEncode()}&code={code.UrlEncode()}";
 
                 await AddClaims(newUser);
 
@@ -598,6 +599,15 @@ namespace JPProject.Sso.Infra.Identity.Services
                 user = await _userManager.FindByNameAsync(emailOrUsername);
             return user;
         }
+        public Task<int> Count(ICustomQueryable findByEmailNameUsername)
+        {
+            return _userManager.Users.Filter(findByEmailNameUsername).CountAsync();
+        }
 
+        public async Task<IEnumerable<User>> Search(ICustomQueryable search)
+        {
+            var users = await _userManager.Users.Apply(search).ToListAsync();
+            return users.Select(GetUser);
+        }
     }
 }

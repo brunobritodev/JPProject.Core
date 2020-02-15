@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using JPProject.Sso.Domain.ViewModels.User;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -311,6 +312,48 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             var user = _database.Users.FirstOrDefault(f => f.UserName == command.Username);
             user.Should().NotBeNull();
             user.LockoutEnd.Should().BeNull();
+        }
+
+
+
+        [Fact]
+        public async Task ShouldSearchUserByName()
+        {
+            string name = string.Empty;
+            var commands = UserViewModelFaker.GenerateUserViewModel().Generate(_faker.Random.Int(1, 10));
+            foreach (var command in commands)
+            {
+                var result = await _userAppService.Register(command);
+                result.Should().BeTrue();
+                name = command.Name;
+            }
+
+            var search = new UserFindByEmailNameUsername(name);
+
+            var users = await _userManagerAppService.SearchUsers(search);
+
+            users.Total.Should().BeGreaterOrEqualTo(1);
+            users.Collection.ToList().Count.Should().Be(users.Total);
+        }
+
+        [Fact]
+        public async Task ShouldSearchUserBySsn()
+        {
+            string ssn = string.Empty;
+            var commands = UserViewModelFaker.GenerateUserViewModel().Generate(_faker.Random.Int(1, 10));
+            foreach (var command in commands)
+            {
+                var result = await _userAppService.Register(command);
+                result.Should().BeTrue();
+                ssn = command.SocialNumber;
+            }
+
+            var search = new UserSearch() { Ssn = ssn };
+
+            var users = await _userManagerAppService.SearchUsers(search);
+
+            users.Total.Should().BeGreaterOrEqualTo(1);
+            users.Collection.ToList().Count.Should().Be(users.Total);
         }
 
     }

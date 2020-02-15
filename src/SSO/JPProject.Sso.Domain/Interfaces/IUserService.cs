@@ -1,5 +1,5 @@
-﻿using JPProject.Domain.Core.Interfaces;
-using JPProject.Domain.Core.ViewModels;
+﻿using AspNetCore.IQueryable.Extensions;
+using JPProject.Domain.Core.Interfaces;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Domain.ViewModels.User;
@@ -25,7 +25,6 @@ namespace JPProject.Sso.Domain.Interfaces
         Task<bool> ChangePasswordAsync(ChangePasswordCommand request);
         Task<bool> RemoveAccountAsync(RemoveAccountCommand request);
         Task<bool> HasPassword(string userId);
-        Task<IEnumerable<User>> GetUsers(PagingViewModel page);
         Task<User> FindByEmailAsync(string email);
         Task<User> FindByNameAsync(string username);
         Task<User> FindByProviderAsync(string provider, string providerUserId);
@@ -47,5 +46,7 @@ namespace JPProject.Sso.Domain.Interfaces
         Task<string> AddLoginAsync(string email, string provider, string providerId);
         Task<bool> ResetPasswordAsync(string username, string password);
         Task<string> ResetPassword(string email, string code, string password);
+        Task<IEnumerable<User>> Search(ICustomQueryable search);
+        Task<int> Count(ICustomQueryable findByEmailNameUsername);
     }
 }
