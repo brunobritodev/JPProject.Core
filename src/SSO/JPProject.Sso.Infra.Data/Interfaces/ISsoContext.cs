@@ -5,11 +5,10 @@ using Microsoft.EntityFrameworkCore;
 namespace JPProject.Sso.Infra.Data.Interfaces
 {
 
-    public interface ISsoContext
+    public interface ISsoContext : IJpEntityFrameworkStore
     {
         DbSet<Template> Templates { get; set; }
         DbSet<Email> Emails { get; set; }
         DbSet<GlobalConfigurationSettings> GlobalConfigurationSettings { get; set; }
-
     }
 }
