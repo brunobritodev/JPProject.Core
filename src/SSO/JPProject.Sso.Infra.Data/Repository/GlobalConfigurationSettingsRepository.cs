@@ -1,4 +1,5 @@
-﻿using JPProject.EntityFrameworkCore.Repository;
+﻿using System.Linq;
+using JPProject.EntityFrameworkCore.Repository;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Infra.Data.Interfaces;
@@ -16,6 +17,11 @@ namespace JPProject.Sso.Infra.Data.Repository
         public Task<GlobalConfigurationSettings> FindByKey(string key)
         {
             return DbSet.FirstOrDefaultAsync(f => f.Key == key);
+        }
+
+        public IQueryable<GlobalConfigurationSettings> GetAll()
+        {
+            return DbSet.AsQueryable();
         }
     }
 }

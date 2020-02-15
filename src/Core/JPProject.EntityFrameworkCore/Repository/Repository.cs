@@ -2,7 +2,6 @@
 using JPProject.EntityFrameworkCore.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 
 namespace JPProject.EntityFrameworkCore.Repository
 {
@@ -27,16 +26,6 @@ namespace JPProject.EntityFrameworkCore.Repository
             DbSet.Add(obj);
         }
 
-        public virtual TEntity GetById<T>(T id)
-        {
-            return DbSet.Find(id);
-        }
-
-        public virtual IQueryable<TEntity> GetAll()
-        {
-            return DbSet;
-        }
-
         public virtual void Update(TEntity obj)
         {
             DbSet.Update(obj);
@@ -47,9 +36,9 @@ namespace JPProject.EntityFrameworkCore.Repository
             DbSet.Remove(DbSet.Find(id));
         }
 
-        public int SaveChanges()
+        public void Remove(TEntity obj)
         {
-            return Db.SaveChanges();
+            DbSet.Remove(obj);
         }
 
         public void Dispose()

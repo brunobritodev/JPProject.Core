@@ -11,7 +11,7 @@ namespace JPProject.Admin.Infra.Data.Context
 {
     public class JPProjectAdminUIContext : DbContext,
         IAdminContext,
-        IConfigurationStore,
+        IConfigurationDbStore,
         IPersistedGrantDbContext
     {
         private readonly ConfigurationStoreOptions _storeOptions;
