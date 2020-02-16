@@ -58,6 +58,19 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
 
 
         [Fact]
+        public async Task Should_ApiResource_Have_At_Least_One_Scope_With_His_Name_When_Register()
+        {
+            var command = ApiResourceFaker.GenerateApiResource().Generate();
+
+            await _apiResourceAppService.Save(command);
+
+            var api = _database.ApiResources.FirstOrDefault(s => s.Name == command.Name);
+            api.Should().NotBeNull();
+            api.Scopes.Should().HaveCountGreaterOrEqualTo(1);
+            api.Scopes.Should().Contain(a => a.Name == api.Name);
+        }
+
+        [Fact]
         public async Task ShouldRemoveApi()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();

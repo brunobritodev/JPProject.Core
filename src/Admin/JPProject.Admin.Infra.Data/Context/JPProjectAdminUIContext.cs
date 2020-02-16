@@ -1,9 +1,7 @@
 ﻿using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.EntityFramework.Extensions;
-using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.EntityFramework.Options;
 using JPProject.Admin.Infra.Data.Interfaces;
-using JPProject.Admin.Infra.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -12,7 +10,7 @@ namespace JPProject.Admin.Infra.Data.Context
     public class JPProjectAdminUIContext : DbContext,
         IAdminContext,
         IConfigurationDbStore,
-        IPersistedGrantDbContext
+        IPersistedGrantDbStore
     {
         private readonly ConfigurationStoreOptions _storeOptions;
         private readonly OperationalStoreOptions _operationalOptions;

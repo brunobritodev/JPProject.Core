@@ -238,7 +238,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
             await _clientAppService.Save(command);
 
-            var secret = ClientViewModelFaker.GenerateSaveClientSecret(command.ClientId);
+            var secret = ClientViewModelFaker.GenerateSaveClientSecret(command.ClientId).Generate();
 
             await _clientAppService.SaveSecret(secret);
 
