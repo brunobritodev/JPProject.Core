@@ -21,7 +21,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
     {
         private readonly ITestOutputHelper _output;
         private readonly IClientAppService _clientAppService;
-        private readonly JPProjectAdminUIContext _database;
+        private readonly JpProjectAdminUiContext _database;
         private readonly DomainNotificationHandler _notifications;
         private Faker _faker;
 
@@ -32,7 +32,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             _output = output;
             InMemoryData = inMemoryData;
             _clientAppService = InMemoryData.Services.GetRequiredService<IClientAppService>();
-            _database = InMemoryData.Services.GetRequiredService<JPProjectAdminUIContext>();
+            _database = InMemoryData.Services.GetRequiredService<JpProjectAdminUiContext>();
             _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             _notifications.Clear();
         }

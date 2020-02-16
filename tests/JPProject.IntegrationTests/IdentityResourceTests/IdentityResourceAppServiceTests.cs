@@ -17,7 +17,7 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
     {
         private readonly ITestOutputHelper _output;
         private readonly IIdentityResourceAppService _identityResource;
-        private readonly JPProjectAdminUIContext _database;
+        private readonly JpProjectAdminUiContext _database;
         private DomainNotificationHandler _notifications;
         public WarmupInMemory InMemoryData { get; }
 
@@ -26,7 +26,7 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
             _output = output;
             InMemoryData = inMemoryData;
             _identityResource = InMemoryData.Services.GetRequiredService<IIdentityResourceAppService>();
-            _database = InMemoryData.Services.GetRequiredService<JPProjectAdminUIContext>();
+            _database = InMemoryData.Services.GetRequiredService<JpProjectAdminUiContext>();
             _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             _notifications.Clear();
         }

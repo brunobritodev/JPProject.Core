@@ -31,7 +31,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
         private readonly ISystemUser _user;
 
         public UserManagementCommandHandler(
-            ISsoUnitOfWork uow,
+            IUnitOfWork uow,
             IMediatorHandler bus,
             INotificationHandler<DomainNotification> notifications,
             IUserService userService,

@@ -14,13 +14,13 @@ namespace JPProject.Admin.Infra.Data.Configuration
         {
             using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
-            var id4Context = scope.ServiceProvider.GetRequiredService<JPProjectAdminUIContext>();
+            var id4Context = scope.ServiceProvider.GetRequiredService<JpProjectAdminUiContext>();
 
             await DbHealthChecker.TestConnection(id4Context);
             await ValidateIs4Context(options, id4Context);
         }
 
-        private static async Task ValidateIs4Context(JpDatabaseOptions options, JPProjectAdminUIContext id4AdminUiContext)
+        private static async Task ValidateIs4Context(JpDatabaseOptions options, JpProjectAdminUiContext id4AdminUiContext)
         {
             var configurationDatabaseExist = await DbHealthChecker.CheckTableExists<Client>(id4AdminUiContext);
             var operationalDatabaseExist = await DbHealthChecker.CheckTableExists<PersistedGrant>(id4AdminUiContext);

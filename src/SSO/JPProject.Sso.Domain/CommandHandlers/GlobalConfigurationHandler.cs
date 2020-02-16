@@ -1,5 +1,6 @@
 ﻿using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Commands;
+using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.Commands.GlobalConfiguration;
 using JPProject.Sso.Domain.Events.GlobalConfiguration;
@@ -18,7 +19,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
         private readonly IGlobalConfigurationSettingsRepository _globalConfigurationSettingsRepository;
 
         public GlobalConfigurationHandler(
-            ISsoUnitOfWork uow,
+            IUnitOfWork uow,
             IMediatorHandler bus,
             INotificationHandler<DomainNotification> notifications,
             IGlobalConfigurationSettingsRepository globalConfigurationSettingsRepository) : base(uow, bus, notifications)

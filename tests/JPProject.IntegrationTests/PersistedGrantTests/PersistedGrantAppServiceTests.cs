@@ -1,22 +1,21 @@
 ﻿using FluentAssertions;
-using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels;
+using JPProject.Admin.Infra.Data.Context;
 using JPProject.Domain.Core.Notifications;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using JPProject.Admin.Infra.Data.Context;
 using Xunit;
 
 namespace JPProject.Admin.IntegrationTests.PersistedGrantTests
 {
     public class PersistedGrantAppServiceTests : IClassFixture<WarmupInMemory>
     {
-        private readonly JPProjectAdminUIContext _database;
+        private readonly JpProjectAdminUiContext _database;
         private readonly IPersistedGrantAppService _persistedGrant;
         public WarmupInMemory InMemoryData { get; }
 
@@ -24,7 +23,7 @@ namespace JPProject.Admin.IntegrationTests.PersistedGrantTests
         {
             InMemoryData = inMemoryData;
             _persistedGrant = InMemoryData.Services.GetRequiredService<IPersistedGrantAppService>();
-            _database = InMemoryData.Services.GetRequiredService<JPProjectAdminUIContext>();
+            _database = InMemoryData.Services.GetRequiredService<JpProjectAdminUiContext>();
             var notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             notifications.Clear();
         }

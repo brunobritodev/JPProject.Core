@@ -1,5 +1,6 @@
 ﻿using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Commands;
+using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.Commands.Role;
 using JPProject.Sso.Domain.Events.Role;
@@ -20,7 +21,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
         private readonly IUserService _userService;
 
         public RoleCommandHandler(
-            ISsoUnitOfWork uow,
+            IUnitOfWork uow,
             IMediatorHandler bus,
             INotificationHandler<DomainNotification> notifications,
             IRoleService roleService,

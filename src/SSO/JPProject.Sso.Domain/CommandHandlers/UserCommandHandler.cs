@@ -1,5 +1,6 @@
 ﻿using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Commands;
+using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Events.User;
@@ -26,7 +27,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
         private readonly IEmailRepository _emailRepository;
 
         public UserCommandHandler(
-            ISsoUnitOfWork uow,
+            IUnitOfWork uow,
             IMediatorHandler bus,
             INotificationHandler<DomainNotification> notifications,
             IUserService userService,

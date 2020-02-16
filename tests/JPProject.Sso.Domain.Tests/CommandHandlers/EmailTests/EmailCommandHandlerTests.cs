@@ -18,7 +18,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.EmailTests
     {
         private Faker _faker;
         private readonly CancellationTokenSource _tokenSource;
-        private readonly Mock<ISsoUnitOfWork> _uow;
+        private readonly Mock<IUnitOfWork> _uow;
         private readonly Mock<IMediatorHandler> _mediator;
         private readonly Mock<DomainNotificationHandler> _notifications;
         private readonly EmailCommandHandler _commandHandler;
@@ -31,7 +31,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.EmailTests
         {
             _faker = new Faker();
             _tokenSource = new CancellationTokenSource();
-            _uow = new Mock<ISsoUnitOfWork>();
+            _uow = new Mock<IUnitOfWork>();
             _mediator = new Mock<IMediatorHandler>();
             _notifications = new Mock<DomainNotificationHandler>();
             _templateRepository = new Mock<ITemplateRepository>();

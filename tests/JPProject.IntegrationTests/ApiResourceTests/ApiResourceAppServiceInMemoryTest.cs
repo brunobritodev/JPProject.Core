@@ -18,7 +18,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
     {
         private readonly ITestOutputHelper _output;
         private readonly IApiResourceAppService _apiResourceAppService;
-        private readonly JPProjectAdminUIContext _database;
+        private readonly JpProjectAdminUiContext _database;
         private DomainNotificationHandler _notifications;
         public WarmupInMemory InMemoryData { get; }
 
@@ -27,7 +27,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
             _output = output;
             InMemoryData = inMemoryData;
             _apiResourceAppService = InMemoryData.Services.GetRequiredService<IApiResourceAppService>();
-            _database = InMemoryData.Services.GetRequiredService<JPProjectAdminUIContext>();
+            _database = InMemoryData.Services.GetRequiredService<JpProjectAdminUiContext>();
             _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             _notifications.Clear();
         }

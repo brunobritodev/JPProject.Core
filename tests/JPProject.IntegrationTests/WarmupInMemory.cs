@@ -48,7 +48,7 @@ namespace JPProject.Admin.IntegrationTests
         public void DetachAll()
         {
 
-            var database = Services.GetService<JPProjectAdminUIContext>();
+            var database = Services.GetService<JpProjectAdminUiContext>();
             foreach (var dbEntityEntry in database.ChangeTracker.Entries())
             {
                 if (dbEntityEntry.Entity != null)

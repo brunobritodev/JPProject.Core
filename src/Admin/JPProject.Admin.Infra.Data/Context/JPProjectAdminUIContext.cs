@@ -1,21 +1,22 @@
 ﻿using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.EntityFramework.Extensions;
+using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.EntityFramework.Options;
-using JPProject.Admin.Infra.Data.Interfaces;
+using JPProject.EntityFrameworkCore.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace JPProject.Admin.Infra.Data.Context
 {
-    public class JPProjectAdminUIContext : DbContext,
-        IAdminContext,
-        IConfigurationDbStore,
-        IPersistedGrantDbStore
+    public class JpProjectAdminUiContext : DbContext,
+        IJpEntityFrameworkStore,
+        IConfigurationDbContext,
+        IPersistedGrantDbContext
     {
         private readonly ConfigurationStoreOptions _storeOptions;
         private readonly OperationalStoreOptions _operationalOptions;
 
-        public JPProjectAdminUIContext(DbContextOptions<JPProjectAdminUIContext> options,
+        public JpProjectAdminUiContext(DbContextOptions<JpProjectAdminUiContext> options,
             ConfigurationStoreOptions storeOptions,
             OperationalStoreOptions operationalOptions
             ) : base(options)
