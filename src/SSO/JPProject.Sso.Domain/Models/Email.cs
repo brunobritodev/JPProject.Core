@@ -3,6 +3,7 @@ using JPProject.Sso.Domain.Commands.Email;
 using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.ViewModels.User;
 using System;
+using JPProject.Domain.Core.Interfaces;
 
 namespace JPProject.Sso.Domain.Models
 {
@@ -41,7 +42,7 @@ namespace JPProject.Sso.Domain.Models
             Updated = DateTime.UtcNow;
         }
 
-        public EmailMessage GetMessage(User user, AccountResult created, UserCommand command)
+        public EmailMessage GetMessage(IDomainUser user, AccountResult created, UserCommand command)
         {
             return new EmailMessage(
                 user.Email,
@@ -51,7 +52,7 @@ namespace JPProject.Sso.Domain.Models
                 Sender);
         }
 
-        private string GetFormatedContent(string content, User user, AccountResult created, UserCommand command)
+        private string GetFormatedContent(string content, IDomainUser user, AccountResult created, UserCommand command)
         {
             if (content is null)
                 return string.Empty;

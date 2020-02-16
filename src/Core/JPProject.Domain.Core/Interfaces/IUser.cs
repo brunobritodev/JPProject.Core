@@ -7,6 +7,7 @@ namespace JPProject.Domain.Core.Interfaces
     /// </summary>
     public interface IDomainUser
     {
+        string UserName { get; }
         string Email { get; }
         bool EmailConfirmed { get; }
         string PasswordHash { get; }
@@ -17,14 +18,19 @@ namespace JPProject.Domain.Core.Interfaces
         DateTimeOffset? LockoutEnd { get; }
         bool LockoutEnabled { get; }
         int AccessFailedCount { get; }
-        string UserName { get; }
         string Picture { get; }
-        string Url { get; }
         string Name { get; }
+        string Url { get; }
         string Company { get; }
         string Bio { get; }
         string JobTitle { get; }
         string SocialNumber { get; }
         DateTime? Birthdate { get; }
+    }
+
+    public interface IDomainUserFactory<T>
+        where T : class
+    {
+        T CreateUser(IDomainUser user);
     }
 }

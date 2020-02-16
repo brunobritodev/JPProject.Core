@@ -24,11 +24,11 @@ namespace JPProject.Sso.Domain.Commands.User
         public Models.User ToModel()
         {
             return new Models.User(
-                email: Email,
-                name: Name,
-                userName: Username,
-                phoneNumber: PhoneNumber,
-                picture: Picture,
+                Email,
+                Name,
+                Username,
+                PhoneNumber,
+                Picture,
                 SocialNumber,
                 Birthdate
             );

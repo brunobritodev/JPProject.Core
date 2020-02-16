@@ -68,7 +68,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             if (result.HasValue)
             {
                 await SendEmailToUser(user, request, result.Value, EmailType.NewUser);
-                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Id, user.Name, user.Email));
+                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Username, user.Name, user.Email));
                 return true;
             }
             return false;
@@ -103,7 +103,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             if (result.HasValue)
             {
                 await SendEmailToUser(user, request, result.Value, EmailType.NewUserWithoutPassword);
-                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Id, user.Name, user.Email));
+                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Username, user.Name, user.Email));
                 return true;
             }
             return false;
@@ -130,7 +130,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             if (result.HasValue)
             {
                 await SendEmailToUser(user, request, result.Value, EmailType.NewUser);
-                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Id, user.Name, user.Email));
+                await Bus.RaiseEvent(new UserRegisteredEvent(request.Username, user.Name, user.Email));
                 return true;
             }
             return false;
@@ -150,13 +150,13 @@ namespace JPProject.Sso.Domain.CommandHandlers
             {
                 var user = await _userService.FindByUsernameOrEmail(request.EmailOrUsername);
                 await SendEmailToUser(user, request, accountResult.Value, EmailType.RecoverPassword);
-                await Bus.RaiseEvent(new ResetLinkGeneratedEvent(accountResult.Value.Id, request.Email, request.Username));
+                await Bus.RaiseEvent(new ResetLinkGeneratedEvent(accountResult.Value.Username, request.Email, request.Username));
                 return true;
             }
             return false;
         }
 
-        private async Task SendEmailToUser(User user, UserCommand request, AccountResult accountResult, EmailType type)
+        private async Task SendEmailToUser(IDomainUser user, UserCommand request, AccountResult accountResult, EmailType type)
         {
             var email = await _emailRepository.GetByType(type);
             if (email is null)

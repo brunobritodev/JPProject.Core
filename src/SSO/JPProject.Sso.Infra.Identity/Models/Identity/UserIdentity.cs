@@ -6,7 +6,7 @@ using System;
 
 namespace JPProject.Sso.Infra.Identity.Models.Identity
 {
-    public class UserIdentity : IdentityUser, IDomainUser
+    public class UserIdentity : IdentityUser, IDomainUser, IDomainUserFactory<UserIdentity>
     {
         public string Picture { get; set; }
         public string Url { get; set; }
@@ -75,6 +75,25 @@ namespace JPProject.Sso.Infra.Identity.Models.Identity
             PhoneNumber = command.PhoneNumber;
             SocialNumber = command.SocialNumber;
             Birthdate = command.Birthdate;
+        }
+
+        public UserIdentity CreateUser(IDomainUser user)
+        {
+            return new UserIdentity
+            {
+                PhoneNumber = user.PhoneNumber,
+                Email = user.Email,
+                UserName = user.UserName,
+                Name = user.Name,
+                Picture = user.Picture,
+                EmailConfirmed = user.EmailConfirmed,
+                SocialNumber = user.SocialNumber,
+                Birthdate = user.Birthdate,
+                Bio = user.Bio,
+                JobTitle = user.JobTitle,
+                LockoutEnd = null,
+                Company = user.Company,
+            };
         }
     }
 }

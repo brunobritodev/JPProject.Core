@@ -8,8 +8,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static ISsoConfigurationBuilder AddDefaultAspNetIdentityServices(this ISsoConfigurationBuilder services)
         {
             // Infra - Identity Services
-            services.Services.AddTransient<IUserService, UserService>();
-            services.Services.AddTransient<IRoleService, RoleService>();
+            services.Services.AddScoped<IUserService, UserService>();
+            services.Services.AddScoped<IRoleService, RoleService>();
 
             return services;
         }

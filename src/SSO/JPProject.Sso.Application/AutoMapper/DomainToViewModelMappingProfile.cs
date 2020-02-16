@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JPProject.Domain.Core.Events;
+using JPProject.Domain.Core.Interfaces;
 using JPProject.Sso.Application.EventSourcedNormalizers;
 using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Application.ViewModels.EmailViewModels;
@@ -14,8 +15,8 @@ namespace JPProject.Sso.Application.AutoMapper
     {
         public DomainToViewModelMappingProfile()
         {
-            CreateMap<User, UserViewModel>(MemberList.Destination);
-            CreateMap<User, UserListViewModel>(MemberList.Destination);
+            CreateMap<IDomainUser, UserViewModel>(MemberList.Destination);
+            CreateMap<IDomainUser, UserListViewModel>(MemberList.Destination);
 
             CreateMap<StoredEvent, EventHistoryData>().ConstructUsing(a => new EventHistoryData(a.Message, a.Id.ToString(), a.Details, a.Timestamp.ToString(CultureInfo.InvariantCulture), a.User, a.MessageType, a.RemoteIpAddress));
 

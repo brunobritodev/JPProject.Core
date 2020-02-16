@@ -4,7 +4,6 @@ using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Domain.Core.StringUtils;
-using JPProject.Domain.Core.ViewModels;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
@@ -17,7 +16,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -29,16 +27,19 @@ namespace JPProject.Sso.Infra.Identity.Services
         private readonly IMediatorHandler _bus;
         private readonly ILogger _logger;
         private readonly IConfiguration _config;
+        private readonly IDomainUserFactory<UserIdentity> _userFactory;
 
         public UserService(
             UserManager<UserIdentity> userManager,
             IMediatorHandler bus,
             ILoggerFactory loggerFactory,
-            IConfiguration config)
+            IConfiguration config,
+            IDomainUserFactory<UserIdentity> userFactory)
         {
             _userManager = userManager;
             _bus = bus;
             _config = config;
+            _userFactory = userFactory;
             _logger = loggerFactory.CreateLogger<UserService>();
         }
 
@@ -59,21 +60,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         private async Task<AccountResult?> CreateUser(IDomainUser user, string password, string provider, string providerId)
         {
-            var newUser = new UserIdentity
-            {
-                PhoneNumber = user.PhoneNumber,
-                Email = user.Email,
-                UserName = user.UserName,
-                Name = user.Name,
-                Picture = user.Picture,
-                EmailConfirmed = user.EmailConfirmed,
-                SocialNumber = user.SocialNumber,
-                Birthdate = user.Birthdate,
-                Bio = user.Bio,
-                JobTitle = user.JobTitle,
-                LockoutEnd = null,
-                Company = user.Company,
-            };
+            var newUser = _userFactory.CreateUser(user);
             IdentityResult result;
 
             if (provider.IsPresent())
@@ -107,7 +94,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
                 if (provider.IsPresent())
                     _logger.LogInformation($"Provider {provider} associated.");
-                return new AccountResult(newUser.Id, code, callbackUrl);
+                return new AccountResult(newUser.UserName, code, callbackUrl);
             }
 
             foreach (var error in result.Errors)
@@ -172,7 +159,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             //await _emailService.SendEmailAsync(user.Email, "Reset Password", $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
             //_logger.LogInformation("Reset link sended to userId.");
 
-            return new AccountResult(user.Id, code, callbackUrl);
+            return new AccountResult(user.UserName, code, callbackUrl);
         }
 
         public async Task<string> ConfirmEmailAsync(string email, string code)
@@ -319,33 +306,16 @@ namespace JPProject.Sso.Infra.Identity.Services
             return await _userManager.HasPasswordAsync(user);
         }
 
-        public async Task<IEnumerable<User>> GetByIdAsync(params string[] id)
+        public async Task<IEnumerable<IDomainUser>> GetByIdAsync(params string[] id)
         {
             var users = await _userManager.Users.Where(w => id.Contains(w.Id)).ToListAsync();
 
             return users.Select(GetUser).ToList();
         }
 
-        private static User GetUser(UserIdentity s)
+        private static IDomainUser GetUser(UserIdentity s)
         {
             return s?.ToUser();
-        }
-
-        public async Task<IEnumerable<User>> GetUsers(PagingViewModel paging)
-        {
-            List<UserIdentity> users;
-            if (paging.Search.IsPresent())
-                users = await _userManager.Users.Where(UserFind(paging.Search)).Skip(paging.Offset).Take(paging.Limit).ToListAsync();
-            else
-                users = await _userManager.Users.Skip(paging.Offset).Take(paging.Limit).ToListAsync();
-            return users.Select(GetUser);
-        }
-
-        private static Expression<Func<UserIdentity, bool>> UserFind(string search)
-        {
-            return w => w.UserName.Contains(search) ||
-                        w.Email.Contains(search) ||
-                        w.Name.Contains(search);
         }
 
         private async Task AddLoginAsync(UserIdentity user, string provider, string providerUserId)
@@ -358,7 +328,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             }
         }
 
-        public async Task<User> FindByEmailAsync(string email)
+        public async Task<IDomainUser> FindByEmailAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             return GetUser(user);
@@ -370,25 +340,10 @@ namespace JPProject.Sso.Infra.Identity.Services
             return GetUser(user);
         }
 
-        public async Task<User> FindByProviderAsync(string provider, string providerUserId)
+        public async Task<IDomainUser> FindByProviderAsync(string provider, string providerUserId)
         {
             var user = await _userManager.FindByLoginAsync(provider, providerUserId);
             return GetUser(user);
-        }
-
-        public async Task UpdateUserAsync(User user)
-        {
-            var userDb = await _userManager.FindByNameAsync(user.UserName);
-            userDb.Email = user.Email;
-            userDb.EmailConfirmed = user.EmailConfirmed;
-            userDb.AccessFailedCount = user.AccessFailedCount;
-            userDb.LockoutEnabled = user.LockoutEnabled;
-            userDb.LockoutEnd = user.LockoutEnd;
-            userDb.Name = user.Name;
-            userDb.TwoFactorEnabled = user.TwoFactorEnabled;
-            userDb.PhoneNumber = user.PhoneNumber;
-            userDb.PhoneNumberConfirmed = user.PhoneNumberConfirmed;
-            await _userManager.UpdateAsync(userDb);
         }
 
         public async Task<IEnumerable<Claim>> GetClaimByName(string userName)
@@ -483,7 +438,7 @@ namespace JPProject.Sso.Infra.Identity.Services
             return result.Succeeded;
         }
 
-        public async Task<IEnumerable<User>> GetUserFromRole(string role)
+        public async Task<IEnumerable<IDomainUser>> GetUserFromRole(string role)
         {
             return (await _userManager.GetUsersInRoleAsync(role)).Select(GetUser);
         }
@@ -561,11 +516,6 @@ namespace JPProject.Sso.Infra.Identity.Services
             return false;
         }
 
-        public Task<int> Count(string search)
-        {
-            return search.IsPresent() ? _userManager.Users.Where(UserFind(search)).CountAsync() : _userManager.Users.CountAsync();
-        }
-
         public async Task<string> AddLoginAsync(string email, string provider, string providerId)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -578,7 +528,7 @@ namespace JPProject.Sso.Infra.Identity.Services
         }
 
 
-        public async Task<User> FindByUsernameOrEmail(string emailOrUsername)
+        public async Task<IDomainUser> FindByUsernameOrEmail(string emailOrUsername)
         {
             var user = await GetUserByEmailOrUsername(emailOrUsername);
             return GetUser(user);
@@ -593,12 +543,12 @@ namespace JPProject.Sso.Infra.Identity.Services
                 user = await _userManager.FindByNameAsync(emailOrUsername);
             return user;
         }
-        public Task<int> Count(ICustomQueryable findByEmailNameUsername)
+        public Task<int> Count(ICustomQueryable search)
         {
-            return _userManager.Users.Filter(findByEmailNameUsername).CountAsync();
+            return _userManager.Users.Filter(search).CountAsync();
         }
 
-        public async Task<IEnumerable<User>> Search(ICustomQueryable search)
+        public async Task<IEnumerable<IDomainUser>> Search(ICustomQueryable search)
         {
             var users = await _userManager.Users.Apply(search).ToListAsync();
             return users.Select(GetUser);
