@@ -33,7 +33,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldAddNewApi()
+        public async Task Should_Add_New_Api()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -44,7 +44,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldApiResourceHaveAtLeastOneScope()
+        public async Task Should_ApiResource_Have_At_Least_One_Scope()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -71,7 +71,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldRemoveApi()
+        public async Task Should_Remove_Api()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -85,7 +85,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldUpdateApi()
+        public async Task Should_Update_Api()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -103,7 +103,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldNotAddAnotherApiWithSameName()
+        public async Task Should_Not_Add_Another_Api_With_Same_Name()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -116,7 +116,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
 
 
         [Fact]
-        public async Task ShouldAddNewApiScope()
+        public async Task Should_Add_New_ApiScope()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -131,7 +131,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldAddNewApiSecret()
+        public async Task Should_Add_New_ApiSecret()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -146,7 +146,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldNotAddNewApiSecretWhenClientDoesntExist()
+        public async Task Should_Not_Add_New_ApiSecret_When_Client_Doesnt_Exist()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
             var secret = ApiResourceFaker.GenerateSaveClientSecret(command.Name).Generate();

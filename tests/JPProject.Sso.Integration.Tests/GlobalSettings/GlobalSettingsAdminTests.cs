@@ -43,7 +43,7 @@ namespace JPProject.Sso.Integration.Tests.GlobalSettings
 
 
         [Fact]
-        public async Task ShouldNotTruncateSensitiveDataWhenUserIsAdmin()
+        public async Task Should_Not_Truncate_Sensitive_Data_When_User_Is_Admin()
         {
             var anotherSetting = GlobalSettingsFaker.GenerateSetting(key: "Smtp:Password", sensitive: true).Generate();
             _database.GlobalConfigurationSettings.Add(anotherSetting);
@@ -55,7 +55,7 @@ namespace JPProject.Sso.Integration.Tests.GlobalSettings
 
 
         [Fact]
-        public async Task ShouldUpdateWhenConfigurationExist()
+        public async Task Should_Update_When_Configuration_Exist()
         {
             var setting = GlobalSettingsFaker.GenerateSetting(key: "Smtp:Password").Generate();
             var oldSetting = setting.Value;
@@ -70,7 +70,7 @@ namespace JPProject.Sso.Integration.Tests.GlobalSettings
         }
 
         [Fact]
-        public async Task ShouldSaveConfigurationWhenItDoesntExist()
+        public async Task Should_Save_Configuration_When_It_Doesnt_Exist()
         {
             var anotherSetting = GlobalSettingsFaker.GenerateSettingViewModel(key: "Smtp:Password", isPublic: false).Generate();
 

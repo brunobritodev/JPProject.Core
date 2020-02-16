@@ -40,7 +40,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldRegisterNewUser()
+        public async Task Should_Register_New_User()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             var result = await _userAppService.Register(command);
@@ -76,7 +76,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
 
 
         [Fact]
-        public async Task UserLockoutDate_Should_Be_Null()
+        public async Task User_LockoutDate_Should_Be_Null()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             var result = await _userAppService.Register(command);
@@ -88,7 +88,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
 
 
         [Fact]
-        public async Task ShouldNotRegisterDuplicatedUsername()
+        public async Task Should_Not_Register_Duplicated_Username()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             var result = await _userAppService.Register(command);
@@ -105,7 +105,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldNotRegisterDuplicatedEmail()
+        public async Task Should_Not_Register_Duplicated_Email()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             var result = await _userAppService.Register(command);
@@ -123,7 +123,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
 
 
         [Fact]
-        public async Task ShouldNotRegisterUserWithoutPassword()
+        public async Task Should_Not_Register_User_Without_Password()
         {
             var command = UserViewModelFaker.GenerateUserWithProviderViewModel().Generate();
             command.Password = null;
@@ -135,7 +135,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldRegisterNewUserWithoutPassword()
+        public async Task Should_Register_New_User_Without_Password()
         {
             var command = UserViewModelFaker.GenerateSocialViewModel().Generate();
 
@@ -145,7 +145,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldRegisterNewUserWithProviderAndWithoutPassword()
+        public async Task Should_Register_New_User_With_Provider_And_Without_Password()
         {
             var command = UserViewModelFaker.GenerateUserWithProviderViewModel().Generate();
             command.Password = null;
@@ -158,28 +158,28 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldNotFindUser()
+        public async Task Should_Not_Find_User()
         {
             var result = await _userAppService.FindByUsernameAsync(_faker.Person.FirstName);
             result.Should().BeNull();
         }
 
         [Fact]
-        public async Task ShouldNotFindUsername()
+        public async Task Should_Not_Find_Username()
         {
             var result = await _userAppService.FindByUsernameAsync(_faker.Person.UserName);
             result.Should().BeNull();
         }
 
         [Fact]
-        public async Task ShouldNotFindEmail()
+        public async Task Should_Not_Find_Email()
         {
             var result = await _userAppService.FindByEmailAsync(_faker.Person.Email);
             result.Should().BeNull();
         }
 
         [Fact]
-        public async Task ShouldUsernameExist()
+        public async Task Should_Username_Exist()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             await _userAppService.Register(command);
@@ -189,7 +189,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldEmailExist()
+        public async Task Should_Email_Exist()
         {
 
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
@@ -200,21 +200,21 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldUsernameNotExist()
+        public async Task Should_Username_Not_Exist()
         {
             var result = await _userAppService.CheckUsername(_faker.Person.UserName);
             result.Should().BeFalse();
         }
 
         [Fact]
-        public async Task ShouldEmailNotExist()
+        public async Task Should_Email_Not_Exist()
         {
             var result = await _userAppService.CheckEmail(_faker.Person.Email);
             result.Should().BeFalse();
         }
 
         [Fact]
-        public async Task ShouldFindUsername()
+        public async Task Should_Find_Username()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             await _userAppService.Register(command);
@@ -223,7 +223,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldFindEmail()
+        public async Task Should_Find_Email()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             await _userAppService.Register(command);
@@ -233,7 +233,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
 
 
         [Fact]
-        public async Task ShouldAddLogin()
+        public async Task Should_Add_Login()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             await _userAppService.Register(command);
@@ -250,7 +250,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldFindLoginByProvider()
+        public async Task Should_Find_Login_By_Provider()
         {
             var command = UserViewModelFaker.GenerateSocialViewModel().Generate();
 
@@ -264,7 +264,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
 
 
         [Fact]
-        public async Task ShouldFindByIds()
+        public async Task Should_Find_By_Ids()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             await _userAppService.Register(command);
@@ -278,7 +278,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldSendResetLinkByUsername()
+        public async Task Should_Send_Reset_Link_By_Username()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             await _userAppService.Register(command);
@@ -291,7 +291,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldSendResetLinkByEmail()
+        public async Task Should_Send_Reset_Link_By_Email()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             await _userAppService.Register(command);
@@ -304,7 +304,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldRegisterNewUserWithLockOutDisabled()
+        public async Task Should_Register_New_User_With_LockOut_Disabled()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             var result = await _userAppService.Register(command);
@@ -317,7 +317,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
 
 
         [Fact]
-        public async Task ShouldSearchUserByName()
+        public async Task Should_Search_User_By_Name()
         {
             string name = string.Empty;
             var commands = UserViewModelFaker.GenerateUserViewModel().Generate(_faker.Random.Int(1, 10));
@@ -337,7 +337,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task ShouldSearchUserBySsn()
+        public async Task Should_Search_User_By_Ssn()
         {
             string ssn = string.Empty;
             var commands = UserViewModelFaker.GenerateUserViewModel().Generate(_faker.Random.Int(1, 10));

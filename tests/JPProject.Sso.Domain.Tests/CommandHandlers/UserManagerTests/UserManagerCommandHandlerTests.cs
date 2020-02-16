@@ -40,7 +40,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
 
 
         [Fact]
-        public async Task ShouldRemoveClaimWithoutValue()
+        public async Task Should_Remove_Claim_Without_Value()
         {
             var user = UserFaker.GenerateUser().Generate();
             var command = UserManagerCommandFaker.GenerateRemoveClaimCommand(false).Generate();
@@ -62,7 +62,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
         }
 
         [Fact]
-        public async Task ShouldRemoveClaimWithValue()
+        public async Task Should_Remove_Claim_With_Value()
         {
             var user = UserFaker.GenerateUser().Generate();
             var command = UserManagerCommandFaker.GenerateRemoveClaimCommand().Generate();

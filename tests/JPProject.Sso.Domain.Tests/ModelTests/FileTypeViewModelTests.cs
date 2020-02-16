@@ -8,7 +8,7 @@ namespace JPProject.Sso.Domain.Tests.ModelTests
     public class FileTypeViewModelTests
     {
         [Fact]
-        public void ShouldNormalizeFileTypePng()
+        public void Should_Normalize_File_Type_Png()
         {
             var file = new FileUploadViewModel()
             {
@@ -23,7 +23,7 @@ namespace JPProject.Sso.Domain.Tests.ModelTests
         }
 
         [Fact]
-        public void ShouldNormalizeFileTypePdf()
+        public void Should_Normalize_File_Type_Pdf()
         {
             var file = new FileUploadViewModel()
             {
@@ -35,7 +35,7 @@ namespace JPProject.Sso.Domain.Tests.ModelTests
             Path.GetExtension(file.Filename).Should().Be(".pdf");
         }
         [Fact]
-        public void ShouldNormalizeChangeFilename()
+        public void Should_Normalize_Change_Filename()
         {
             var file = new FileUploadViewModel()
             {

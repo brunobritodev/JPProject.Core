@@ -30,7 +30,7 @@ namespace JPProject.Admin.IntegrationTests.PersistedGrantTests
         }
 
         [Fact]
-        public async Task ShouldRemoveGrant()
+        public async Task Should_Remove_Grant()
         {
             _database.PersistedGrants.Add(new PersistedGrant()
             {

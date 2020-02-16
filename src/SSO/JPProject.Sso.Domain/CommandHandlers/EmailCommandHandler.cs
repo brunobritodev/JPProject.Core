@@ -130,7 +130,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            _templateRepository.Remove(template.Id);
+            _templateRepository.Remove(template);
 
             if (await Commit())
             {

@@ -36,7 +36,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
         }
 
         [Fact]
-        public async Task ShouldSaveEmail()
+        public async Task Should_Save_Email()
         {
             var command = EmailFaker.GenerateEmailViewModel().Generate();
             var result = await _emailAppService.SaveEmail(command);
@@ -45,7 +45,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
         }
 
         [Fact]
-        public async Task ShouldSaveEmailWithManyBccs()
+        public async Task Should_Save_Email_With_Many_Bccs()
         {
             var command = EmailFaker.GenerateEmailViewModel().Generate();
             var emailBcc = _faker.Person.Email;
@@ -56,7 +56,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
         }
 
         [Fact]
-        public async Task ShouldSaveEmailWithNullBcc()
+        public async Task Should_Save_Email_With_Null_Bcc()
         {
             var command = EmailFaker.GenerateEmailViewModel().Generate();
 
@@ -70,7 +70,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
 
 
         [Fact]
-        public async Task ShouldUpdateEmailWithNullBcc()
+        public async Task Should_Update_Email_With_Null_Bcc()
         {
             var command = EmailFaker.GenerateEmailViewModel().Generate();
 
@@ -88,7 +88,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
         }
 
         [Fact]
-        public async Task ShouldFindEmailByType()
+        public async Task Should_Find_Email_By_Type()
         {
             var command = EmailFaker.GenerateEmailViewModel().Generate();
             await _emailAppService.SaveEmail(command);
@@ -102,7 +102,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
         }
 
         [Fact]
-        public async Task ShouldUpdateEmailWhenTypeAlreadyExists()
+        public async Task Should_Update_Email_When_Type_Already_Exists()
         {
             var command = EmailFaker.GenerateEmailViewModel().Generate();
             var result = await _emailAppService.SaveEmail(command);
@@ -116,7 +116,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
         }
 
         [Fact]
-        public async Task ShouldSaveTemplate()
+        public async Task Should_Save_Template()
         {
             var command = EmailFaker.GenerateTemplateViewModel().Generate();
             var result = await _emailAppService.SaveTemplate(command);
@@ -126,7 +126,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
         }
 
         [Fact]
-        public async Task ShouldRemoveTemplate()
+        public async Task Should_Remove_Template()
         {
             var command = EmailFaker.GenerateTemplateViewModel().Generate();
             var result = await _emailAppService.SaveTemplate(command);

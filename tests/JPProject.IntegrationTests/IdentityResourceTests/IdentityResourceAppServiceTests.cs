@@ -33,7 +33,7 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
 
 
         [Fact]
-        public async Task ShouldAddNewIdentityResource()
+        public async Task Should_Add_New_IdentityResource()
         {
             var command = IdentityResourceFaker.GenerateIdentiyResource().Generate();
 
@@ -45,7 +45,7 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
         }
 
         [Fact]
-        public async Task ShouldRemoveIdentityResource()
+        public async Task Should_Remove_IdentityResource()
         {
             var command = IdentityResourceFaker.GenerateIdentiyResource().Generate();
 
@@ -59,7 +59,7 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
         }
 
         [Fact]
-        public async Task ShouldUpdateIdentityResource()
+        public async Task Should_Update_IdentityResource()
         {
             var command = IdentityResourceFaker.GenerateIdentiyResource().Generate();
 

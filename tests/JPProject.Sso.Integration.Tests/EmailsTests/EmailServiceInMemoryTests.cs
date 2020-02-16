@@ -35,7 +35,7 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
         }
 
         [Fact]
-        public void ShouldReplaceEmailVariables()
+        public void Should_Replace_Email_Variables()
         {
             var email = EmailFaker.GenerateEmail().Generate();
             var message = email.GetMessage(UserFaker.GenerateUser().Generate(), new AccountResult(_faker.Random.Guid().ToString(), _faker.Database.Random.AlphaNumeric(5), _faker.Internet.Url()), UserCommandFaker.GenerateRegisterNewUserCommand().Generate());
