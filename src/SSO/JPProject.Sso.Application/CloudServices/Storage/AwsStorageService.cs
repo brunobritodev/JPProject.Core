@@ -2,12 +2,12 @@
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
+using JPProject.Domain.Core.StringUtils;
 using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Domain.ViewModels.Settings;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using JPProject.Domain.Core.StringUtils;
 
 namespace JPProject.Sso.Application.CloudServices.Storage
 {

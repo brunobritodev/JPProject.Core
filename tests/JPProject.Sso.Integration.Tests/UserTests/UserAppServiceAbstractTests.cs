@@ -160,21 +160,21 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         [Fact]
         public async Task Should_Not_Find_User()
         {
-            var result = await _userAppService.FindByUsernameAsync(_faker.Person.FirstName);
+            var result = await _userManagerAppService.FindByUsernameAsync(_faker.Person.FirstName);
             result.Should().BeNull();
         }
 
         [Fact]
         public async Task Should_Not_Find_Username()
         {
-            var result = await _userAppService.FindByUsernameAsync(_faker.Person.UserName);
+            var result = await _userManagerAppService.FindByUsernameAsync(_faker.Person.UserName);
             result.Should().BeNull();
         }
 
         [Fact]
         public async Task Should_Not_Find_Email()
         {
-            var result = await _userAppService.FindByEmailAsync(_faker.Person.Email);
+            var result = await _userManagerAppService.FindByEmailAsync(_faker.Person.Email);
             result.Should().BeNull();
         }
 
@@ -218,7 +218,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             await _userAppService.Register(command);
-            var result = await _userAppService.FindByUsernameAsync(command.Username);
+            var result = await _userManagerAppService.FindByUsernameAsync(command.Username);
             result.Should().NotBeNull();
         }
 
@@ -227,7 +227,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             await _userAppService.Register(command);
-            var result = await _userAppService.FindByEmailAsync(command.Email);
+            var result = await _userManagerAppService.FindByEmailAsync(command.Email);
             result.Should().NotBeNull();
         }
 
@@ -244,9 +244,10 @@ namespace JPProject.Sso.Integration.Tests.UserTests
 
             var result = await _userAppService.AddLogin(socialUser);
             result.Should().BeTrue();
-            var userId = await _userAppService.FindByEmailAsync(command.Email);
+            var userId = await _userManagerAppService.FindByEmailAsync(command.Email);
 
-            _database.UserLogins.Any(s => s.UserId == userId.Id).Should().BeTrue();
+            var user = _database.Users.First(f => f.UserName == userId.UserName);
+            _database.UserLogins.Any(s => s.UserId == user.Id).Should().BeTrue();
         }
 
         [Fact]
@@ -258,7 +259,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             result.Should().BeTrue();
             _database.Users.FirstOrDefault(f => f.UserName == command.Username).Should().NotBeNull();
 
-            var user = await _userAppService.FindByProviderAsync(command.Provider, command.ProviderId);
+            var user = await _userManagerAppService.FindByProviderAsync(command.Provider, command.ProviderId);
             user.Should().NotBeNull();
         }
 

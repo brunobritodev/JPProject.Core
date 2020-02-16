@@ -6,7 +6,7 @@
     {
         public SetPasswordCommandValidation()
         {
-            ValidateId();
+            ValidateUsername();
             ValidatePassword();
         }
     }

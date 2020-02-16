@@ -13,9 +13,9 @@ namespace JPProject.Sso.Domain.Validations.UserManagement
                 .Length(2, 150).WithMessage("The Username must have between 2 and 150 characters");
         }
 
-        protected void ValidateId()
+        protected void ValidateUsername()
         {
-            RuleFor(c => c.Id)
+            RuleFor(c => c.Username)
                 .NotEmpty().WithMessage("Invalid user");
         }
 

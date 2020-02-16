@@ -4,9 +4,9 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
 {
     public class RemoveAccountCommand : ProfileCommand
     {
-        public RemoveAccountCommand(string id)
+        public RemoveAccountCommand(string username)
         {
-            Id = id;
+            Username = username;
         }
 
         public override bool IsValid()

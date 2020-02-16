@@ -64,23 +64,6 @@ namespace JPProject.Sso.Application.Services
             return Bus.SendCommand(registerCommand);
         }
 
-        public async Task<UserViewModel> FindByUsernameAsync(string username)
-        {
-            var user = await _userService.FindByNameAsync(username);
-            return _mapper.Map<UserViewModel>(user);
-        }
-
-        public async Task<UserViewModel> FindByEmailAsync(string email)
-        {
-            var user = await _userService.FindByEmailAsync(email);
-            return _mapper.Map<UserViewModel>(user);
-        }
-
-        public async Task<UserViewModel> FindByProviderAsync(string provider, string providerUserId)
-        {
-            var user = await _userService.FindByProviderAsync(provider, providerUserId);
-            return _mapper.Map<UserViewModel>(user);
-        }
 
         public Task<bool> AddLogin(SocialViewModel model)
         {

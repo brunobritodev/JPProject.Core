@@ -47,7 +47,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
 
             _userService.Setup(s => s.FindByNameAsync(It.Is<string>(e => e == command.Username))).ReturnsAsync(user);
             _userService.Setup(s => s.RemoveClaim(
-                    It.Is<string>(c => c == user.Id),
+                    It.Is<string>(c => c == user.UserName),
                     It.Is<string>(c => c.Equals(command.Type)),
                     It.Is<string>(c => c.IsMissing())))
                 .ReturnsAsync(true);
@@ -69,7 +69,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
 
             _userService.Setup(s => s.FindByNameAsync(It.Is<string>(e => e == command.Username))).ReturnsAsync(user);
             _userService.Setup(s => s.RemoveClaim(
-                    It.Is<string>(c => c == user.Id),
+                    It.Is<string>(c => c == user.UserName),
                     It.Is<string>(c => c.Equals(command.Type)),
                     It.Is<string>(c => c.Equals(command.Value))))
                 .ReturnsAsync(true);

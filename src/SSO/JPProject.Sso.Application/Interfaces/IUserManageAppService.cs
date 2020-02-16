@@ -12,30 +12,31 @@ namespace JPProject.Sso.Application.Interfaces
 {
     public interface IUserManageAppService : IDisposable
     {
-        Task UpdateProfile(UserViewModel model);
-        Task UpdateProfilePicture(ProfilePictureViewModel model);
-        Task ChangePassword(ChangePasswordViewModel model);
-        Task CreatePassword(SetPasswordViewModel model);
-        Task RemoveAccount(RemoveAccountViewModel model);
-        Task<bool> HasPassword(string userId);
+        Task<UserViewModel> FindByUsernameAsync(string username);
+        Task<UserViewModel> FindByEmailAsync(string email);
+        Task<UserViewModel> FindByProviderAsync(string provider, string providerUserId);
         Task<ListOf<EventHistoryData>> GetEvents(string username, PagingViewModel paging);
-
         Task<UserViewModel> GetUserDetails(string username);
-        Task<UserViewModel> GetUserAsync(string value);
-        Task<bool> UpdateUser(UserViewModel model);
-
         Task<IEnumerable<ClaimViewModel>> GetClaims(string userName);
-        Task SaveClaim(SaveUserClaimViewModel model);
-        Task RemoveClaim(RemoveUserClaimViewModel model);
         Task<IEnumerable<RoleViewModel>> GetRoles(string userName);
-        Task RemoveRole(RemoveUserRoleViewModel model);
-        Task SaveRole(SaveUserRoleViewModel model);
         Task<IEnumerable<UserLoginViewModel>> GetLogins(string userName);
-        Task RemoveLogin(RemoveUserLoginViewModel model);
         Task<IEnumerable<UserListViewModel>> GetUsersInRole(string role);
-        Task ResetPassword(AdminChangePasswordViewodel model);
         Task<IEnumerable<UserListViewModel>> GetUsersById(params string[] id);
         Task<ListOf<UserListViewModel>> SearchUsers(ICustomQueryable search);
+
+        Task<bool> UpdateProfile(UserViewModel model);
+        Task<bool> UpdateProfilePicture(ProfilePictureViewModel model);
+        Task<bool> ChangePassword(ChangePasswordViewModel model);
+        Task<bool> CreatePassword(SetPasswordViewModel model);
+        Task<bool> RemoveAccount(RemoveAccountViewModel model);
+        Task<bool> HasPassword(string userId);
+        Task<bool> UpdateUser(UserViewModel model);
+        Task<bool> SaveClaim(SaveUserClaimViewModel model);
+        Task<bool> RemoveClaim(RemoveUserClaimViewModel model);
+        Task<bool> RemoveRole(RemoveUserRoleViewModel model);
+        Task<bool> SaveRole(SaveUserRoleViewModel model);
+        Task<bool> RemoveLogin(RemoveUserLoginViewModel model);
+        Task<bool> ResetPassword(AdminChangePasswordViewodel model);
 
 
     }

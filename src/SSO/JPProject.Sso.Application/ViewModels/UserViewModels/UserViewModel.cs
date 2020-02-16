@@ -32,9 +32,6 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
         public string Company { get; set; }
         public string Bio { get; set; }
         public string JobTitle { get; set; }
-
-        [JsonIgnore]
-        public string Id { get; set; }
         public bool EmailConfirmed { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
         public bool TwoFactorEnabled { get; set; }

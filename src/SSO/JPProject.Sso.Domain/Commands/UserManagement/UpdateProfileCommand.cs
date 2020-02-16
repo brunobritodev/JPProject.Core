@@ -6,11 +6,11 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
     public class UpdateProfileCommand : ProfileCommand
     {
 
-        public UpdateProfileCommand(string id, string url, string bio, string company, string jobTitle, string name, string phoneNumber, string socialNumber, DateTime? birthdate)
+        public UpdateProfileCommand(string username, string url, string bio, string company, string jobTitle, string name, string phoneNumber, string socialNumber, DateTime? birthdate)
         {
+            Username = username;
             SocialNumber = socialNumber;
             Birthdate = birthdate;
-            Id = id;
             Url = url;
             Bio = bio;
             Company = company;
@@ -25,6 +25,4 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
             return ValidationResult.IsValid;
         }
     }
-
-
 }

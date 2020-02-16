@@ -18,7 +18,7 @@ namespace JPProject.Sso.Infra.Data.Configuration
             services.AddScoped<IGlobalConfigurationSettingsRepository, GlobalConfigurationSettingsRepository>();
             services.AddScoped<IEmailRepository, EmailRepository>();
             services.AddScoped<IEventStore, SqlEventStore>();
-            services.AddScoped<IUnitOfWork, UoW.UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

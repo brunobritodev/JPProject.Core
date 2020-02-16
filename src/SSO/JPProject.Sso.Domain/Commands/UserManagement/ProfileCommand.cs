@@ -5,7 +5,7 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
 {
     public abstract class ProfileCommand : Command
     {
-        public string Id { get; protected set; }
+        public string Username { get; protected set; }
         public string PhoneNumber { get; protected set; }
         public string Name { get; protected set; }
         public string Picture { get; protected set; }
