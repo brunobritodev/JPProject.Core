@@ -2,8 +2,7 @@ using JPProject.Sso.Application.Configuration;
 using JPProject.Sso.Infra.Data.Configuration;
 using JPProject.Sso.Infra.Identity.Configuration;
 using JPProject.Sso.Infra.Identity.Models.Identity;
-using JPProject.Sso.Infra.Identity.Services;
-using JPProject.Sso.Integration.Tests.Context;
+using JPProject.Sso.Integration.Tests.CustomIdentityConfigurations.StringIdentity;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -13,19 +12,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using System.IO;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
-namespace JPProject.Sso.Integration.Tests
+namespace JPProject.Sso.Integration.Tests.CustomIdentityConfigurations.IntIdentity
 {
-    public class WarmupInDifferentDb : IWarmupTest
+    public class WarmupIdentityIntPrimaryKeyContext : IWarmupTest
     {
-        public WarmupInDifferentDb()
+        public WarmupIdentityIntPrimaryKeyContext()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddUserSecrets<WarmupInDifferentDb>();
+                .AddUserSecrets<WarmupUnifiedContext>();
 
             //Mock IHttpContextAccessor
             var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -35,19 +32,18 @@ namespace JPProject.Sso.Integration.Tests
 
             void DatabaseOptions(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
 
-            serviceCollection.AddDbContext<SsoContext>(DatabaseOptions);
-            serviceCollection.AddDbContext<EventStoreContext>(DatabaseOptions);
+            serviceCollection.AddDbContext<CustomDatabasePrimaryKey<CustomIntIdentity, CustomRoleIntIdentity, int>>(DatabaseOptions);
 
 
             serviceCollection
-                .AddIdentity<UserIdentity, RoleIdentity>(AccountOptions.NistAccountOptions)
-                .AddEntityFrameworkStores<SsoContext>()
+                .AddIdentity<CustomIntIdentity, CustomRoleIntIdentity>(AccountOptions.NistAccountOptions)
+                .AddEntityFrameworkStores<CustomDatabasePrimaryKey<CustomIntIdentity, CustomRoleIntIdentity, int>>()
                 .AddDefaultTokenProviders();
 
             serviceCollection
                 .ConfigureSso<AspNetUserTest>()
-                .AddSsoContext<SsoContext, EventStoreContext>()
-                .ConfigureIdentity<UserIdentity, RoleIdentity, string, IdentityFactory, IdentityFactory>();
+                .AddSsoContext<CustomDatabasePrimaryKey<CustomIntIdentity, CustomRoleIntIdentity, int>>()
+                .ConfigureIdentity<CustomIntIdentity, CustomRoleIntIdentity, int, CustomIntFactory, CustomIntFactory>();
 
             serviceCollection
                 .AddIdentityServer(options =>
@@ -57,7 +53,7 @@ namespace JPProject.Sso.Integration.Tests
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
                 })
-                .AddAspNetIdentity<UserIdentity>()
+                .AddAspNetIdentity<CustomIntIdentity>()
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = DatabaseOptions;
@@ -71,8 +67,7 @@ namespace JPProject.Sso.Integration.Tests
                     options.TokenCleanupInterval = 15; // frequency in seconds to cleanup stale grants. 15 is useful during debugging
                 });
 
-
-            serviceCollection.AddMediatR(typeof(WarmupInDifferentDb));
+            serviceCollection.AddMediatR(typeof(WarmupUnifiedContext));
             serviceCollection.TryAddSingleton(mockHttpContextAccessor.Object);
 
             Services = serviceCollection.BuildServiceProvider();
@@ -82,7 +77,7 @@ namespace JPProject.Sso.Integration.Tests
         public void DetachAll()
         {
 
-            var database = Services.GetService<SsoContext>();
+            var database = Services.GetService<CustomDatabasePrimaryKey<CustomIntIdentity, CustomRoleIntIdentity, int>>();
             foreach (var dbEntityEntry in database.ChangeTracker.Entries())
             {
                 if (dbEntityEntry.Entity != null)

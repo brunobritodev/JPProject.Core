@@ -1,5 +1,4 @@
-﻿using JPProject.Domain.Core.Interfaces;
-using JPProject.Sso.Domain.Commands.User;
+﻿using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Infra.Identity.Models.Identity;
@@ -10,8 +9,7 @@ namespace JPProject.Sso.Infra.Identity.Services
     {
         public UserIdentity Create(UserCommand user)
         {
-
-            var newUser = new UserIdentity
+            return new UserIdentity
             {
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
@@ -23,8 +21,6 @@ namespace JPProject.Sso.Infra.Identity.Services
                 Birthdate = user.Birthdate,
                 LockoutEnd = null,
             };
-
-            return newUser;
         }
 
         public RoleIdentity CreateRole(string name)
@@ -32,10 +28,6 @@ namespace JPProject.Sso.Infra.Identity.Services
             return new RoleIdentity(name);
         }
 
-        public IDomainUser ToDomainUser(UserIdentity identityUser)
-        {
-            return identityUser;
-        }
 
         public void UpdateInfo(AdminUpdateUserCommand command, UserIdentity userDb)
         {
@@ -54,14 +46,14 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public void UpdateProfile(UpdateProfileCommand command, UserIdentity user)
         {
-            //user.Name = command.UserIdentity.Name;
-            //user.PhoneNumber = command.UserIdentity.PhoneNumber;
-            //user.Bio = command.UserIdentity.Bio;
-            //user.Company = command.UserIdentity.Company;
-            //user.JobTitle = command.UserIdentity.JobTitle;
-            //user.Url = command.UserIdentity.Url;
-            //user.SocialNumber = command.UserIdentity.SocialNumber;
-            //user.Birthdate = command.UserIdentity.Birthdate;
+            user.Name = command.Name;
+            user.PhoneNumber = command.PhoneNumber;
+            user.Bio = command.Bio;
+            user.Company = command.Company;
+            user.JobTitle = command.JobTitle;
+            user.Url = command.Url;
+            user.SocialNumber = command.SocialNumber;
+            user.Birthdate = command.Birthdate;
         }
 
     }

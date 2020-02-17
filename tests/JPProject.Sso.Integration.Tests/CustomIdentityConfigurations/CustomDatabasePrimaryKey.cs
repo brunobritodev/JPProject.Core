@@ -8,25 +8,29 @@ using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Infra.Data.Constants;
 using JPProject.Sso.Infra.Data.Interfaces;
 using JPProject.Sso.Infra.Data.Mappings;
-using JPProject.Sso.Infra.Identity.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 
-namespace JPProject.Sso.Integration.Tests.Context
+namespace JPProject.Sso.Integration.Tests.CustomIdentityConfigurations
 {
-    public class UnifiedContext : IdentityDbContext<UserIdentity, IdentityRole, string>,
-       IPersistedGrantDbContext,
-       IConfigurationDbContext,
-       ISsoContext,
-       IEventStoreContext
+
+    public class CustomDatabasePrimaryKey<TUser, TRole, TKey> : IdentityDbContext<TUser, TRole, TKey>,
+        IPersistedGrantDbContext,
+        IConfigurationDbContext,
+        ISsoContext,
+        IEventStoreContext
+        where TKey : IEquatable<TKey>
+        where TUser : IdentityUser<TKey>
+        where TRole : IdentityRole<TKey>
     {
         private readonly ConfigurationStoreOptions _storeOptions;
         private readonly OperationalStoreOptions _operationalOptions;
 
-        public UnifiedContext(
-            DbContextOptions<UnifiedContext> options,
+        public CustomDatabasePrimaryKey(
+            DbContextOptions<CustomDatabasePrimaryKey<TUser, TRole, TKey>> options,
             ConfigurationStoreOptions storeOptions,
             OperationalStoreOptions operationalOptions)
             : base(options)
@@ -43,14 +47,14 @@ namespace JPProject.Sso.Integration.Tests.Context
 
         private void ConfigureIdentityContext(ModelBuilder builder)
         {
-            builder.Entity<IdentityRole>().ToTable(TableConsts.IdentityRoles);
-            builder.Entity<IdentityRoleClaim<string>>().ToTable(TableConsts.IdentityRoleClaims);
-            builder.Entity<IdentityUserRole<string>>().ToTable(TableConsts.IdentityUserRoles);
+            builder.Entity<TRole>().ToTable(TableConsts.IdentityRoles);
+            builder.Entity<IdentityRoleClaim<TKey>>().ToTable(TableConsts.IdentityRoleClaims);
+            builder.Entity<IdentityUserRole<TKey>>().ToTable(TableConsts.IdentityUserRoles);
 
-            builder.Entity<UserIdentity>().ToTable(TableConsts.IdentityUsers);
-            builder.Entity<IdentityUserLogin<string>>().ToTable(TableConsts.IdentityUserLogins);
-            builder.Entity<IdentityUserClaim<string>>().ToTable(TableConsts.IdentityUserClaims);
-            builder.Entity<IdentityUserToken<string>>().ToTable(TableConsts.IdentityUserTokens);
+            builder.Entity<TUser>().ToTable(TableConsts.IdentityUsers);
+            builder.Entity<IdentityUserLogin<TKey>>().ToTable(TableConsts.IdentityUserLogins);
+            builder.Entity<IdentityUserClaim<TKey>>().ToTable(TableConsts.IdentityUserClaims);
+            builder.Entity<IdentityUserToken<TKey>>().ToTable(TableConsts.IdentityUserTokens);
 
             builder.ConfigureClientContext(_storeOptions);
             builder.ConfigureResourcesContext(_storeOptions);

@@ -1,12 +1,20 @@
 ﻿using Bogus;
 using FluentAssertions;
+using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
 using JPProject.Sso.Domain.ViewModels.User;
 using JPProject.Sso.Fakers.Test.Users;
+using JPProject.Sso.Infra.Identity.Models.Identity;
 using JPProject.Sso.Integration.Tests.Context;
+using JPProject.Sso.Integration.Tests.CustomIdentityConfigurations;
+using JPProject.Sso.Integration.Tests.CustomIdentityConfigurations.GuidIdentity;
+using JPProject.Sso.Integration.Tests.CustomIdentityConfigurations.IntIdentity;
+using JPProject.Sso.Integration.Tests.CustomIdentityConfigurations.StringIdentity;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
@@ -16,11 +24,15 @@ using Xunit.Abstractions;
 
 namespace JPProject.Sso.Integration.Tests.UserTests
 {
-    public abstract class UserAppServiceAbstractTests<T> : IClassFixture<T> where T : class, IWarmupTest
+    public abstract class UserAppServiceAbstractTests<T, TUser, TRole, TKey> :
+        IClassFixture<T>
+        where T : class, IWarmupTest
+        where TUser : IdentityUser<TKey>, IDomainUser
+        where TRole : IdentityRole<TKey> where TKey : IEquatable<TKey>
     {
         private readonly ITestOutputHelper _output;
         private readonly IUserAppService _userAppService;
-        private readonly UnifiedContext _database;
+        public IdentityDbContext<TUser, TRole, TKey> _database;
         private readonly Faker _faker;
         private readonly IUserManageAppService _userManagerAppService;
         private readonly DomainNotificationHandler _notifications;
@@ -33,7 +45,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             UnifiedContextData = unifiedContext;
             _userAppService = UnifiedContextData.Services.GetRequiredService<IUserAppService>();
             _userManagerAppService = UnifiedContextData.Services.GetRequiredService<IUserManageAppService>();
-            _database = UnifiedContextData.Services.GetRequiredService<UnifiedContext>();
+
             _notifications = (DomainNotificationHandler)UnifiedContextData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
 
             _notifications.Clear();
@@ -247,7 +259,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             var userId = await _userManagerAppService.FindByEmailAsync(command.Email);
 
             var user = _database.Users.First(f => f.UserName == userId.UserName);
-            _database.UserLogins.Any(s => s.UserId == user.Id).Should().BeTrue();
+            _database.UserLogins.Any(s => s.UserId.Equals(user.Id)).Should().BeTrue();
         }
 
         [Fact]
@@ -275,7 +287,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             var users = _database.Users.Select(s => s.Id).ToArray();
 
 
-            var search = new UserSearch() { Id = users };
+            var search = new UserSearch<TKey>() { Id = users };
 
             var usersFound = await _userManagerAppService.SearchUsers(search);
 
@@ -356,7 +368,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
                 ssn = command.SocialNumber;
             }
 
-            var search = new UserSearch() { Ssn = ssn };
+            var search = new UserSearch<TKey>() { Ssn = ssn };
 
             var users = await _userManagerAppService.SearchUsers(search);
 
@@ -367,18 +379,48 @@ namespace JPProject.Sso.Integration.Tests.UserTests
     }
 
     [Trait("Category", "Database - Unified Contexts")]
-    public class UserUnifiedContextTests : UserAppServiceAbstractTests<WarmupUnifiedContext>
+    public class UserUnifiedContextTests : UserAppServiceAbstractTests<WarmupUnifiedContext, UserIdentity, IdentityRole, string>
     {
         public UserUnifiedContextTests(WarmupUnifiedContext unifiedContext, ITestOutputHelper output) : base(unifiedContext, output)
         {
+            _database = unifiedContext.Services.GetRequiredService<UnifiedContext>();
         }
     }
 
     [Trait("Category", "Database - Separeted Contexts")]
-    public class UserManyContextTests : UserAppServiceAbstractTests<WarmupUnifiedContext>
+    public class UserManyContextTests : UserAppServiceAbstractTests<WarmupInDifferentDb, UserIdentity, RoleIdentity, string>
     {
-        public UserManyContextTests(WarmupUnifiedContext unifiedContext, ITestOutputHelper output) : base(unifiedContext, output)
+        public UserManyContextTests(WarmupInDifferentDb unifiedContext, ITestOutputHelper output) : base(unifiedContext, output)
         {
+            _database = unifiedContext.Services.GetRequiredService<SsoContext>();
+        }
+    }
+
+
+    [Trait("Category", "Database - String Contexts")]
+    public class UserStringContextTests : UserAppServiceAbstractTests<WarmupIdentityStringPrimaryKeyContext, CustomStringIdentity, CustomRoleStringIdentity, string>
+    {
+        public UserStringContextTests(WarmupIdentityStringPrimaryKeyContext unifiedContext, ITestOutputHelper output) : base(unifiedContext, output)
+        {
+            _database = unifiedContext.Services.GetRequiredService<CustomDatabasePrimaryKey<CustomStringIdentity, CustomRoleStringIdentity, string>>();
+        }
+    }
+
+    [Trait("Category", "Database - Int Contexts")]
+    public class UserIntContextTests : UserAppServiceAbstractTests<WarmupIdentityIntPrimaryKeyContext, CustomIntIdentity, CustomRoleIntIdentity, int>
+    {
+        public UserIntContextTests(WarmupIdentityIntPrimaryKeyContext unifiedContext, ITestOutputHelper output) : base(unifiedContext, output)
+        {
+            _database = unifiedContext.Services.GetRequiredService<CustomDatabasePrimaryKey<CustomIntIdentity, CustomRoleIntIdentity, int>>();
+        }
+    }
+
+    [Trait("Category", "Database - Guid Contexts")]
+    public class UserGuidContextTests : UserAppServiceAbstractTests<WarmupIdentityGuidPrimaryKeyContext, CustomGuidIdentity, CustomRoleGuidIdentity, Guid>
+    {
+        public UserGuidContextTests(WarmupIdentityGuidPrimaryKeyContext unifiedContext, ITestOutputHelper output) : base(unifiedContext, output)
+        {
+            _database = unifiedContext.Services.GetRequiredService<CustomDatabasePrimaryKey<CustomGuidIdentity, CustomRoleGuidIdentity, Guid>>();
         }
     }
 }

@@ -291,10 +291,6 @@ namespace JPProject.Sso.Infra.Identity.Services
             return await _userManager.HasPasswordAsync(user);
         }
 
-        private IDomainUser GetUser(TUser s)
-        {
-            return _userFactory.ToDomainUser(s);
-        }
 
         private async Task AddLoginAsync(TUser user, string provider, string providerUserId)
         {
@@ -309,19 +305,19 @@ namespace JPProject.Sso.Infra.Identity.Services
         public async Task<IDomainUser> FindByEmailAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            return GetUser(user);
+            return user;
         }
 
         public async Task<IDomainUser> FindByNameAsync(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
-            return GetUser(user);
+            return user;
         }
 
         public async Task<IDomainUser> FindByProviderAsync(string provider, string providerUserId)
         {
             var user = await _userManager.FindByLoginAsync(provider, providerUserId);
-            return GetUser(user);
+            return user;
         }
 
         public async Task<IEnumerable<Claim>> GetClaimByName(string userName)
@@ -510,7 +506,7 @@ namespace JPProject.Sso.Infra.Identity.Services
         public async Task<IDomainUser> FindByUsernameOrEmail(string emailOrUsername)
         {
             var user = await GetUserByEmailOrUsername(emailOrUsername);
-            return GetUser(user);
+            return user;
         }
 
         private async Task<TUser> GetUserByEmailOrUsername(string emailOrUsername)
@@ -530,7 +526,7 @@ namespace JPProject.Sso.Infra.Identity.Services
         public async Task<IEnumerable<IDomainUser>> Search(ICustomQueryable search)
         {
             var users = await _userManager.Users.Apply(search).ToListAsync();
-            return users.Select(GetUser);
+            return users;
         }
     }
 }

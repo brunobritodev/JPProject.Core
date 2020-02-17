@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace JPProject.Sso.Integration.Tests.Context
 {
-    public class SsoContext : IdentityDbContext<UserIdentity>,
+    public class SsoContext : IdentityDbContext<UserIdentity, RoleIdentity, string>,
       IPersistedGrantDbContext,
       IConfigurationDbContext,
       ISsoContext
@@ -23,7 +23,7 @@ namespace JPProject.Sso.Integration.Tests.Context
         private readonly OperationalStoreOptions _operationalOptions;
 
         public SsoContext(
-            DbContextOptions<UnifiedContext> options,
+            DbContextOptions<SsoContext> options,
             ConfigurationStoreOptions storeOptions,
             OperationalStoreOptions operationalOptions)
             : base(options)
@@ -40,7 +40,7 @@ namespace JPProject.Sso.Integration.Tests.Context
 
         private void ConfigureIdentityContext(ModelBuilder builder)
         {
-            builder.Entity<IdentityRole>().ToTable(TableConsts.IdentityRoles);
+            builder.Entity<RoleIdentity>().ToTable(TableConsts.IdentityRoles);
             builder.Entity<IdentityRoleClaim<string>>().ToTable(TableConsts.IdentityRoleClaims);
             builder.Entity<IdentityUserRole<string>>().ToTable(TableConsts.IdentityUserRoles);
 
