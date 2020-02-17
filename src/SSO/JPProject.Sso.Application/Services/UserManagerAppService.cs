@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JPProject.Sso.Application.AutoMapper;
 
 namespace JPProject.Sso.Application.Services
 {
@@ -27,14 +28,14 @@ namespace JPProject.Sso.Application.Services
         private readonly IStorage _storage;
         private readonly IMediatorHandler Bus;
 
-        public UserManagerAppService(IMapper mapper,
+        public UserManagerAppService(
             IUserService userService,
             IMediatorHandler bus,
             IEventStoreRepository eventStoreRepository,
             IStorage storage
             )
         {
-            _mapper = mapper;
+            _mapper = UserMapping.Mapper;
             _userService = userService;
             Bus = bus;
             _eventStoreRepository = eventStoreRepository;
@@ -62,12 +63,6 @@ namespace JPProject.Sso.Application.Services
         {
             var user = await _userService.FindByProviderAsync(provider, providerUserId);
             return _mapper.Map<UserViewModel>(user);
-        }
-
-        public async Task<IEnumerable<UserListViewModel>> GetUsersById(params string[] id)
-        {
-            var users = await _userService.GetByIdAsync(id);
-            return _mapper.Map<IEnumerable<UserListViewModel>>(users);
         }
 
         public async Task<UserViewModel> GetUserDetails(string username)
@@ -130,7 +125,7 @@ namespace JPProject.Sso.Application.Services
 
         public Task<bool> UpdateUser(UserViewModel model)
         {
-            var command = _mapper.Map<UpdateUserCommand>(model);
+            var command = _mapper.Map<AdminUpdateUserCommand>(model);
             return Bus.SendCommand(command);
         }
 

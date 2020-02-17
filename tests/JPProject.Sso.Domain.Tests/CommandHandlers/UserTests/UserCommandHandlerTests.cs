@@ -4,6 +4,7 @@ using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.CommandHandlers;
+using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Domain.ViewModels.User;
@@ -156,7 +157,8 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         public async Task Should_Send_Email_After_Successfull_Registration()
         {
             _emailRepository.Setup(s => s.GetByType(It.IsAny<EmailType>())).ReturnsAsync(EmailFaker.GenerateEmail());
-            _userService.Setup(s => s.CreateUserWithPass(It.IsAny<User>(), It.IsAny<string>())).ReturnsAsync(new AccountResult(_faker.Random.Guid().ToString(), _faker.Random.String(), _faker.Internet.Url()));
+            _userService.Setup(s => s.CreateUserWithPass(It.IsAny<RegisterNewUserCommand>(), It.IsAny<string>())).ReturnsAsync(new AccountResult(_faker.Random.Guid().ToString(), _faker.Random.String(), _faker.Internet.Url()));
+            _userService.SetupSequence(s => s.FindByNameAsync(It.IsAny<string>())).ReturnsAsync((IDomainUser)null).ReturnsAsync(UserFaker.GenerateUser().Generate());
 
             var command = UserCommandFaker.GenerateRegisterNewUserCommand().Generate();
 

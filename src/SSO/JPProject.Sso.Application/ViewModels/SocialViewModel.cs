@@ -22,5 +22,7 @@ namespace JPProject.Sso.Application.ViewModels
         public string ProviderId { get; set; }
 
         public string Provider { get; set; }
+
+        public dynamic UserIdentity { get; set; }
     }
 }

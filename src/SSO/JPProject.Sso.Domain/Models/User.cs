@@ -94,9 +94,18 @@ namespace JPProject.Sso.Domain.Models
         /// </summary>
         public string SocialNumber { get; private set; }
         public DateTime? Birthdate { get; private set; }
+        public void UpdatePicture(string picture)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ConfirmEmail()
+        {
+            throw new NotImplementedException();
+        }
 
 
-        public void UpdateInfo(UpdateUserCommand request)
+        public void UpdateInfo(AdminUpdateUserCommand request)
         {
             Email = request.Email;
             EmailConfirmed = request.EmailConfirmed;
@@ -107,8 +116,8 @@ namespace JPProject.Sso.Domain.Models
             TwoFactorEnabled = request.TwoFactorEnabled;
             PhoneNumber = request.PhoneNumber;
             PhoneNumberConfirmed = request.PhoneNumberConfirmed;
-            SocialNumber = request.SocialNumber;
-            Birthdate = request.Birthdate;
+            //SocialNumber = request.UserIdentity.SocialNumber;
+            //Birthdate = request.UserIdentity.Birthdate;
         }
     }
 }

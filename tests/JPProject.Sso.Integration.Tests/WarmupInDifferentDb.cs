@@ -1,10 +1,7 @@
-using AutoMapper;
-using AutoMapper.Configuration;
-using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.Application.Configuration;
 using JPProject.Sso.Infra.Data.Configuration;
+using JPProject.Sso.Infra.Identity.Configuration;
 using JPProject.Sso.Infra.Identity.Models.Identity;
-using JPProject.Sso.Infra.Identity.Services;
 using JPProject.Sso.Integration.Tests.Context;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -41,12 +38,12 @@ namespace JPProject.Sso.Integration.Tests
 
 
             serviceCollection
-                .AddIdentity<UserIdentity, IdentityRole>(AccountOptions.NistAccountOptions)
+                .AddIdentity<UserIdentity, RoleIdentity>(AccountOptions.NistAccountOptions)
                 .AddEntityFrameworkStores<SsoContext>()
                 .AddDefaultTokenProviders();
 
             serviceCollection
-                .ConfigureSso<AspNetUserTest, UserService, RoleService>()
+                .ConfigureSso<AspNetUserTest>()
                 .AddSsoContext<SsoContext, EventStoreContext>()
                 .AddDefaultAspNetIdentityServices();
 
@@ -73,11 +70,6 @@ namespace JPProject.Sso.Integration.Tests
                 });
 
 
-            var configurationExpression = new MapperConfigurationExpression();
-            SsoMapperConfig.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));
-            var automapperConfig = new MapperConfiguration(configurationExpression);
-
-            serviceCollection.TryAddSingleton(automapperConfig.CreateMapper());
             serviceCollection.AddMediatR(typeof(WarmupInDifferentDb));
             serviceCollection.TryAddSingleton(mockHttpContextAccessor.Object);
 

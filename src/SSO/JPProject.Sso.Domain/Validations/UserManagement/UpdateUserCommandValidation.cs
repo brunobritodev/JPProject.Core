@@ -2,7 +2,7 @@
 
 namespace JPProject.Sso.Domain.Validations.UserManagement
 {
-    public class UpdateUserCommandValidation : UserManagementValidation<UpdateUserCommand>
+    public class UpdateUserCommandValidation : UserManagementValidation<UserManagementCommand>
     {
         public UpdateUserCommandValidation()
         {

@@ -15,15 +15,9 @@ namespace JPProject.Sso.Domain.Commands.User
         public string Provider { get; protected set; }
         public string ProviderId { get; protected set; }
         public bool EmailConfirmed { get; protected set; }
-        public bool PhoneNumberConfirmed { get; protected set; }
-        public bool TwoFactorEnabled { get; protected set; }
-        public DateTimeOffset? LockoutEnd { get; protected set; }
-        public bool LockoutEnabled { get; protected set; }
-        public int AccessFailedCount { get; protected set; }
         public string Code { get; protected set; }
-        public DateTime? Birthdate { get; protected set; }
-        public string SocialNumber { get; protected set; }
         public string EmailOrUsername { get; protected set; }
-
+        public DateTime? Birthdate { get; internal set; }
+        public string SocialNumber { get; internal set; }
     }
 }

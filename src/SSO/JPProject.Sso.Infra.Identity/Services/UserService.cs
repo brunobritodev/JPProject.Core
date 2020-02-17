@@ -4,11 +4,11 @@ using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Domain.Core.StringUtils;
+using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Domain.ViewModels.User;
-using JPProject.Sso.Infra.Identity.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,46 +21,50 @@ using System.Threading.Tasks;
 
 namespace JPProject.Sso.Infra.Identity.Services
 {
-    public class UserService : IUserService
+    public class UserService<TUser, TKey> : IUserService
+        where TUser : IdentityUser<TKey>, IDomainUser
+        where TKey : IEquatable<TKey>
     {
-        private readonly UserManager<UserIdentity> _userManager;
+        private readonly UserManager<TUser> _userManager;
         private readonly IMediatorHandler _bus;
         private readonly ILogger _logger;
         private readonly IConfiguration _config;
-        private readonly IDomainUserFactory<UserIdentity> _userFactory;
+        private readonly IIdentityFactory<TUser> _userFactory;
 
         public UserService(
-            UserManager<UserIdentity> userManager,
+            UserManager<TUser> userManager,
             IMediatorHandler bus,
             ILoggerFactory loggerFactory,
             IConfiguration config,
-            IDomainUserFactory<UserIdentity> userFactory)
+            IIdentityFactory<TUser> userFactory)
         {
             _userManager = userManager;
             _bus = bus;
             _config = config;
             _userFactory = userFactory;
-            _logger = loggerFactory.CreateLogger<UserService>();
+            _logger = loggerFactory.CreateLogger<UserService<TUser, TKey>>();
         }
 
-        public Task<AccountResult?> CreateUserWithPass(IDomainUser user, string password)
+        public Task<AccountResult?> CreateUserWithPass(RegisterNewUserCommand command, string password)
         {
+            var user = _userFactory.Create(command);
             return CreateUser(user, password, null, null);
         }
 
-        public Task<AccountResult?> CreateUserWithProvider(IDomainUser user, string provider, string providerUserId)
+        public Task<AccountResult?> CreateUserWithProvider(RegisterNewUserWithoutPassCommand command, string provider, string providerUserId)
         {
+            var user = _userFactory.Create(command);
             return CreateUser(user, null, provider, providerUserId);
         }
 
-        public Task<AccountResult?> CreateUserWithProviderAndPass(IDomainUser user, string password, string provider, string providerId)
+        public Task<AccountResult?> CreateUserWithProviderAndPass(RegisterNewUserWithProviderCommand command)
         {
-            return CreateUser(user, password, provider, providerId);
+            var user = _userFactory.Create(command);
+            return CreateUser(user, command.Password, command.Provider, command.ProviderId);
         }
 
-        private async Task<AccountResult?> CreateUser(IDomainUser user, string password, string provider, string providerId)
+        private async Task<AccountResult?> CreateUser(TUser user, string password, string provider, string providerId)
         {
-            var newUser = _userFactory.CreateUser(user);
             IdentityResult result;
 
             if (provider.IsPresent())
@@ -71,22 +75,22 @@ namespace JPProject.Sso.Infra.Identity.Services
             }
 
             if (password.IsMissing())
-                result = await _userManager.CreateAsync(newUser);
+                result = await _userManager.CreateAsync(user);
             else
-                result = await _userManager.CreateAsync(newUser, password);
+                result = await _userManager.CreateAsync(user, password);
 
             if (result.Succeeded)
             {
                 // User claim for write customers data
                 //await _userManager.AddClaimAsync(newUser, new Claim("User", "Write"));
 
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var callbackUrl = $"{_config.GetValue<string>("ApplicationSettings:UserManagementURL")}/confirm-email?userId={ user.Email.UrlEncode()}&code={code.UrlEncode()}";
 
-                await AddClaims(newUser);
+                await AddClaims(user);
 
                 if (!string.IsNullOrWhiteSpace(provider))
-                    await AddLoginAsync(newUser, provider, providerId);
+                    await AddLoginAsync(user, provider, providerId);
 
 
                 if (password.IsPresent())
@@ -94,7 +98,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
                 if (provider.IsPresent())
                     _logger.LogInformation($"Provider {provider} associated.");
-                return new AccountResult(newUser.UserName, code, callbackUrl);
+                return new AccountResult(user.UserName, code, callbackUrl);
             }
 
             foreach (var error in result.Errors)
@@ -110,7 +114,7 @@ namespace JPProject.Sso.Infra.Identity.Services
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        private Task AddClaims(UserIdentity user)
+        private Task AddClaims(TUser user)
         {
             return Task.CompletedTask;
             //var claims = new List<Claim>();
@@ -173,7 +177,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
-                return user.Id;
+                return user.UserName;
 
             foreach (var error in result.Errors)
             {
@@ -188,17 +192,11 @@ namespace JPProject.Sso.Infra.Identity.Services
         public async Task<bool> UpdateProfileAsync(UpdateProfileCommand command)
         {
             var user = await _userManager.FindByNameAsync(command.Username);
-            user.UpdateBio(command);
+            _userFactory.UpdateProfile(command, user);
 
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
-            {
-                var claims = await _userManager.GetClaimsAsync(user);
-                if (!user.Name.Equals(command.Name))
-                    await AddOrUpdateClaimAsync(user, claims, "name", user.Name);
-
                 return true;
-            }
 
             foreach (var error in result.Errors)
             {
@@ -211,9 +209,8 @@ namespace JPProject.Sso.Infra.Identity.Services
         public async Task<bool> UpdateProfilePictureAsync(UpdateProfilePictureCommand command)
         {
             var user = await _userManager.FindByNameAsync(command.Username);
-
-            user.Picture = command.Picture;
-
+            var domainUser = user as IDomainUser;
+            domainUser.UpdatePicture(command.Picture);
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
                 return true;
@@ -226,24 +223,12 @@ namespace JPProject.Sso.Infra.Identity.Services
             return false;
         }
 
-        private async Task AddOrUpdateClaimAsync(UserIdentity user, IEnumerable<Claim> claims, string key, string value)
-        {
-            var customClaim = claims.FirstOrDefault(a => a.Type == key);
-            if (customClaim != null)
-            {
-                if (customClaim.Value.NotEqual(value))
-                    await _userManager.RemoveClaimAsync(user, customClaim);
-            }
-            else
-            {
-                await _userManager.AddClaimAsync(user, new Claim(key, value));
-            }
-        }
 
-        public async Task<bool> UpdateUserAsync(UpdateUserCommand user)
+        public async Task<bool> UpdateUserAsync(AdminUpdateUserCommand command)
         {
-            var userDb = await _userManager.FindByNameAsync(user.Username);
-            userDb.UpdateInfo(user);
+            var userDb = await _userManager.FindByNameAsync(command.Username);
+            _userFactory.UpdateInfo(command, userDb);
+
             var resut = await _userManager.UpdateAsync(userDb);
             if (!resut.Succeeded)
             {
@@ -306,19 +291,12 @@ namespace JPProject.Sso.Infra.Identity.Services
             return await _userManager.HasPasswordAsync(user);
         }
 
-        public async Task<IEnumerable<IDomainUser>> GetByIdAsync(params string[] id)
+        private IDomainUser GetUser(TUser s)
         {
-            var users = await _userManager.Users.Where(w => id.Contains(w.Id)).ToListAsync();
-
-            return users.Select(GetUser).ToList();
+            return _userFactory.ToDomainUser(s);
         }
 
-        private static IDomainUser GetUser(UserIdentity s)
-        {
-            return s?.ToUser();
-        }
-
-        private async Task AddLoginAsync(UserIdentity user, string provider, string providerUserId)
+        private async Task AddLoginAsync(TUser user, string provider, string providerUserId)
         {
             var result = await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, providerUserId, provider));
 
@@ -440,7 +418,7 @@ namespace JPProject.Sso.Infra.Identity.Services
 
         public async Task<IEnumerable<IDomainUser>> GetUserFromRole(string role)
         {
-            return (await _userManager.GetUsersInRoleAsync(role)).Select(GetUser);
+            return (await _userManager.GetUsersInRoleAsync(role));//.Select(GetUser);
         }
 
         public async Task<bool> RemoveUserFromRole(string name, string username)
@@ -481,13 +459,15 @@ namespace JPProject.Sso.Infra.Identity.Services
 
             if (result.Succeeded)
             {
-                if (!user.EmailConfirmed)
+                var emailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+                if (!emailConfirmed)
                 {
-                    user.EmailConfirmed = true;
+                    user.ConfirmEmail();
                     await _userManager.UpdateAsync(user);
+
                 }
                 _logger.LogInformation("Password reseted successfull.");
-                return user.Id;
+                return user.UserName;
             }
             else
             {
@@ -524,9 +504,8 @@ namespace JPProject.Sso.Infra.Identity.Services
 
             await AddLoginAsync(user, provider, providerId);
 
-            return user.Id;
+            return user.UserName;
         }
-
 
         public async Task<IDomainUser> FindByUsernameOrEmail(string emailOrUsername)
         {
@@ -534,9 +513,9 @@ namespace JPProject.Sso.Infra.Identity.Services
             return GetUser(user);
         }
 
-        private async Task<UserIdentity> GetUserByEmailOrUsername(string emailOrUsername)
+        private async Task<TUser> GetUserByEmailOrUsername(string emailOrUsername)
         {
-            UserIdentity user;
+            TUser user;
             if (emailOrUsername.IsEmail())
                 user = await _userManager.FindByEmailAsync(emailOrUsername);
             else

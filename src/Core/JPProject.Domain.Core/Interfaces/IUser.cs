@@ -26,11 +26,9 @@ namespace JPProject.Domain.Core.Interfaces
         string JobTitle { get; }
         string SocialNumber { get; }
         DateTime? Birthdate { get; }
+
+        public void UpdatePicture(string picture);
+        void ConfirmEmail();
     }
 
-    public interface IDomainUserFactory<T>
-        where T : class
-    {
-        T CreateUser(IDomainUser user);
-    }
 }

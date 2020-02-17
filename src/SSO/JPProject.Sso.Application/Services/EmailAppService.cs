@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JPProject.Domain.Core.Bus;
+using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels.EmailViewModels;
 using JPProject.Sso.Domain.Commands.Email;
@@ -13,19 +14,19 @@ namespace JPProject.Sso.Application.Services
 {
     public class EmailAppService : IEmailAppService
     {
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
         private readonly IRoleService _roleService;
         private readonly IEmailRepository _emailRepository;
         private readonly ITemplateRepository _templateRepository;
 
         public IMediatorHandler Bus { get; set; }
-        public EmailAppService(IMapper mapper,
+        public EmailAppService(
             IRoleService roleService,
             IMediatorHandler bus,
             IEmailRepository emailRepository,
             ITemplateRepository templateRepository)
         {
-            _mapper = mapper;
+            _mapper = EmailMapping.Mapper;
             _roleService = roleService;
             _emailRepository = emailRepository;
             _templateRepository = templateRepository;

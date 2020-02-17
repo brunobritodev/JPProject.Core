@@ -2,16 +2,15 @@
 
 namespace JPProject.Sso.Domain.Validations.User
 {
-    public class RegisterNewUserCommandValidation : UserValidation<RegisterNewUserCommand>
+    public class RegisterNewUserCommandValidation : UserValidation<UserCommand>
     {
-        public RegisterNewUserCommandValidation(RegisterNewUserCommand registerNewUserCommand)
+        public RegisterNewUserCommandValidation()
         {
             ValidateName();
             ValidateUsername();
             ValidateEmail();
             ValidatePassword();
-            if (registerNewUserCommand.Birthdate.HasValue)
-                ValidateBirthdate();
+
         }
     }
 }

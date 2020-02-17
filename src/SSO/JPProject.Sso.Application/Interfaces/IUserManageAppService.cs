@@ -21,7 +21,6 @@ namespace JPProject.Sso.Application.Interfaces
         Task<IEnumerable<RoleViewModel>> GetRoles(string userName);
         Task<IEnumerable<UserLoginViewModel>> GetLogins(string userName);
         Task<IEnumerable<UserListViewModel>> GetUsersInRole(string role);
-        Task<IEnumerable<UserListViewModel>> GetUsersById(params string[] id);
         Task<ListOf<UserListViewModel>> SearchUsers(ICustomQueryable search);
 
         Task<bool> UpdateProfile(UserViewModel model);

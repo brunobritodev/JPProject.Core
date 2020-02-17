@@ -8,9 +8,9 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
 
         public UpdateProfileCommand(string username, string url, string bio, string company, string jobTitle, string name, string phoneNumber, string socialNumber, DateTime? birthdate)
         {
-            Username = username;
             SocialNumber = socialNumber;
             Birthdate = birthdate;
+            Username = username;
             Url = url;
             Bio = bio;
             Company = company;
@@ -18,6 +18,7 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
             Name = name;
             PhoneNumber = phoneNumber;
         }
+
 
         public override bool IsValid()
         {

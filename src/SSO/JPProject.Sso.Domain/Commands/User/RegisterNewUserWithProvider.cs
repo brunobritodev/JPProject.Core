@@ -1,5 +1,5 @@
-﻿using JPProject.Sso.Domain.Validations.User;
-using System;
+﻿using System;
+using JPProject.Sso.Domain.Validations.User;
 
 namespace JPProject.Sso.Domain.Commands.User
 {
@@ -18,8 +18,8 @@ namespace JPProject.Sso.Domain.Commands.User
             PhoneNumber = phoneNumber;
             Password = password;
             ConfirmPassword = confirmPassword;
-
         }
+
 
         public override bool IsValid()
         {

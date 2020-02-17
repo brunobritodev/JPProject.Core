@@ -1,8 +1,8 @@
 ﻿using Bogus;
 using Bogus.Extensions.UnitedStates;
 using JPProject.Sso.Domain.Commands.User;
-using System;
 using JPProject.Sso.Domain.Commands.UserManagement;
+using System;
 
 namespace JPProject.Sso.Fakers.Test.Users
 {
@@ -35,8 +35,7 @@ namespace JPProject.Sso.Fakers.Test.Users
                     confirmPassword ?? password,
                     birthdate ?? f.Person.DateOfBirth,
                     socialNumber ?? f.Person.Ssn()
-                )
-            );
+                ));
         }
 
         public static Faker<AddLoginCommand> GenerateAddLoginCommand()
@@ -56,9 +55,9 @@ namespace JPProject.Sso.Fakers.Test.Users
                 f => new SendResetLinkCommand(username ?? f.Person.Email)
             );
         }
-        public static Faker<UpdateUserCommand> GenerateUpdateUserCommand()
+        public static Faker<AdminUpdateUserCommand> GenerateUpdateUserCommand()
         {
-            return new Faker<UpdateUserCommand>().CustomInstantiator(f => new UpdateUserCommand(
+            return new Faker<AdminUpdateUserCommand>().CustomInstantiator(f => new AdminUpdateUserCommand(
                 f.Person.Email,
                 f.Person.UserName,
                 f.Person.FullName,
@@ -68,10 +67,9 @@ namespace JPProject.Sso.Fakers.Test.Users
                 f.Random.Bool(),
                 f.Date.RecentOffset(),
                 f.Random.Bool(),
-                f.Random.Int(0, 5),
-                f.Person.Ssn(),
-                f.Person.DateOfBirth
-            ));
+                0,
+                f.Person.DateOfBirth,
+                f.Person.Ssn()));
         }
     }
 }

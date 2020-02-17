@@ -17,26 +17,21 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.EmailTests
     public class EmailCommandHandlerTests
     {
         private Faker _faker;
-        private readonly CancellationTokenSource _tokenSource;
         private readonly Mock<IUnitOfWork> _uow;
         private readonly Mock<IMediatorHandler> _mediator;
         private readonly Mock<DomainNotificationHandler> _notifications;
         private readonly EmailCommandHandler _commandHandler;
-        private readonly Mock<IUserService> _userService;
-        private readonly Mock<ISystemUser> _systemUser;
         private readonly Mock<ITemplateRepository> _templateRepository;
         private readonly Mock<IEmailRepository> _emailRepository;
 
         public EmailCommandHandlerTests()
         {
             _faker = new Faker();
-            _tokenSource = new CancellationTokenSource();
             _uow = new Mock<IUnitOfWork>();
             _mediator = new Mock<IMediatorHandler>();
             _notifications = new Mock<DomainNotificationHandler>();
             _templateRepository = new Mock<ITemplateRepository>();
             _emailRepository = new Mock<IEmailRepository>();
-            _systemUser = new Mock<ISystemUser>();
             _commandHandler = new EmailCommandHandler(_uow.Object, _mediator.Object, _notifications.Object, _templateRepository.Object, _emailRepository.Object);
         }
 

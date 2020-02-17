@@ -10,6 +10,7 @@ namespace JPProject.Sso.Domain.ViewModels.User
         [QueryOperator(Operator = WhereOperator.Equals, HasName = "SocialNumber")]
         public string Ssn { get; set; }
         public bool EmailConfirmed { get; set; }
+        public string[] Id { get; set; }
         public string Sort { get; set; }
         public int? Limit { get; set; }
         public int? Offset { get; set; }

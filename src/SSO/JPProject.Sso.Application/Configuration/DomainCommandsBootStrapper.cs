@@ -41,7 +41,7 @@ namespace JPProject.Sso.Application.Configuration
             services.AddScoped<IRequestHandler<SetPasswordCommand, bool>, UserManagementCommandHandler>();
             services.AddScoped<IRequestHandler<ChangePasswordCommand, bool>, UserManagementCommandHandler>();
             services.AddScoped<IRequestHandler<RemoveAccountCommand, bool>, UserManagementCommandHandler>();
-            services.AddScoped<IRequestHandler<UpdateUserCommand, bool>, UserManagementCommandHandler>();
+            services.AddScoped<IRequestHandler<AdminUpdateUserCommand, bool>, UserManagementCommandHandler>();
             services.AddScoped<IRequestHandler<SaveUserClaimCommand, bool>, UserManagementCommandHandler>();
             services.AddScoped<IRequestHandler<RemoveUserClaimCommand, bool>, UserManagementCommandHandler>();
             services.AddScoped<IRequestHandler<SaveUserRoleCommand, bool>, UserManagementCommandHandler>();

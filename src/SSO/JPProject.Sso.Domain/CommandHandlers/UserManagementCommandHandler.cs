@@ -20,7 +20,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
         IRequestHandler<SetPasswordCommand, bool>,
         IRequestHandler<ChangePasswordCommand, bool>,
         IRequestHandler<RemoveAccountCommand, bool>,
-        IRequestHandler<UpdateUserCommand, bool>,
+        IRequestHandler<AdminUpdateUserCommand, bool>,
         IRequestHandler<SaveUserClaimCommand, bool>,
         IRequestHandler<RemoveUserClaimCommand, bool>,
         IRequestHandler<RemoveUserRoleCommand, bool>,
@@ -128,7 +128,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
         }
 
 
-        public async Task<bool> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(AdminUpdateUserCommand request, CancellationToken cancellationToken)
         {
             if (!request.IsValid())
             {

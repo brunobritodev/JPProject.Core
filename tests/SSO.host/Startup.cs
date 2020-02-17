@@ -1,18 +1,14 @@
-using AutoMapper;
-using AutoMapper.Configuration;
 using JPProject.AspNet.Core;
-using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.Application.Configuration;
 using JPProject.Sso.Infra.Data.Configuration;
+using JPProject.Sso.Infra.Identity.Configuration;
 using JPProject.Sso.Infra.Identity.Models.Identity;
-using JPProject.Sso.Infra.Identity.Services;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SSO.host.Context;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
@@ -21,6 +17,7 @@ namespace SSO.host
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -39,7 +36,7 @@ namespace SSO.host
 
             // ASP.NET Identity Configuration
             services
-                .AddIdentity<UserIdentity, IdentityRole>(AccountOptions.NistAccountOptions)
+                .AddIdentity<UserIdentity, RoleIdentity>(AccountOptions.NistAccountOptions)
                 .AddEntityFrameworkStores<SsoContext>()
                 .AddDefaultTokenProviders();
 
@@ -68,15 +65,10 @@ namespace SSO.host
 
             // SSO Configuration
             services
-                .ConfigureSso<AspNetUser, UserService, RoleService>()
-                .AddSsoContext<SsoContext>();
+                .ConfigureSso<AspNetUser>()
+                .AddSsoContext<SsoContext>()
+                .AddDefaultAspNetIdentityServices();
 
-
-            var configurationExpression = new MapperConfigurationExpression();
-            SsoMapperConfig.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));
-            var automapperConfig = new MapperConfiguration(configurationExpression);
-
-            services.TryAddSingleton(automapperConfig.CreateMapper());
             // Adding MediatR for Domain Events and Notifications
             services.AddMediatR(typeof(Startup));
         }

@@ -1,4 +1,5 @@
-﻿using JPProject.EntityFrameworkCore.Interfaces;
+﻿using System.Collections.Generic;
+using JPProject.EntityFrameworkCore.Interfaces;
 using JPProject.EntityFrameworkCore.Repository;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
@@ -19,9 +20,9 @@ namespace JPProject.Sso.Infra.Data.Repository
             return DbSet.FirstOrDefaultAsync(f => f.Key == key);
         }
 
-        public IQueryable<GlobalConfigurationSettings> GetAll()
+        public Task<List<GlobalConfigurationSettings>> All()
         {
-            return DbSet.AsQueryable();
+            return DbSet.ToListAsync();
         }
     }
 }

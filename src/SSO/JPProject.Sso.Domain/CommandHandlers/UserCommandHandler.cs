@@ -48,15 +48,13 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var user = request.ToModel();
-
-            var emailAlreadyExist = await _userService.FindByEmailAsync(user.Email);
+            var emailAlreadyExist = await _userService.FindByEmailAsync(request.Email);
             if (emailAlreadyExist != null)
             {
                 await Bus.RaiseEvent(new DomainNotification("New User", "E-mail already exist. If you don't remember your passwork, reset it."));
                 return false;
             }
-            var usernameAlreadyExist = await _userService.FindByNameAsync(user.UserName);
+            var usernameAlreadyExist = await _userService.FindByNameAsync(request.Username);
 
             if (usernameAlreadyExist != null)
             {
@@ -64,9 +62,10 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var result = await _userService.CreateUserWithPass(user, request.Password);
+            var result = await _userService.CreateUserWithPass(request, request.Password);
             if (result.HasValue)
             {
+                var user = await _userService.FindByNameAsync(request.Username);
                 await SendEmailToUser(user, request, result.Value, EmailType.NewUser);
                 await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Username, user.Name, user.Email));
                 return true;
@@ -82,15 +81,13 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var user = request.ToModel();
-
-            var emailAlreadyExist = await _userService.FindByEmailAsync(user.Email);
+            var emailAlreadyExist = await _userService.FindByEmailAsync(request.Email);
             if (emailAlreadyExist != null)
             {
                 await Bus.RaiseEvent(new DomainNotification("New User", "E-mail already exist. If you don't remember your passwork, reset it."));
                 return false;
             }
-            var usernameAlreadyExist = await _userService.FindByNameAsync(user.UserName);
+            var usernameAlreadyExist = await _userService.FindByNameAsync(request.Username);
 
             if (usernameAlreadyExist != null)
             {
@@ -98,10 +95,11 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var result = await _userService.CreateUserWithProvider(user, request.Provider, request.ProviderId);
+            var result = await _userService.CreateUserWithProvider(request, request.Provider, request.ProviderId);
 
             if (result.HasValue)
             {
+                var user = await _userService.FindByNameAsync(request.Username);
                 await SendEmailToUser(user, request, result.Value, EmailType.NewUserWithoutPassword);
                 await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Username, user.Name, user.Email));
                 return true;
@@ -117,18 +115,10 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false; ;
             }
 
-            var user = new User(
-                email: request.Email,
-                name: request.Name,
-                userName: request.Username,
-                phoneNumber: request.PhoneNumber,
-                picture: request.Picture,
-                request.SocialNumber,
-                request.Birthdate);
-
-            var result = await _userService.CreateUserWithProviderAndPass(user, request.Password, request.Provider, request.ProviderId);
+            var result = await _userService.CreateUserWithProviderAndPass(request);
             if (result.HasValue)
             {
+                var user = await _userService.FindByNameAsync(request.Username);
                 await SendEmailToUser(user, request, result.Value, EmailType.NewUser);
                 await Bus.RaiseEvent(new UserRegisteredEvent(request.Username, user.Name, user.Email));
                 return true;

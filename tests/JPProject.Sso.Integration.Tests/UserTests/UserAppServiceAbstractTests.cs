@@ -274,8 +274,14 @@ namespace JPProject.Sso.Integration.Tests.UserTests
 
             var users = _database.Users.Select(s => s.Id).ToArray();
 
-            var usersFound = await _userManagerAppService.GetUsersById(users);
-            usersFound.Should().HaveCountGreaterOrEqualTo(2);
+
+            var search = new UserSearch() { Id = users };
+
+            var usersFound = await _userManagerAppService.SearchUsers(search);
+
+            usersFound.Total.Should().BeGreaterOrEqualTo(1);
+            usersFound.Collection.ToList().Count.Should().Be(usersFound.Total);
+
         }
 
         [Fact]
@@ -342,6 +348,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         {
             string ssn = string.Empty;
             var commands = UserViewModelFaker.GenerateUserViewModel().Generate(_faker.Random.Int(1, 10));
+
             foreach (var command in commands)
             {
                 var result = await _userAppService.Register(command);

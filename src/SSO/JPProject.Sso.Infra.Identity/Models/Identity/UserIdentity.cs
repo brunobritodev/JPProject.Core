@@ -1,12 +1,10 @@
 ﻿using JPProject.Domain.Core.Interfaces;
-using JPProject.Sso.Domain.Commands.UserManagement;
-using JPProject.Sso.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 
 namespace JPProject.Sso.Infra.Identity.Models.Identity
 {
-    public class UserIdentity : IdentityUser, IDomainUser, IDomainUserFactory<UserIdentity>
+    public class UserIdentity : IdentityUser, IDomainUser
     {
         public string Picture { get; set; }
         public string Url { get; set; }
@@ -25,75 +23,20 @@ namespace JPProject.Sso.Infra.Identity.Models.Identity
         /// </summary>
         public string SocialNumber { get; set; }
         public DateTime? Birthdate { get; set; }
-
-        public User ToUser()
+        public void UpdatePicture(string picture)
         {
-            return new User(
-                Id,
-                Email,
-                EmailConfirmed,
-                Name,
-                SecurityStamp,
-                AccessFailedCount,
-                Bio,
-                Company,
-                JobTitle,
-                LockoutEnabled,
-                LockoutEnd,
-                PhoneNumber,
-                PhoneNumberConfirmed,
-                Picture,
-                TwoFactorEnabled,
-                Url,
-                UserName,
-                Birthdate,
-                SocialNumber
-            );
-        }
-        public void UpdateInfo(UpdateUserCommand user)
-        {
-            Email = user.Email;
-            EmailConfirmed = user.EmailConfirmed;
-            AccessFailedCount = user.AccessFailedCount;
-            LockoutEnabled = user.LockoutEnabled;
-            LockoutEnd = user.LockoutEnd;
-            Name = user.Name;
-            TwoFactorEnabled = user.TwoFactorEnabled;
-            PhoneNumber = user.PhoneNumber;
-            PhoneNumberConfirmed = user.PhoneNumberConfirmed;
-            SocialNumber = user.SocialNumber;
-            Birthdate = user.Birthdate;
+            this.Picture = picture;
         }
 
-        public void UpdateBio(UpdateProfileCommand command)
+        public void ConfirmEmail()
         {
-            Name = command.Name;
-            Bio = command.Bio;
-            Company = command.Company;
-            JobTitle = command.JobTitle;
-            Url = command.Url;
-            PhoneNumber = command.PhoneNumber;
-            SocialNumber = command.SocialNumber;
-            Birthdate = command.Birthdate;
+            EmailConfirmed = true;
         }
+    }
 
-        public UserIdentity CreateUser(IDomainUser user)
-        {
-            return new UserIdentity
-            {
-                PhoneNumber = user.PhoneNumber,
-                Email = user.Email,
-                UserName = user.UserName,
-                Name = user.Name,
-                Picture = user.Picture,
-                EmailConfirmed = user.EmailConfirmed,
-                SocialNumber = user.SocialNumber,
-                Birthdate = user.Birthdate,
-                Bio = user.Bio,
-                JobTitle = user.JobTitle,
-                LockoutEnd = null,
-                Company = user.Company,
-            };
-        }
+    public class RoleIdentity : IdentityRole
+    {
+        public RoleIdentity() : base() { }
+        public RoleIdentity(string name) : base(name) { }
     }
 }

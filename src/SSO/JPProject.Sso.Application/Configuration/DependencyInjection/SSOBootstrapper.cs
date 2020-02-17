@@ -18,19 +18,13 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Configure User Identity - ASP.NET Identity
         /// </summary>
         /// <typeparam name="THttpUser">Implementation of ISystemUser</typeparam>
-        /// <typeparam name="TUserService">Provide a services for SSO manipulate users</typeparam>
-        /// <typeparam name="TRoleService">Provide a service for SSO manipulate Roles</typeparam>
         /// <returns></returns>
-        public static ISsoConfigurationBuilder ConfigureSso<THttpUser, TUserService, TRoleService>(this IServiceCollection services)
-            where TUserService : class, IUserService
-            where TRoleService : class, IRoleService
+        public static ISsoConfigurationBuilder ConfigureSso<THttpUser>(this IServiceCollection services)
             where THttpUser : class, ISystemUser
         {
             services.TryAddScoped<IMediatorHandler, InMemoryBus>();
             services.TryAddScoped<ISystemUser, THttpUser>();
             services.AddScoped<IEventSink, IdentityServerEventStore>();
-            services.AddScoped<IUserService, TUserService>();
-            services.AddScoped<IRoleService, TRoleService>();
             services.AddScoped<IStorage, StorageService>();
 
             services

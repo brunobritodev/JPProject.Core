@@ -1,13 +1,15 @@
-﻿using System;
-using JPProject.Sso.Domain.Validations.UserManagement;
+﻿using JPProject.Sso.Domain.Validations.UserManagement;
+using System;
 
 namespace JPProject.Sso.Domain.Commands.UserManagement
 {
-    public class UpdateUserCommand : UserManagementCommand
+    public class AdminUpdateUserCommand : UserManagementCommand
     {
 
-        public UpdateUserCommand(string email, string userName, string name, string phoneNumber, bool emailConfirmed, bool phoneNumberConfirmed, bool twoFactorEnabled, DateTimeOffset? lockoutEnd, bool lockoutEnabled, int accessFailedCount, string socialNumber, DateTime? birthDate)
+        public AdminUpdateUserCommand(string email, string userName, string name, string phoneNumber, bool emailConfirmed, bool phoneNumberConfirmed, bool twoFactorEnabled, DateTimeOffset? lockoutEnd, bool lockoutEnabled, int accessFailedCount, DateTime? birthdate, string ssn)
         {
+            Birthdate = birthdate;
+            SocialNumber = ssn;
             Email = email;
             Username = userName;
             EmailConfirmed = emailConfirmed;
@@ -18,9 +20,8 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
             AccessFailedCount = accessFailedCount;
             Name = name;
             PhoneNumber = phoneNumber;
-            SocialNumber = socialNumber;
-            Birthdate = birthDate;
         }
+
 
         public override bool IsValid()
         {
