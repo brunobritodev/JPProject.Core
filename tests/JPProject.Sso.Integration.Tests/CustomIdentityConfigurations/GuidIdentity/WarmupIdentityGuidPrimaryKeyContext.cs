@@ -1,8 +1,6 @@
 using JPProject.Sso.Application.Configuration;
+using JPProject.Sso.AspNetIdentity.Configuration;
 using JPProject.Sso.Infra.Data.Configuration;
-using JPProject.Sso.Infra.Identity.Configuration;
-using JPProject.Sso.Infra.Identity.Models.Identity;
-using JPProject.Sso.Integration.Tests.CustomIdentityConfigurations.StringIdentity;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

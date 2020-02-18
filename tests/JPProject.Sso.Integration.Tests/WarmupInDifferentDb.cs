@@ -1,8 +1,5 @@
 using JPProject.Sso.Application.Configuration;
 using JPProject.Sso.Infra.Data.Configuration;
-using JPProject.Sso.Infra.Identity.Configuration;
-using JPProject.Sso.Infra.Identity.Models.Identity;
-using JPProject.Sso.Infra.Identity.Services;
 using JPProject.Sso.Integration.Tests.Context;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using System.IO;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using JPProject.Sso.AspNetIdentity.Configuration;
+using JPProject.Sso.AspNetIdentity.Models.Identity;
+using JPProject.Sso.AspNetIdentity.Services;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace JPProject.Sso.Integration.Tests

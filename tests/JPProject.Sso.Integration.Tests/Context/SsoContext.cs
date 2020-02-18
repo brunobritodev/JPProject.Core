@@ -2,11 +2,11 @@
 using IdentityServer4.EntityFramework.Extensions;
 using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.EntityFramework.Options;
+using JPProject.Sso.AspNetIdentity.Models.Identity;
 using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Infra.Data.Constants;
 using JPProject.Sso.Infra.Data.Interfaces;
 using JPProject.Sso.Infra.Data.Mappings;
-using JPProject.Sso.Infra.Identity.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

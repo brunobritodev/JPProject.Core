@@ -34,8 +34,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SSO\JPProject.Sso.Application\JPProject.Sso.Application.csproj" />
+    <ProjectReference Include="..\..\src\SSO\JPProject.Sso.AspNetIdentity\JPProject.Sso.AspNetIdentity.csproj" />
     <ProjectReference Include="..\..\src\SSO\JPProject.Sso.Infra.Data\JPProject.Sso.Infra.Data.csproj" />
-    <ProjectReference Include="..\..\src\SSO\JPProject.Sso.Infra.Identity\JPProject.Sso.Infra.Identity.csproj" />
     <ProjectReference Include="..\JPProject.Sso.Fakers.Test\JPProject.Sso.Fakers.Test.csproj" />
   </ItemGroup>
 

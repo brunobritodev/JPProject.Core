@@ -6,7 +6,6 @@ using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
 using JPProject.Sso.Domain.ViewModels.User;
 using JPProject.Sso.Fakers.Test.Users;
-using JPProject.Sso.Infra.Identity.Models.Identity;
 using JPProject.Sso.Integration.Tests.Context;
 using JPProject.Sso.Integration.Tests.CustomIdentityConfigurations;
 using JPProject.Sso.Integration.Tests.CustomIdentityConfigurations.GuidIdentity;
@@ -19,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using JPProject.Sso.AspNetIdentity.Models.Identity;
 using Xunit;
 using Xunit.Abstractions;
 
