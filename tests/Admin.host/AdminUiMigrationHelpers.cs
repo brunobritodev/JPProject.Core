@@ -1,5 +1,5 @@
-using JPProject.Admin.Infra.Data.Configuration;
-using JPProject.Admin.Infra.Data.Context;
+using JPProject.Admin.EntityFramework.Repository.Configuration;
+using JPProject.Admin.EntityFramework.Repository.Context;
 using JPProject.Domain.Core.Events;
 using JPProject.EntityFrameworkCore.MigrationHelper;
 using JPProject.Sso.Integration.Tests.Context;

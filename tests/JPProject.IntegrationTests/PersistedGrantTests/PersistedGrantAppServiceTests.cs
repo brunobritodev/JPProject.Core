@@ -2,7 +2,7 @@
 using IdentityServer4.EntityFramework.Entities;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels;
-using JPProject.Admin.Infra.Data.Context;
+using JPProject.Admin.EntityFramework.Repository.Context;
 using JPProject.Domain.Core.Notifications;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

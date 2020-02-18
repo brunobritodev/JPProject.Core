@@ -1,8 +1,8 @@
 using AutoMapper;
 using AutoMapper.Configuration;
 using JPProject.Admin.Application.AutoMapper;
+using JPProject.Admin.EntityFramework.Repository.Context;
 using JPProject.Admin.Fakers.Test;
-using JPProject.Admin.Infra.Data.Context;
 using JPProject.Admin.IntegrationTests.Contexts;
 using MediatR;
 using Microsoft.AspNetCore.Http;
