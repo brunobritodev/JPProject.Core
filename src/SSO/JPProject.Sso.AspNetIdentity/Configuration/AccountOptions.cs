@@ -1,7 +1,7 @@
 ﻿using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 
-namespace JPProject.Sso.Application.Configuration
+namespace JPProject.Sso.AspNetIdentity.Configuration
 {
     public class AccountOptions
     {
