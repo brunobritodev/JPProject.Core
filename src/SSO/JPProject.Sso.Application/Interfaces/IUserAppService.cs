@@ -7,6 +7,7 @@ namespace JPProject.Sso.Application.Interfaces
 {
     public interface IUserAppService : IDisposable
     {
+        Task<bool> AdminRegister(AdminRegisterUserViewModel model);
         Task<bool> Register(RegisterUserViewModel model);
         Task<bool> RegisterWithoutPassword(SocialViewModel model);
         Task<bool> CheckUsername(string userName);

@@ -1,6 +1,3 @@
-using AutoMapper;
-using AutoMapper.Configuration;
-using JPProject.Admin.Application.AutoMapper;
 using JPProject.Admin.EntityFramework.Repository.Context;
 using JPProject.Admin.Fakers.Test;
 using JPProject.Admin.IntegrationTests.Contexts;
@@ -8,7 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 
 namespace JPProject.Admin.IntegrationTests
@@ -22,12 +18,6 @@ namespace JPProject.Admin.IntegrationTests
             var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
             var serviceCollection = new ServiceCollection();
 
-
-            var configurationExpression = new MapperConfigurationExpression();
-            AdminUiMapperConfiguration.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));
-            var automapperConfig = new MapperConfiguration(configurationExpression);
-
-
             void Options(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
 
             serviceCollection.AddDbContext<EventStoreContext>(Options);
@@ -36,10 +26,7 @@ namespace JPProject.Admin.IntegrationTests
                 .AddEventStore<EventStoreContext>()
                 .AddAdminContext(Options);
 
-            serviceCollection.TryAddSingleton(automapperConfig.CreateMapper());
             serviceCollection.AddMediatR(typeof(WarmupInMemory));
-            serviceCollection.TryAddSingleton(mockHttpContextAccessor.Object);
-
             Services = serviceCollection.BuildServiceProvider();
         }
 

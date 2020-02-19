@@ -1,5 +1,5 @@
-﻿using System;
-using JPProject.Domain.Core.StringUtils;
+﻿using JPProject.Domain.Core.StringUtils;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace JPProject.Sso.Application.ViewModels.UserViewModels
@@ -58,5 +58,10 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
 
         }
 
+        public void ClearSensitiveData()
+        {
+            this.Password = null;
+            this.ConfirmPassword = null;
+        }
     }
 }

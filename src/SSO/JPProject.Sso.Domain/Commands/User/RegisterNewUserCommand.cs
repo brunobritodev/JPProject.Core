@@ -5,7 +5,7 @@ namespace JPProject.Sso.Domain.Commands.User
 {
     public class RegisterNewUserCommand : UserCommand
     {
-        public RegisterNewUserCommand(string username, string email, string name, string phoneNumber, string password, string confirmPassword, DateTime? birthdate, string ssn)
+        public RegisterNewUserCommand(string username, string email, string name, string phoneNumber, string password, string confirmPassword, DateTime? birthdate, string ssn, bool confirmEmail = false)
         {
             Birthdate = birthdate;
             Username = username;

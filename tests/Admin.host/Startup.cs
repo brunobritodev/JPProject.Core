@@ -1,6 +1,3 @@
-using AutoMapper;
-using AutoMapper.Configuration;
-using JPProject.Admin.Application.AutoMapper;
 using JPProject.AspNet.Core;
 using JPProject.Sso.Integration.Tests.Context;
 using MediatR;
@@ -38,11 +35,6 @@ namespace Admin.host
                 .AddAdminContext(Options);
 
 
-            var configurationExpression = new MapperConfigurationExpression();
-            AdminUiMapperConfiguration.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));
-            var automapperConfig = new MapperConfiguration(configurationExpression);
-
-            services.TryAddSingleton(automapperConfig.CreateMapper());
             // Adding MediatR for Domain Events and Notifications
             services.AddMediatR(typeof(Startup));
 

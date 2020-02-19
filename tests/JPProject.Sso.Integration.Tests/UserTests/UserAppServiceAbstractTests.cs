@@ -4,6 +4,7 @@ using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
+using JPProject.Sso.AspNetIdentity.Models.Identity;
 using JPProject.Sso.Domain.ViewModels.User;
 using JPProject.Sso.Fakers.Test.Users;
 using JPProject.Sso.Integration.Tests.Context;
@@ -18,7 +19,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using JPProject.Sso.AspNetIdentity.Models.Identity;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -86,6 +86,14 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             _database.Users.FirstOrDefault(f => f.UserName == command.Username)?.SocialNumber.Should().NotBeNull();
         }
 
+        [Fact]
+        public async Task Should_Not_Email_Be_Confirmed_After_User_Register()
+        {
+            var command = UserViewModelFaker.GenerateUserViewModel().Generate();
+            var result = await _userAppService.Register(command);
+            result.Should().BeTrue();
+            _database.Users.FirstOrDefault(f => f.Email == command.Email)?.EmailConfirmed.Should().BeFalse();
+        }
 
         [Fact]
         public async Task User_LockoutDate_Should_Be_Null()

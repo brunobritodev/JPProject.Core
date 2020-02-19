@@ -148,6 +148,9 @@ namespace JPProject.Sso.Domain.CommandHandlers
 
         private async Task SendEmailToUser(IDomainUser user, UserCommand request, AccountResult accountResult, EmailType type)
         {
+            if (user.EmailConfirmed)
+                return;
+
             var email = await _emailRepository.GetByType(type);
             if (email is null)
                 return;

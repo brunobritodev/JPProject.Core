@@ -31,6 +31,11 @@ namespace JPProject.Sso.Application.Services
             _eventStoreRepository = eventStoreRepository;
         }
 
+        public Task<bool> AdminRegister(AdminRegisterUserViewModel model)
+        {
+            var registerCommand = _mapper.Map<RegisterNewUserCommand>(model);
+            return Bus.SendCommand(registerCommand);
+        }
         public Task<bool> Register(RegisterUserViewModel model)
         {
             var registerCommand = _mapper.Map<RegisterNewUserCommand>(model);
