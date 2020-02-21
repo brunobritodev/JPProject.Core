@@ -30,8 +30,8 @@ namespace JPProject.Admin.IntegrationTests.ConfigurationTests
                 .AddDbContext<EventStoreContext>(DatabaseOptions);
 
             Configuration.ServiceCollection
-                .ConfigureJpAdmin<AspNetUserTest>()
-                .AddAdminContext(DatabaseOptions)
+                .ConfigureJpAdminServices<AspNetUserTest>()
+                .AddJpAdminContext(DatabaseOptions)
                 .AddEventStore<EventStoreContext>();
 
             Configuration.ServiceCollection.BuildServiceProvider();

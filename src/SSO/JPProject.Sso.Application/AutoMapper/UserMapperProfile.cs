@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JPProject.Domain.Core.Events;
 using JPProject.Domain.Core.Interfaces;
+using JPProject.Domain.Core.ViewModels;
 using JPProject.Sso.Application.EventSourcedNormalizers;
 using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
@@ -8,6 +9,7 @@ using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Models;
 using System.Globalization;
+using System.Security.Claims;
 
 namespace JPProject.Sso.Application.AutoMapper
 {
@@ -18,7 +20,7 @@ namespace JPProject.Sso.Application.AutoMapper
             /*
           * User Creation Commands
           */
-            CreateMap<RegisterUserViewModel, RegisterNewUserCommand>().ConstructUsing(c => new RegisterNewUserCommand(c.Username, c.Email, c.Name, c.PhoneNumber, c.Password, c.ConfirmPassword, c.Birthdate, c.SocialNumber, false));
+            CreateMap<RegisterUserViewModel, RegisterNewUserCommand>().ConstructUsing(c => new RegisterNewUserCommand(c.Username, c.Email, c.Name, c.PhoneNumber, c.Password, c.ConfirmPassword, c.Birthdate, c.SocialNumber, true));
             CreateMap<AdminRegisterUserViewModel, RegisterNewUserCommand>().ConstructUsing(c => new RegisterNewUserCommand(c.Username, c.Email, c.Name, c.PhoneNumber, c.Password, c.ConfirmPassword, c.Birthdate, c.SocialNumber, c.ConfirmEmail));
             CreateMap<SocialViewModel, RegisterNewUserWithoutPassCommand>(MemberList.Source).ConstructUsing(c => new RegisterNewUserWithoutPassCommand(c.Email, c.Email, c.Name, c.Picture, c.Provider, c.ProviderId));
 
@@ -50,6 +52,7 @@ namespace JPProject.Sso.Application.AutoMapper
             CreateMap<IDomainUser, UserListViewModel>(MemberList.Destination);
             CreateMap<UserLogin, UserLoginViewModel>(MemberList.Destination);
             CreateMap<StoredEvent, EventHistoryData>().ConstructUsing(a => new EventHistoryData(a.Message, a.Id.ToString(), a.Details, a.Timestamp.ToString(CultureInfo.InvariantCulture), a.User, a.MessageType, a.RemoteIpAddress));
+            CreateMap<Claim, ClaimViewModel>().ConstructUsing(a => new ClaimViewModel(a.Type, a.Value));
 
         }
     }

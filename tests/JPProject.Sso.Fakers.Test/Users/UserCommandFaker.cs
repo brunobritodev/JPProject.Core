@@ -22,7 +22,11 @@ namespace JPProject.Sso.Fakers.Test.Users
             );
         }
 
-        public static Faker<RegisterNewUserCommand> GenerateRegisterNewUserCommand(string confirmPassword = null, DateTime? birthdate = null, string socialNumber = null)
+        public static Faker<RegisterNewUserCommand> GenerateRegisterNewUserCommand(
+            string confirmPassword = null,
+            DateTime? birthdate = null,
+            string socialNumber = null,
+            bool? shouldConfirmEmail = null)
         {
             var password = new Faker().Internet.Password();
             return new Faker<RegisterNewUserCommand>().CustomInstantiator(
@@ -34,7 +38,8 @@ namespace JPProject.Sso.Fakers.Test.Users
                     password,
                     confirmPassword ?? password,
                     birthdate ?? f.Person.DateOfBirth,
-                    socialNumber ?? f.Person.Ssn()
+                    socialNumber ?? f.Person.Ssn(),
+                    shouldConfirmEmail ?? f.Random.Bool()
                 ));
         }
 

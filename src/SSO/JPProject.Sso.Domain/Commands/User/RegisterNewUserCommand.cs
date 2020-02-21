@@ -5,7 +5,7 @@ namespace JPProject.Sso.Domain.Commands.User
 {
     public class RegisterNewUserCommand : UserCommand
     {
-        public RegisterNewUserCommand(string username, string email, string name, string phoneNumber, string password, string confirmPassword, DateTime? birthdate, string ssn, bool confirmEmail = false)
+        public RegisterNewUserCommand(string username, string email, string name, string phoneNumber, string password, string confirmPassword, DateTime? birthdate, string ssn, bool shouldConfirmEmail = false)
         {
             Birthdate = birthdate;
             Username = username;
@@ -15,6 +15,7 @@ namespace JPProject.Sso.Domain.Commands.User
             Password = password;
             ConfirmPassword = confirmPassword;
             SocialNumber = ssn;
+            EmailConfirmed = !shouldConfirmEmail;
         }
 
         public override bool IsValid()

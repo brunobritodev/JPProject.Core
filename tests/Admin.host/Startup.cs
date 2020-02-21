@@ -30,9 +30,9 @@ namespace Admin.host
 
             services.AddDbContext<EventStoreContext>(Options);
             services
-                .ConfigureJpAdmin<AspNetUser>()
+                .ConfigureJpAdminServices<AspNetUser>()
                 .AddEventStore<EventStoreContext>()
-                .AddAdminContext(Options);
+                .AddJpAdminContext(Options);
 
 
             // Adding MediatR for Domain Events and Notifications

@@ -10,9 +10,6 @@ namespace JPProject.Sso.Application.AutoMapper
         }
 
         internal static IMapper Mapper { get; private set; }
-        public static void Configure<TUser>()
-        {
-            Mapper = new MapperConfiguration(cfg => cfg.AddProfile<UserMapperProfile>()).CreateMapper();
-        }
+
     }
 }

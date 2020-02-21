@@ -160,11 +160,12 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
             _userService.Setup(s => s.CreateUserWithPass(It.IsAny<RegisterNewUserCommand>(), It.IsAny<string>())).ReturnsAsync(new AccountResult(_faker.Random.Guid().ToString(), _faker.Random.String(), _faker.Internet.Url()));
             _userService.SetupSequence(s => s.FindByNameAsync(It.IsAny<string>())).ReturnsAsync((IDomainUser)null).ReturnsAsync(UserFaker.GenerateUser().Generate());
 
-            var command = UserCommandFaker.GenerateRegisterNewUserCommand().Generate();
+            var command = UserCommandFaker.GenerateRegisterNewUserCommand(shouldConfirmEmail: true).Generate();
 
             var result = await _commandHandler.Handle(command, _tokenSource.Token);
 
             result.Should().BeTrue();
+            _userService.Verify(s => s.CreateUserWithPass(It.IsAny<RegisterNewUserCommand>(), It.IsAny<string>()), Times.Once);
             _emailService.Verify(e => e.SendEmailAsync(It.IsAny<EmailMessage>()), Times.Once);
         }
     }

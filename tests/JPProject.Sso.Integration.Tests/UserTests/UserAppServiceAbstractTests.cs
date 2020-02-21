@@ -60,6 +60,16 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             _database.Users.FirstOrDefault(f => f.UserName == command.Username).Should().NotBeNull();
         }
 
+
+        [Fact]
+        public async Task Should_Register_New_User_As_Admin_With_Email_Confirmed()
+        {
+            var command = UserViewModelFaker.GenerateRegisterAdminViewModel(false).Generate();
+            var result = await _userAppService.Register(command);
+            result.Should().BeTrue();
+            _database.Users.FirstOrDefault(f => f.UserName == command.Username).EmailConfirmed.Should().BeTrue();
+        }
+
         [Fact]
         public async Task Should_Update_User()
         {

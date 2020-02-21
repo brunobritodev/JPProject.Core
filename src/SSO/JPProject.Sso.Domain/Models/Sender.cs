@@ -9,8 +9,8 @@
             Name = name;
         }
 
-        public string Address { get; }
-        public string Name { get; }
+        public string Address { get; set; }
+        public string Name { get; set; }
 
         public bool IsValid()
         {

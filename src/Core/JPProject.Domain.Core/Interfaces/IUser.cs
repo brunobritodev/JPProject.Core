@@ -12,7 +12,7 @@ namespace JPProject.Domain.Core.Interfaces
         bool EmailConfirmed { get; }
         string PasswordHash { get; }
         string SecurityStamp { get; }
-        string PhoneNumber { get;  }
+        string PhoneNumber { get; }
         bool PhoneNumberConfirmed { get; }
         bool TwoFactorEnabled { get; }
         DateTimeOffset? LockoutEnd { get; }

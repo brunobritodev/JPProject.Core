@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using IdentityServer4.Models;
 using JPProject.Admin.Application.ViewModels.ClientsViewModels;
 using JPProject.Admin.Domain.Commands;
 using JPProject.Admin.Domain.Commands.Clients;
 using JPProject.Domain.Core.ViewModels;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace JPProject.Admin.Application.AutoMapper
 {
@@ -14,7 +14,7 @@ namespace JPProject.Admin.Application.AutoMapper
         public AdminClientMapperProfile()
         {
             CreateMap<Client, ClientListViewModel>(MemberList.Destination);
-            CreateMap<IDictionary<string, string>, ClientPropertyViewModel>();
+            CreateMap<KeyValuePair<string, string>, ClientPropertyViewModel>();
             CreateMap<Claim, ClaimViewModel>().ConstructUsing(a => new ClaimViewModel(a.Type, a.Value));
             /*
             * Client commands

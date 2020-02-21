@@ -22,10 +22,9 @@ namespace JPProject.Admin.IntegrationTests
 
             serviceCollection.AddDbContext<EventStoreContext>(Options);
             serviceCollection
-                .ConfigureJpAdmin<AspNetUserTest>()
+                .ConfigureJpAdminServices<AspNetUserTest>()
                 .AddEventStore<EventStoreContext>()
-                .AddAdminContext(Options);
-
+                .AddJpAdminContext(Options);
             serviceCollection.AddMediatR(typeof(WarmupInMemory));
             Services = serviceCollection.BuildServiceProvider();
         }

@@ -53,8 +53,8 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         [Fact]
         public async Task Should_Add_New_Client_Without_PostLogout()
         {
-            //var command = JsonConvert.DeserializeObject<SaveClientViewModel>("{\"ClientId\":\"aoeu123\",\"ClientName\":\"aoe\",\"LogoUri\":\"https://localhost:5000/storage/1200px-Jenkins_logo.svg.png\",\"ClientType\":\"WebImplicit\"}");
-            var command = JsonConvert.DeserializeObject<SaveClientViewModel>("{\"ClientId\":\"aoeu123\",\"ClientName\":\"aoe\",\"ClientType\":\"WebImplicit\"}");
+            //var command = JsonConvert.DeserializeObject<SaveClientViewModel>("{\"ClientId\":\"aoeu123\",\"ClientName\":\"aoe\",\"LogoUri\":\"https://localhost:5000/storage/1200px-Jenkins_logo.svg.png\",\"ClientType\":\"WebServerSideRenderer\"}");
+            var command = JsonConvert.DeserializeObject<SaveClientViewModel>("{\"ClientId\":\"aoeu123\",\"ClientName\":\"aoe\",\"ClientType\":\"WebServerSideRenderer\"}");
 
             await _clientAppService.Save(command);
 
@@ -66,7 +66,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         [Theory]
         [InlineData(ClientType.Spa, new[] { "openid", "profile" })]
         [InlineData(ClientType.WebHybrid, new[] { "openid", "profile" })]
-        [InlineData(ClientType.WebImplicit, new[] { "openid", "profile" })]
+        [InlineData(ClientType.WebServerSideRenderer, new[] { "openid", "profile" })]
         [InlineData(ClientType.Device, new[] { "openid" })]
         [InlineData(ClientType.Machine, new[] { "openid" })]
         [InlineData(ClientType.Native, new[] { "openid", "profile" })]
@@ -88,7 +88,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         [Theory]
         [InlineData(ClientType.Spa)]
         [InlineData(ClientType.WebHybrid)]
-        [InlineData(ClientType.WebImplicit)]
+        [InlineData(ClientType.WebServerSideRenderer)]
         public async Task Should_Add_Cors(ClientType clientType)
         {
             var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
@@ -103,7 +103,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         [Theory]
         [InlineData(ClientType.Spa)]
         [InlineData(ClientType.WebHybrid)]
-        [InlineData(ClientType.WebImplicit)]
+        [InlineData(ClientType.WebServerSideRenderer)]
         public async Task Should_Add_Default_RedirectUri(ClientType clientType)
         {
             var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
@@ -137,7 +137,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         [Theory]
         [InlineData(ClientType.Spa)]
         [InlineData(ClientType.WebHybrid)]
-        [InlineData(ClientType.WebImplicit)]
+        [InlineData(ClientType.WebServerSideRenderer)]
         public async Task Should_Add_Default_LogoutUri_If_Null(ClientType clientType)
         {
             var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
@@ -153,8 +153,9 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
         [Theory]
         [InlineData(ClientType.Spa)]
-        [InlineData(ClientType.WebImplicit)]
-        public async Task Should_Add_AlwaysIncludeUserClaims_In_IdToken_When_Implicity(ClientType clientType)
+        [InlineData(ClientType.WebServerSideRenderer)]
+        [InlineData(ClientType.Native)]
+        public async Task Should_Be_AuthorizationCode_Flow(ClientType clientType)
         {
             var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
             command.LogoutUri = null;
@@ -163,7 +164,22 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
             var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
             client.Should().NotBeNull();
-            client.AlwaysIncludeUserClaimsInIdToken.Should().BeTrue();
+            client.AllowedGrantTypes.Select(s => s.GrantType).Should().Contain("authorization_code");
+        }
+
+
+        [Theory]
+        [InlineData(ClientType.Machine)]
+        public async Task Should_Be_ClientCredentials_Flow(ClientType clientType)
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
+            command.LogoutUri = null;
+
+            await _clientAppService.Save(command);
+
+            var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
+            client.Should().NotBeNull();
+            client.AllowedGrantTypes.Select(s => s.GrantType).Should().Contain("client_credentials");
         }
 
         [Fact]
@@ -265,12 +281,28 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
             await _clientAppService.Save(command);
 
-            var property = ClientViewModelFaker.GenerateSaveProperty().Generate();
+            var property = ClientViewModelFaker.GenerateSaveProperty(command.ClientId).Generate();
 
             await _clientAppService.SaveProperty(property);
 
-            _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId).Should().NotBeNull();
-            _database.ClientProperties.Include(i => i.Client).Where(f => f.Client.ClientId == command.ClientId).Should().NotBeNull();
+            _database.Clients.Include(s => s.Properties).FirstOrDefault(s => s.ClientId == command.ClientId)?.Properties.Should().HaveCountGreaterOrEqualTo(1);
+        }
+
+        [Fact]
+        public async Task Should_Get_ClientProperty()
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient().Generate();
+
+            await _clientAppService.Save(command);
+
+            var property = ClientViewModelFaker.GenerateSaveProperty(command.ClientId).Generate();
+
+            await _clientAppService.SaveProperty(property);
+
+            _database.Clients.Include(s => s.Properties).FirstOrDefault(s => s.ClientId == command.ClientId)?.Properties.Should().HaveCountGreaterOrEqualTo(1);
+
+            var clientProperties = await _clientAppService.GetProperties(command.ClientId);
+            clientProperties.Should().HaveCountGreaterOrEqualTo(1);
         }
 
         [Fact]
@@ -301,6 +333,22 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
             _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId).Should().NotBeNull();
             var clams = _database.ClientClaims.Include(i => i.Client).Where(f => f.Client.ClientId == command.ClientId);
+            clams.Should().HaveCountGreaterOrEqualTo(1);
+        }
+
+        [Fact]
+        public async Task Should_Get_ClientClaim()
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient().Generate();
+
+            await _clientAppService.Save(command);
+
+            var property = ClientViewModelFaker.GenerateSaveClaim(command.ClientId).Generate();
+
+            await _clientAppService.SaveClaim(property);
+
+            _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId).Should().NotBeNull();
+            var clams = await _clientAppService.GetClaims(command.ClientId);
             clams.Should().HaveCountGreaterOrEqualTo(1);
         }
 
@@ -337,5 +385,6 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             _database.ClientClaims.Include(i => i.Client).Where(f => f.Client.ClientId == command.ClientId).Should().NotBeNull();
             result.Should().BeFalse(becauseArgs: _notifications.GetNotificationsByKey());
         }
+
     }
 }
