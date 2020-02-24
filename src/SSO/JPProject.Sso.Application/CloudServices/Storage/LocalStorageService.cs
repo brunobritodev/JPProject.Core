@@ -32,7 +32,11 @@ namespace JPProject.Sso.Application.CloudServices.Storage
 
         public Task RemoveFile(string fileName, string virtualLocation)
         {
-            var file = Path.Combine(_privateSettings.PhysicalPath, _privateSettings.VirtualPath ?? string.Empty, virtualLocation ?? string.Empty, fileName);
+            var directory = Path.Combine(_privateSettings.PhysicalPath, _privateSettings.VirtualPath ?? string.Empty, virtualLocation ?? string.Empty);
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
+            var file = Path.Combine(directory, fileName);
             if (File.Exists(file))
                 File.Delete(file);
             return Task.CompletedTask;

@@ -1,9 +1,9 @@
 ﻿using AspNetCore.IQueryable.Extensions;
 using AutoMapper;
-using IdentityModel;
 using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.ViewModels;
+using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.Application.EventSourcedNormalizers;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels;
@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JPProject.Sso.Application.AutoMapper;
 
 namespace JPProject.Sso.Application.Services
 {
@@ -149,7 +148,7 @@ namespace JPProject.Sso.Application.Services
 
         public async Task<bool> UpdateProfilePicture(ProfilePictureViewModel model)
         {
-            await _storage.Remove(model.Username.ToSha256(), "images");
+            await _storage.Remove(model.Filename, "images");
             model.Picture = await _storage.Upload(model);
             var updateCommand = _mapper.Map<UpdateProfilePictureCommand>(model);
             return await Bus.SendCommand(updateCommand);
