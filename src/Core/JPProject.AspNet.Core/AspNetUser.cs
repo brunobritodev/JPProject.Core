@@ -1,9 +1,9 @@
 ﻿using IdentityModel;
 using JPProject.Domain.Core.Interfaces;
-using JPProject.Domain.Core.StringUtils;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Security.Claims;
+using JPProject.Domain.Core.Util;
 
 namespace JPProject.AspNet.Core
 {

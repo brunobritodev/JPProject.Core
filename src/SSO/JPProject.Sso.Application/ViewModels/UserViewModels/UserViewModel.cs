@@ -1,6 +1,6 @@
-﻿using JPProject.Domain.Core.StringUtils;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using JPProject.Domain.Core.Util;
 
 namespace JPProject.Sso.Application.ViewModels.UserViewModels
 {

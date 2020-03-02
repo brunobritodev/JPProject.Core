@@ -67,7 +67,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             {
                 var user = await _userService.FindByNameAsync(request.Username);
                 await SendEmailToUser(user, request, result.Value, EmailType.NewUser);
-                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Username, user.Name, user.Email));
+                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Username, user.Email));
                 return true;
             }
             return false;
@@ -101,7 +101,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             {
                 var user = await _userService.FindByNameAsync(request.Username);
                 await SendEmailToUser(user, request, result.Value, EmailType.NewUserWithoutPassword);
-                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Username, user.Name, user.Email));
+                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Username, user.Email));
                 return true;
             }
             return false;
@@ -120,7 +120,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             {
                 var user = await _userService.FindByNameAsync(request.Username);
                 await SendEmailToUser(user, request, result.Value, EmailType.NewUser);
-                await Bus.RaiseEvent(new UserRegisteredEvent(request.Username, user.Name, user.Email));
+                await Bus.RaiseEvent(new UserRegisteredEvent(request.Username, user.Email));
                 return true;
             }
             return false;
@@ -140,7 +140,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             {
                 var user = await _userService.FindByUsernameOrEmail(request.EmailOrUsername);
                 await SendEmailToUser(user, request, accountResult.Value, EmailType.RecoverPassword);
-                await Bus.RaiseEvent(new ResetLinkGeneratedEvent(accountResult.Value.Username, request.Email, request.Username));
+                await Bus.RaiseEvent(new ResetLinkGeneratedEvent(request.Email, request.Username));
                 return true;
             }
             return false;

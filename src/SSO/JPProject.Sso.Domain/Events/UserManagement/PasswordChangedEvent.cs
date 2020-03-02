@@ -6,10 +6,10 @@ namespace JPProject.Sso.Domain.Events.UserManagement
     public class PasswordChangedEvent : Event
     {
 
-        public PasswordChangedEvent(string aggregateId)
+        public PasswordChangedEvent(string username)
             : base(EventTypes.Success)
         {
-            AggregateId = aggregateId.ToString();
+            AggregateId = username;
         }
     }
 }

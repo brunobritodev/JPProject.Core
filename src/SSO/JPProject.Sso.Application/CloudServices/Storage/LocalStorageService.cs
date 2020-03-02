@@ -1,9 +1,9 @@
-﻿using JPProject.Domain.Core.StringUtils;
-using JPProject.Sso.Application.ViewModels;
+﻿using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Domain.ViewModels.Settings;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using JPProject.Domain.Core.Util;
 
 namespace JPProject.Sso.Application.CloudServices.Storage
 {

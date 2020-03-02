@@ -4,10 +4,10 @@ namespace JPProject.Sso.Domain.Events.UserManagement
 {
     public class AccountRemovedEvent : Event
     {
-        public AccountRemovedEvent(string aggregateId)
+        public AccountRemovedEvent(string username)
             : base(EventTypes.Success)
         {
-            AggregateId = aggregateId.ToString();
+            AggregateId = username;
         }
     }
 }

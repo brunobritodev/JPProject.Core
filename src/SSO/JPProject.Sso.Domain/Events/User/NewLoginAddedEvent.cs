@@ -8,13 +8,13 @@ namespace JPProject.Sso.Domain.Events.User
         public string Provider { get; }
         public string ProviderId { get; }
 
-        public NewLoginAddedEvent(string aggregateId, string email, string provider, string providerId)
+        public NewLoginAddedEvent(string username, string email, string provider, string providerId)
             : base(EventTypes.Success)
         {
             Email = email;
             Provider = provider;
             ProviderId = providerId;
-            AggregateId = aggregateId.ToString();
+            AggregateId = username;
         }
     }
 }

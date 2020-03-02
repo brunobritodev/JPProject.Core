@@ -51,7 +51,7 @@ namespace JPProject.Sso.Application.AutoMapper
             CreateMap<IDomainUser, UserViewModel>(MemberList.Destination);
             CreateMap<IDomainUser, UserListViewModel>(MemberList.Destination);
             CreateMap<UserLogin, UserLoginViewModel>(MemberList.Destination);
-            CreateMap<StoredEvent, EventHistoryData>().ConstructUsing(a => new EventHistoryData(a.Message, a.Id.ToString(), a.Details, a.Timestamp.ToString(CultureInfo.InvariantCulture), a.User, a.MessageType, a.RemoteIpAddress));
+            CreateMap<StoredEvent, EventHistoryData>().ConstructUsing(a => new EventHistoryData(a.Message, a.AggregateId, a.Details, a.Timestamp.ToString(CultureInfo.InvariantCulture), a.User, a.MessageType, a.RemoteIpAddress, a.EventType)).IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<Claim, ClaimViewModel>().ConstructUsing(a => new ClaimViewModel(a.Type, a.Value));
 
         }

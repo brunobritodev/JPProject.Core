@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using JPProject.Domain.Core.Bus;
-using JPProject.Domain.Core.Interfaces;
 using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels;
@@ -16,19 +15,16 @@ namespace JPProject.Sso.Application.Services
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
-        private readonly IEventStoreRepository _eventStoreRepository;
         private readonly IMediatorHandler Bus;
 
         public UserAppService(
             IUserService userService,
-            IMediatorHandler bus,
-            IEventStoreRepository eventStoreRepository)
+            IMediatorHandler bus)
         {
 
             _mapper = UserMapping.Mapper;
             _userService = userService;
             Bus = bus;
-            _eventStoreRepository = eventStoreRepository;
         }
 
         public Task<bool> AdminRegister(AdminRegisterUserViewModel model)

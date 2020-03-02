@@ -7,10 +7,10 @@ namespace JPProject.Sso.Domain.Events.User
         public string Username { get; }
         public string Role { get; }
 
-        public UserRoleRemovedEvent(string aggregateId, string username, string role)
+        public UserRoleRemovedEvent(string username, string role)
             : base(EventTypes.Success)
         {
-            AggregateId = aggregateId;
+            AggregateId = username;
             Username = username;
             Role = role;
         }

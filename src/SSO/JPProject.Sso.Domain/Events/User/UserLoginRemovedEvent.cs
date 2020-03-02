@@ -8,10 +8,10 @@ namespace JPProject.Sso.Domain.Events.User
         public string LoginProvider { get; }
         public string ProviderKey { get; }
 
-        public UserLoginRemovedEvent(string aggregateId, string username, string loginProvider, string providerKey)
+        public UserLoginRemovedEvent(string username, string loginProvider, string providerKey)
             : base(EventTypes.Success)
         {
-            AggregateId = aggregateId;
+            AggregateId = username;
             Username = username;
             LoginProvider = loginProvider;
             ProviderKey = providerKey;

@@ -1,4 +1,4 @@
-﻿using JPProject.Domain.Core.StringUtils;
+﻿using JPProject.Domain.Core.Util;
 
 namespace JPProject.Sso.Domain.ViewModels.Settings
 {
