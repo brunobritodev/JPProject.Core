@@ -1,14 +1,13 @@
-﻿using System;
-using JPProject.Sso.Domain.Validations.UserManagement;
+﻿using JPProject.Sso.Domain.Validations.UserManagement;
 
 namespace JPProject.Sso.Domain.Commands.UserManagement
 {
     public class UpdateProfilePictureCommand : ProfileCommand
     {
-        public UpdateProfilePictureCommand(string id, string picture)
+        public UpdateProfilePictureCommand(string username, string picture)
         {
+            Username = username;
             Picture = picture;
-            Id = id;
         }
 
         public override bool IsValid()

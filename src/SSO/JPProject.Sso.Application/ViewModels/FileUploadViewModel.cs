@@ -1,4 +1,4 @@
-﻿using System;
+﻿using IdentityModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
@@ -6,7 +6,7 @@ namespace JPProject.Sso.Application.ViewModels
 {
     public class FileUploadViewModel
     {
-        public string Id { get; set; }
+        public string Username { get; set; }
         [Required(ErrorMessage = "Invalid file")]
         public string Filename { get; set; }
         [Required(ErrorMessage = "Invalid file")]
@@ -18,7 +18,7 @@ namespace JPProject.Sso.Application.ViewModels
 
         public void Normalize()
         {
-            Filename = $"{Guid.NewGuid()}{Path.GetExtension(Filename)}";
+            Filename = $"{Filename.ToSha256()}{Path.GetExtension(Filename)}";
         }
     }
 }

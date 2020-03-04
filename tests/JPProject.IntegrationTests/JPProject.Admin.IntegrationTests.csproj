@@ -12,7 +12,7 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     <PackageReference Include="Moq" Version="4.13.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Admin\JPProject.Admin.Application\JPProject.Admin.Application.csproj" />
-    <ProjectReference Include="..\..\src\Admin\JPProject.Admin.EntityFrameworkCore.Sql\JPProject.Admin.EntityFrameworkCore.Sql.csproj" />
+    <ProjectReference Include="..\..\src\Admin\JPProject.Admin.EntityFramework.Repository\JPProject.Admin.EntityFramework.Repository.csproj" />
     <ProjectReference Include="..\..\src\Core\JPProject.AspNet.Core\JPProject.AspNet.Core.csproj" />
     <ProjectReference Include="..\JPProject.Admin.Fakers.Test\JPProject.Admin.Fakers.Test.csproj" />
   </ItemGroup>

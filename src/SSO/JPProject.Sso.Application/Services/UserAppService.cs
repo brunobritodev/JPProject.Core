@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
+using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
@@ -18,17 +19,23 @@ namespace JPProject.Sso.Application.Services
         private readonly IEventStoreRepository _eventStoreRepository;
         private readonly IMediatorHandler Bus;
 
-        public UserAppService(IMapper mapper,
+        public UserAppService(
             IUserService userService,
             IMediatorHandler bus,
             IEventStoreRepository eventStoreRepository)
         {
-            _mapper = mapper;
+
+            _mapper = UserMapping.Mapper;
             _userService = userService;
             Bus = bus;
             _eventStoreRepository = eventStoreRepository;
         }
 
+        public Task<bool> AdminRegister(AdminRegisterUserViewModel model)
+        {
+            var registerCommand = _mapper.Map<RegisterNewUserCommand>(model);
+            return Bus.SendCommand(registerCommand);
+        }
         public Task<bool> Register(RegisterUserViewModel model)
         {
             var registerCommand = _mapper.Map<RegisterNewUserCommand>(model);
@@ -64,23 +71,6 @@ namespace JPProject.Sso.Application.Services
             return Bus.SendCommand(registerCommand);
         }
 
-        public async Task<UserViewModel> FindByUsernameAsync(string username)
-        {
-            var user = await _userService.FindByNameAsync(username);
-            return _mapper.Map<UserViewModel>(user);
-        }
-
-        public async Task<UserViewModel> FindByEmailAsync(string email)
-        {
-            var user = await _userService.FindByEmailAsync(email);
-            return _mapper.Map<UserViewModel>(user);
-        }
-
-        public async Task<UserViewModel> FindByProviderAsync(string provider, string providerUserId)
-        {
-            var user = await _userService.FindByProviderAsync(provider, providerUserId);
-            return _mapper.Map<UserViewModel>(user);
-        }
 
         public Task<bool> AddLogin(SocialViewModel model)
         {
@@ -96,12 +86,6 @@ namespace JPProject.Sso.Application.Services
         public Task<bool> CheckEmail(string email)
         {
             return _userService.EmailExist(email);
-        }
-
-        public async Task<RegisterUserViewModel> FindByLoginAsync(string provider, string providerUserId)
-        {
-            var model = await _userService.FindByLoginAsync(provider, providerUserId);
-            return _mapper.Map<RegisterUserViewModel>(model);
         }
 
         public void Dispose()

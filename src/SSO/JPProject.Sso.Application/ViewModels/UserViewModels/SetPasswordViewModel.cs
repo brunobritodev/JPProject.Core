@@ -17,6 +17,6 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
         public string ConfirmPassword { get; set; }
 
         public string StatusMessage { get; set; }
-        public string Id { get; set; }
+        public string Username { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
+﻿using System.Linq;
 
 namespace JPProject.Sso.Domain.ViewModels.Settings
 {

@@ -18,7 +18,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
     {
         private Faker _faker;
         private readonly CancellationTokenSource _tokenSource;
-        private readonly Mock<ISsoUnitOfWork> _uow;
+        private readonly Mock<IUnitOfWork> _uow;
         private readonly Mock<IMediatorHandler> _mediator;
         private readonly Mock<DomainNotificationHandler> _notifications;
         private readonly UserManagementCommandHandler _commandHandler;
@@ -29,7 +29,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
         {
             _faker = new Faker();
             _tokenSource = new CancellationTokenSource();
-            _uow = new Mock<ISsoUnitOfWork>();
+            _uow = new Mock<IUnitOfWork>();
             _mediator = new Mock<IMediatorHandler>();
             _notifications = new Mock<DomainNotificationHandler>();
             _userService = new Mock<IUserService>();
@@ -38,17 +38,18 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
 
         }
 
+
         [Fact]
-        public async Task ShouldRemoveClaimWithoutValue()
+        public async Task Should_Remove_Claim_Without_Value()
         {
             var user = UserFaker.GenerateUser().Generate();
             var command = UserManagerCommandFaker.GenerateRemoveClaimCommand(false).Generate();
 
             _userService.Setup(s => s.FindByNameAsync(It.Is<string>(e => e == command.Username))).ReturnsAsync(user);
             _userService.Setup(s => s.RemoveClaim(
-                       It.Is<string>(c => c == user.Id),
-                     It.Is<string>(c => c.Equals(command.Type)),
-                        It.Is<string>(c => c.IsMissing())))
+                    It.Is<string>(c => c == user.UserName),
+                    It.Is<string>(c => c.Equals(command.Type)),
+                    It.Is<string>(c => c.IsMissing())))
                 .ReturnsAsync(true);
 
             _uow.Setup(s => s.Commit()).ReturnsAsync(true);
@@ -60,16 +61,15 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
             result.Should().BeTrue();
         }
 
-
         [Fact]
-        public async Task ShouldRemoveClaimWithValue()
+        public async Task Should_Remove_Claim_With_Value()
         {
             var user = UserFaker.GenerateUser().Generate();
             var command = UserManagerCommandFaker.GenerateRemoveClaimCommand().Generate();
 
             _userService.Setup(s => s.FindByNameAsync(It.Is<string>(e => e == command.Username))).ReturnsAsync(user);
             _userService.Setup(s => s.RemoveClaim(
-                    It.Is<string>(c => c == user.Id),
+                    It.Is<string>(c => c == user.UserName),
                     It.Is<string>(c => c.Equals(command.Type)),
                     It.Is<string>(c => c.Equals(command.Value))))
                 .ReturnsAsync(true);
@@ -82,8 +82,6 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests
 
             result.Should().BeTrue();
         }
-
-
 
         [Fact]
         public void ShouldNotContainsFederationGateway()

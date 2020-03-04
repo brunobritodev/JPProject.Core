@@ -14,7 +14,7 @@ namespace JPProject.Sso.Domain.ViewModels.Settings
         public string PhysicalPath { get; }
 
         /// <summary>
-        /// Storage settings
+        /// Repository settings
         /// </summary>
         /// <param name="username">Service username</param>
         /// <param name="password">Service key</param>

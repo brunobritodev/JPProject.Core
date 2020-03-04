@@ -7,6 +7,7 @@ using JPProject.Sso.Domain.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using JPProject.Domain.Core.Interfaces;
 
 namespace JPProject.Sso.Domain.CommandHandlers
 {
@@ -21,7 +22,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
         private readonly IEmailRepository _emailRepository;
 
         public EmailCommandHandler(
-            ISsoUnitOfWork uow,
+            IUnitOfWork uow,
             IMediatorHandler bus,
             INotificationHandler<DomainNotification> notifications,
             ITemplateRepository templateRepository,
@@ -130,7 +131,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            _templateRepository.Remove(template.Id);
+            _templateRepository.Remove(template);
 
             if (await Commit())
             {

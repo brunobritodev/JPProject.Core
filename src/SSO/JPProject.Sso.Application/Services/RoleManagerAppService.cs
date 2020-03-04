@@ -1,30 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
+using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels.RoleViewModels;
 using JPProject.Sso.Domain.Commands.Role;
 using JPProject.Sso.Domain.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace JPProject.Sso.Application.Services
 {
     public class RoleManagerAppService : IRoleManagerAppService
     {
         private IEventStoreRepository _eventStoreRepository;
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
         private readonly IRoleService _roleService;
 
         public IMediatorHandler Bus { get; set; }
-        public RoleManagerAppService(IMapper mapper,
+        public RoleManagerAppService(
             IRoleService roleService,
             IMediatorHandler bus,
             IEventStoreRepository eventStoreRepository
         )
         {
-            _mapper = mapper;
+            _mapper = RoleMapping.Mapper;
             _roleService = roleService;
             Bus = bus;
             _eventStoreRepository = eventStoreRepository;

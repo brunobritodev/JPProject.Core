@@ -3,8 +3,8 @@ using FluentAssertions;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels.ClientsViewModels;
 using JPProject.Admin.Domain.Commands.Clients;
+using JPProject.Admin.EntityFramework.Repository.Context;
 using JPProject.Admin.Fakers.Test.ClientFakers;
-using JPProject.Admin.Infra.Data.Context;
 using JPProject.Domain.Core.Notifications;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +21,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
     {
         private readonly ITestOutputHelper _output;
         private readonly IClientAppService _clientAppService;
-        private readonly JPProjectAdminUIContext _database;
+        private readonly JpProjectAdminUiContext _database;
         private readonly DomainNotificationHandler _notifications;
         private Faker _faker;
 
@@ -32,13 +32,13 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             _output = output;
             InMemoryData = inMemoryData;
             _clientAppService = InMemoryData.Services.GetRequiredService<IClientAppService>();
-            _database = InMemoryData.Services.GetRequiredService<JPProjectAdminUIContext>();
+            _database = InMemoryData.Services.GetRequiredService<JpProjectAdminUiContext>();
             _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             _notifications.Clear();
         }
 
         [Fact]
-        public async Task ShouldAddNewClient()
+        public async Task Should_Add_New_Client()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
 
@@ -51,10 +51,10 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
 
         [Fact]
-        public async Task ShouldAddNewClientWithoutPostLogout()
+        public async Task Should_Add_New_Client_Without_PostLogout()
         {
-            //var command = JsonConvert.DeserializeObject<SaveClientViewModel>("{\"ClientId\":\"aoeu123\",\"ClientName\":\"aoe\",\"LogoUri\":\"https://localhost:5000/storage/1200px-Jenkins_logo.svg.png\",\"ClientType\":\"WebImplicit\"}");
-            var command = JsonConvert.DeserializeObject<SaveClientViewModel>("{\"ClientId\":\"aoeu123\",\"ClientName\":\"aoe\",\"ClientType\":\"WebImplicit\"}");
+            //var command = JsonConvert.DeserializeObject<SaveClientViewModel>("{\"ClientId\":\"aoeu123\",\"ClientName\":\"aoe\",\"LogoUri\":\"https://localhost:5000/storage/1200px-Jenkins_logo.svg.png\",\"ClientType\":\"WebServerSideRenderer\"}");
+            var command = JsonConvert.DeserializeObject<SaveClientViewModel>("{\"ClientId\":\"aoeu123\",\"ClientName\":\"aoe\",\"ClientType\":\"WebServerSideRenderer\"}");
 
             await _clientAppService.Save(command);
 
@@ -66,11 +66,11 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         [Theory]
         [InlineData(ClientType.Spa, new[] { "openid", "profile" })]
         [InlineData(ClientType.WebHybrid, new[] { "openid", "profile" })]
-        [InlineData(ClientType.WebImplicit, new[] { "openid", "profile" })]
+        [InlineData(ClientType.WebServerSideRenderer, new[] { "openid", "profile" })]
         [InlineData(ClientType.Device, new[] { "openid" })]
         [InlineData(ClientType.Machine, new[] { "openid" })]
         [InlineData(ClientType.Native, new[] { "openid", "profile" })]
-        public async Task ShouldAddDefaultScopes(ClientType clientType, string[] scopeName)
+        public async Task Should_Add_Default_Scopes(ClientType clientType, string[] scopeName)
         {
             var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
 
@@ -88,8 +88,8 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         [Theory]
         [InlineData(ClientType.Spa)]
         [InlineData(ClientType.WebHybrid)]
-        [InlineData(ClientType.WebImplicit)]
-        public async Task ShouldAddCors(ClientType clientType)
+        [InlineData(ClientType.WebServerSideRenderer)]
+        public async Task Should_Add_Cors(ClientType clientType)
         {
             var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
 
@@ -103,8 +103,8 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         [Theory]
         [InlineData(ClientType.Spa)]
         [InlineData(ClientType.WebHybrid)]
-        [InlineData(ClientType.WebImplicit)]
-        public async Task ShouldAddDefaultRedirectUri(ClientType clientType)
+        [InlineData(ClientType.WebServerSideRenderer)]
+        public async Task Should_Add_Default_RedirectUri(ClientType clientType)
         {
             var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
 
@@ -117,7 +117,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
 
         [Fact]
-        public async Task ShouldAddClientServer()
+        public async Task Should_Add_ClientServer()
         {
             var command = ClientViewModelFaker.GenerateSaveClient(clientType: ClientType.Machine).Generate();
             command.ClientUri = null;
@@ -137,8 +137,8 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         [Theory]
         [InlineData(ClientType.Spa)]
         [InlineData(ClientType.WebHybrid)]
-        [InlineData(ClientType.WebImplicit)]
-        public async Task ShouldAddDefaultLogoutUriIfNull(ClientType clientType)
+        [InlineData(ClientType.WebServerSideRenderer)]
+        public async Task Should_Add_Default_LogoutUri_If_Null(ClientType clientType)
         {
             var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
             command.LogoutUri = null;
@@ -153,8 +153,9 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
         [Theory]
         [InlineData(ClientType.Spa)]
-        [InlineData(ClientType.WebImplicit)]
-        public async Task ShouldAddAlwaysIncludeUserClaimsInIdTokenWhenImplicity(ClientType clientType)
+        [InlineData(ClientType.WebServerSideRenderer)]
+        [InlineData(ClientType.Native)]
+        public async Task Should_Be_AuthorizationCode_Flow(ClientType clientType)
         {
             var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
             command.LogoutUri = null;
@@ -163,11 +164,26 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
             var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
             client.Should().NotBeNull();
-            client.AlwaysIncludeUserClaimsInIdToken.Should().BeTrue();
+            client.AllowedGrantTypes.Select(s => s.GrantType).Should().Contain("authorization_code");
+        }
+
+
+        [Theory]
+        [InlineData(ClientType.Machine)]
+        public async Task Should_Be_ClientCredentials_Flow(ClientType clientType)
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient(clientType: clientType).Generate();
+            command.LogoutUri = null;
+
+            await _clientAppService.Save(command);
+
+            var client = _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId);
+            client.Should().NotBeNull();
+            client.AllowedGrantTypes.Select(s => s.GrantType).Should().Contain("client_credentials");
         }
 
         [Fact]
-        public async Task ShouldNotSaveClientWithPostLogoutUriWithTrailingSlash()
+        public async Task Should_Not_Save_Client_With_PostLogoutUri_With_Trailing_Slash()
         {
             var command = ClientViewModelFaker.GenerateSaveClient(logoutUri: $"{_faker.Internet.Url()}/").Generate();
             await _clientAppService.Save(command);
@@ -178,7 +194,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
 
 
         [Fact]
-        public async Task ShouldNotSaveClientWithClientUriWithTrailingSlash()
+        public async Task Should_Not_Save_Client_With_ClientUri_With_TrailingSlash()
         {
             var command = ClientViewModelFaker.GenerateSaveClient(clientUri: $"{_faker.Internet.Url()}/").Generate();
             await _clientAppService.Save(command);
@@ -187,7 +203,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             client.Should().BeNull();
         }
         [Fact]
-        public async Task ShouldRemoveClient()
+        public async Task Should_Remove_Client()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
 
@@ -202,7 +218,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         }
 
         [Fact]
-        public async Task ShouldUpdateClient()
+        public async Task Should_Update_Client()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
 
@@ -220,7 +236,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         }
 
         [Fact]
-        public async Task ShouldNotAddAnotherClientWithSameClientId()
+        public async Task Should_Not_Add_Another_Client_With_Same_ClientId()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
 
@@ -232,13 +248,13 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         }
 
         [Fact]
-        public async Task ShouldAddNewClientSecret()
+        public async Task Should_Add_New_ClientSecret()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
 
             await _clientAppService.Save(command);
 
-            var secret = ClientViewModelFaker.GenerateSaveClientSecret(command.ClientId);
+            var secret = ClientViewModelFaker.GenerateSaveClientSecret(command.ClientId).Generate();
 
             await _clientAppService.SaveSecret(secret);
 
@@ -247,7 +263,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         }
 
         [Fact]
-        public async Task ShouldNotAddNewClientSecretWhenClientDoesntExist()
+        public async Task Should_Not_Add_New_ClientSecret_When_Client_Doesnt_Exist()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
             var secret = ClientViewModelFaker.GenerateSaveClientSecret(command.ClientId);
@@ -259,22 +275,38 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         }
 
         [Fact]
-        public async Task ShouldAddNewClientProperty()
+        public async Task Should_Add_New_ClientProperty()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
 
             await _clientAppService.Save(command);
 
-            var property = ClientViewModelFaker.GenerateSaveProperty().Generate();
+            var property = ClientViewModelFaker.GenerateSaveProperty(command.ClientId).Generate();
 
             await _clientAppService.SaveProperty(property);
 
-            _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId).Should().NotBeNull();
-            _database.ClientProperties.Include(i => i.Client).Where(f => f.Client.ClientId == command.ClientId).Should().NotBeNull();
+            _database.Clients.Include(s => s.Properties).FirstOrDefault(s => s.ClientId == command.ClientId)?.Properties.Should().HaveCountGreaterOrEqualTo(1);
         }
 
         [Fact]
-        public async Task ShouldNotAddNewClientPropertyWhenClientDoesntExist()
+        public async Task Should_Get_ClientProperty()
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient().Generate();
+
+            await _clientAppService.Save(command);
+
+            var property = ClientViewModelFaker.GenerateSaveProperty(command.ClientId).Generate();
+
+            await _clientAppService.SaveProperty(property);
+
+            _database.Clients.Include(s => s.Properties).FirstOrDefault(s => s.ClientId == command.ClientId)?.Properties.Should().HaveCountGreaterOrEqualTo(1);
+
+            var clientProperties = await _clientAppService.GetProperties(command.ClientId);
+            clientProperties.Should().HaveCountGreaterOrEqualTo(1);
+        }
+
+        [Fact]
+        public async Task Should_Not_Add_New_ClientProperty_When_Client_Doesnt_Exist()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
             var property = ClientViewModelFaker.GenerateSaveProperty(command.ClientId).Generate();
@@ -289,22 +321,61 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         }
 
         [Fact]
-        public async Task ShouldAddNewClientClaim()
+        public async Task Should_Add_New_ClientClaim()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
 
             await _clientAppService.Save(command);
 
-            var property = ClientViewModelFaker.GenerateSaveClaim().Generate();
+            var property = ClientViewModelFaker.GenerateSaveClaim(command.ClientId).Generate();
 
             await _clientAppService.SaveClaim(property);
 
             _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId).Should().NotBeNull();
-            _database.ClientClaims.Include(i => i.Client).Where(f => f.Client.ClientId == command.ClientId).Should().NotBeNull();
+            var clams = _database.ClientClaims.Include(i => i.Client).Where(f => f.Client.ClientId == command.ClientId);
+            clams.Should().HaveCountGreaterOrEqualTo(1);
         }
 
         [Fact]
-        public async Task ShouldNotAddNewClientClaimWhenClientDoesntExist()
+        public async Task Should_Get_ClientClaim()
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient().Generate();
+
+            await _clientAppService.Save(command);
+
+            var property = ClientViewModelFaker.GenerateSaveClaim(command.ClientId).Generate();
+
+            await _clientAppService.SaveClaim(property);
+
+            _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId).Should().NotBeNull();
+            var clams = await _clientAppService.GetClaims(command.ClientId);
+            clams.Should().HaveCountGreaterOrEqualTo(1);
+        }
+
+        [Fact]
+        public async Task Should_Remove_ClientClaim()
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient().Generate();
+
+            await _clientAppService.Save(command);
+
+            var property = ClientViewModelFaker.GenerateSaveClaim(command.ClientId).Generate();
+
+            await _clientAppService.SaveClaim(property);
+
+            _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId).Should().NotBeNull();
+            var clams = _database.ClientClaims.Include(i => i.Client).Where(f => f.Client.ClientId == command.ClientId);
+            clams.Should().HaveCountGreaterOrEqualTo(1);
+
+            var removeClaim = new RemoveClientClaimViewModel(command.ClientId, property.Type, property.Value);
+            await _clientAppService.RemoveClaim(removeClaim);
+
+            var clientDb = await _database.Clients.Include(s => s.Claims).FirstOrDefaultAsync(s => s.ClientId == command.ClientId);
+            clientDb.Claims.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task Should_Not_Add_New_ClientClaim_When_Client_Doesnt_Exist()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
             var property = ClientViewModelFaker.GenerateSaveClaim(command.ClientId).Generate();
@@ -314,5 +385,6 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             _database.ClientClaims.Include(i => i.Client).Where(f => f.Client.ClientId == command.ClientId).Should().NotBeNull();
             result.Should().BeFalse(becauseArgs: _notifications.GetNotificationsByKey());
         }
+
     }
 }

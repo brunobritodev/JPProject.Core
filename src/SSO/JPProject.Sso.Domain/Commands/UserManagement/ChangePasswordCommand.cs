@@ -5,9 +5,9 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
     public class ChangePasswordCommand : PasswordCommand
     {
 
-        public ChangePasswordCommand(string id, string oldPassword, string newPassword, string confirmPassword)
+        public ChangePasswordCommand(string username, string oldPassword, string newPassword, string confirmPassword)
         {
-            Id = id;
+            Username = username;
             OldPassword = oldPassword;
             Password = newPassword;
             ConfirmPassword = confirmPassword;

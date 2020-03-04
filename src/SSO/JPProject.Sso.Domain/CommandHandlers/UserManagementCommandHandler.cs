@@ -1,4 +1,5 @@
 ﻿using JPProject.Domain.Core.Bus;
+using JPProject.Domain.Core.Commands;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.Commands.User;
@@ -10,7 +11,6 @@ using MediatR;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using JPProject.Domain.Core.Commands;
 
 namespace JPProject.Sso.Domain.CommandHandlers
 {
@@ -20,7 +20,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
         IRequestHandler<SetPasswordCommand, bool>,
         IRequestHandler<ChangePasswordCommand, bool>,
         IRequestHandler<RemoveAccountCommand, bool>,
-        IRequestHandler<UpdateUserCommand, bool>,
+        IRequestHandler<AdminUpdateUserCommand, bool>,
         IRequestHandler<SaveUserClaimCommand, bool>,
         IRequestHandler<RemoveUserClaimCommand, bool>,
         IRequestHandler<RemoveUserRoleCommand, bool>,
@@ -31,7 +31,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
         private readonly ISystemUser _user;
 
         public UserManagementCommandHandler(
-            ISsoUnitOfWork uow,
+            IUnitOfWork uow,
             IMediatorHandler bus,
             INotificationHandler<DomainNotification> notifications,
             IUserService userService,
@@ -53,7 +53,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var result = await _userService.UpdateProfileAsync(request);
             if (result)
             {
-                await Bus.RaiseEvent(new ProfileUpdatedEvent(request.Id, request));
+                await Bus.RaiseEvent(new ProfileUpdatedEvent(request.Username, request));
                 return true;
             }
             return false;
@@ -70,7 +70,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var result = await _userService.UpdateProfilePictureAsync(request);
             if (result)
             {
-                await Bus.RaiseEvent(new ProfilePictureUpdatedEvent(request.Id, request.Picture));
+                await Bus.RaiseEvent(new ProfilePictureUpdatedEvent(request.Username, request.Picture));
                 return true;
             }
             return false;
@@ -87,7 +87,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var result = await _userService.CreatePasswordAsync(request);
             if (result)
             {
-                await Bus.RaiseEvent(new PasswordCreatedEvent(request.Id));
+                await Bus.RaiseEvent(new PasswordCreatedEvent(request.Username));
                 return true;
             }
             return false;
@@ -104,7 +104,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var result = await _userService.ChangePasswordAsync(request);
             if (result)
             {
-                await Bus.RaiseEvent(new PasswordChangedEvent(request.Id));
+                await Bus.RaiseEvent(new PasswordChangedEvent(request.Username));
                 return true;
             }
             return false;
@@ -121,14 +121,14 @@ namespace JPProject.Sso.Domain.CommandHandlers
             var result = await _userService.RemoveAccountAsync(request);
             if (result)
             {
-                await Bus.RaiseEvent(new AccountRemovedEvent(request.Id));
+                await Bus.RaiseEvent(new AccountRemovedEvent(request.Username));
                 return true;
             }
             return false;
         }
 
 
-        public async Task<bool> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(AdminUpdateUserCommand request, CancellationToken cancellationToken)
         {
             if (!request.IsValid())
             {
@@ -142,8 +142,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 await Bus.RaiseEvent(new DomainNotification("Username", "User not found"));
                 return false;
             }
-            user.UpdateInfo(request);
-            await _userService.UpdateUserAsync(user);
+            await _userService.UpdateUserAsync(request);
 
             return true;
         }
@@ -165,7 +164,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
 
             var claim = new Claim(request.Type, request.Value);
 
-            var success = await _userService.SaveClaim(userDb.Id, claim);
+            var success = await _userService.SaveClaim(userDb.UserName, claim);
 
             if (success)
             {
@@ -190,7 +189,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var success = await _userService.RemoveClaim(userDb.Id, request.Type, request.Value);
+            var success = await _userService.RemoveClaim(userDb.UserName, request.Type, request.Value);
 
             if (success)
             {
@@ -215,11 +214,11 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var success = await _userService.RemoveRole(userDb.Id, request.Role);
+            var success = await _userService.RemoveRole(userDb.UserName, request.Role);
 
             if (success)
             {
-                await Bus.RaiseEvent(new UserRoleRemovedEvent(_user.UserId, request.Username, request.Role));
+                await Bus.RaiseEvent(new UserRoleRemovedEvent(_user.Username, request.Username, request.Role));
                 return true;
             }
             return false;
@@ -240,11 +239,11 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var success = await _userService.SaveRole(user.Id, request.Role);
+            var success = await _userService.SaveRole(user.UserName, request.Role);
 
             if (success)
             {
-                await Bus.RaiseEvent(new UserRoleSavedEvent(_user.UserId, request.Username, request.Role));
+                await Bus.RaiseEvent(new UserRoleSavedEvent(_user.Username, request.Username, request.Role));
                 return true;
             }
             return false;
@@ -269,7 +268,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
 
             if (success)
             {
-                await Bus.RaiseEvent(new UserLoginRemovedEvent(_user.UserId, request.Username, request.LoginProvider, request.ProviderKey));
+                await Bus.RaiseEvent(new UserLoginRemovedEvent(_user.Username, request.Username, request.LoginProvider, request.ProviderKey));
                 return true;
             }
             return false;
@@ -294,7 +293,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
 
             if (success)
             {
-                await Bus.RaiseEvent(new AdminChangedPasswordEvent(user.Id, request.Username));
+                await Bus.RaiseEvent(new AdminChangedPasswordEvent(request.Username));
                 return true;
             }
             return false;

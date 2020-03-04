@@ -4,13 +4,10 @@ namespace JPProject.Sso.Domain.Events.User
 {
     public class AdminChangedPasswordEvent : Event
     {
-        public string Username { get; }
-
-        public AdminChangedPasswordEvent(string userId, string username)
+        public AdminChangedPasswordEvent(string username)
             : base(EventTypes.Success)
         {
-            Username = username;
-            AggregateId = userId;
+            AggregateId = username;
         }
     }
 }

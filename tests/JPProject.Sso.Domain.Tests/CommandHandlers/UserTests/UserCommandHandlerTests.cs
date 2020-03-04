@@ -4,6 +4,7 @@ using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Domain.CommandHandlers;
+using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.Models;
 using JPProject.Sso.Domain.ViewModels.User;
@@ -20,7 +21,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
     {
         private readonly Faker _faker;
         private readonly CancellationTokenSource _tokenSource;
-        private readonly Mock<ISsoUnitOfWork> _uow;
+        private readonly Mock<IUnitOfWork> _uow;
         private readonly Mock<IMediatorHandler> _mediator;
         private readonly Mock<DomainNotificationHandler> _notifications;
         private readonly UserCommandHandler _commandHandler;
@@ -32,7 +33,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         {
             _faker = new Faker();
             _tokenSource = new CancellationTokenSource();
-            _uow = new Mock<ISsoUnitOfWork>();
+            _uow = new Mock<IUnitOfWork>();
             _mediator = new Mock<IMediatorHandler>();
             _notifications = new Mock<DomainNotificationHandler>();
             _userService = new Mock<IUserService>();
@@ -43,7 +44,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         }
 
         [Fact]
-        public async Task ShouldNotAddNewUser_AfterSuccessfulLoginThrough_ExternalProvider_IfHisEmailAlreadyExist()
+        public async Task Should_Not_Add_New_User_After_Successful_Login_Through_External_Provider_If_His_Email_Already_Exist()
         {
             var command = UserCommandFaker.GenerateRegisterNewUserWithoutPassCommand().Generate();
 
@@ -58,7 +59,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
 
 
         [Fact]
-        public async Task ShouldNotAddNewUser_AfterSuccessfulLoginThrough_ExternalProvider_IfHisNameAlreadyExist()
+        public async Task Should_Not_Add_New_User_After_Successful_Login_Through_ExternalProvider_If_His_Name_Already_Exist()
         {
             var command = UserCommandFaker.GenerateRegisterNewUserWithoutPassCommand().Generate();
 
@@ -74,7 +75,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         }
 
         [Fact]
-        public async Task ShouldNotAddLoginIfUserDoesntExist()
+        public async Task Should_Not_Add_Login_If_User_Doesnt_Exist()
         {
             var command = UserCommandFaker.GenerateAddLoginCommand().Generate();
 
@@ -87,8 +88,9 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         }
 
 
+
         [Fact]
-        public async Task ShouldNotAddNewUserIfItEmailAlreadyExist()
+        public async Task Should_Not_Add_New_User_If_It_Email_Already_Exist()
         {
             var command = UserCommandFaker.GenerateRegisterNewUserCommand().Generate();
 
@@ -103,7 +105,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
 
 
         [Fact]
-        public async Task ShouldNotAddNewUserIfItNameAlreadyExist()
+        public async Task Should_Not_Add_New_User_If_It_Name_Already_Exist()
         {
             var command = UserCommandFaker.GenerateRegisterNewUserCommand().Generate();
 
@@ -120,7 +122,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
 
 
         [Fact]
-        public async Task ShouldNotAddNewUserIfPasswordDifferFromConfirmation()
+        public async Task Should_Not_Add_New_User_If_Password_Differ_From_Confirmation()
         {
             var command = UserCommandFaker.GenerateRegisterNewUserCommand(_faker.Internet.Password()).Generate();
 
@@ -131,7 +133,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         }
 
         [Fact]
-        public async Task ShouldNotGenerateResetLinkIfNotProvideUsernameOrEmail()
+        public async Task Should_Not_Generate_Reset_Link_If_Not_Provide_Username_Or_Email()
         {
             var command = UserCommandFaker.GenerateSendResetLinkCommand().Generate();
 
@@ -142,7 +144,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         }
 
         [Fact]
-        public async Task ShouldNotRegisterUserWithAFutureBirthdate()
+        public async Task Should_Not_Register_User_With_A_Future_Birthdate()
         {
             var command = UserCommandFaker.GenerateRegisterNewUserCommand(birthdate: _faker.Date.Future()).Generate();
 
@@ -152,16 +154,18 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         }
 
         [Fact]
-        public async Task ShouldSendEmailAfterSuccessfullRegistration()
+        public async Task Should_Send_Email_After_Successfull_Registration()
         {
             _emailRepository.Setup(s => s.GetByType(It.IsAny<EmailType>())).ReturnsAsync(EmailFaker.GenerateEmail());
-            _userService.Setup(s => s.CreateUserWithPass(It.IsAny<User>(), It.IsAny<string>())).ReturnsAsync(new AccountResult(_faker.Random.Guid().ToString(), _faker.Random.String(), _faker.Internet.Url()));
+            _userService.Setup(s => s.CreateUserWithPass(It.IsAny<RegisterNewUserCommand>(), It.IsAny<string>())).ReturnsAsync(new AccountResult(_faker.Random.Guid().ToString(), _faker.Random.String(), _faker.Internet.Url()));
+            _userService.SetupSequence(s => s.FindByNameAsync(It.IsAny<string>())).ReturnsAsync((IDomainUser)null).ReturnsAsync(UserFaker.GenerateUser().Generate());
 
-            var command = UserCommandFaker.GenerateRegisterNewUserCommand().Generate();
+            var command = UserCommandFaker.GenerateRegisterNewUserCommand(shouldConfirmEmail: true).Generate();
 
             var result = await _commandHandler.Handle(command, _tokenSource.Token);
 
             result.Should().BeTrue();
+            _userService.Verify(s => s.CreateUserWithPass(It.IsAny<RegisterNewUserCommand>(), It.IsAny<string>()), Times.Once);
             _emailService.Verify(e => e.SendEmailAsync(It.IsAny<EmailMessage>()), Times.Once);
         }
     }

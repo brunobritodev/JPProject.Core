@@ -1,6 +1,8 @@
-﻿namespace JPProject.Sso.Domain.Models
+﻿using JPProject.Sso.Domain.Interfaces;
+
+namespace JPProject.Sso.Domain.Models
 {
-    public class Role
+    public class Role : IRole
     {
         public Role(string id, string name)
         {

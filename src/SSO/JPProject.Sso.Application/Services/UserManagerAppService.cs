@@ -1,7 +1,9 @@
-﻿using AutoMapper;
+﻿using AspNetCore.IQueryable.Extensions;
+using AutoMapper;
 using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.ViewModels;
+using JPProject.Sso.Application.AutoMapper;
 using JPProject.Sso.Application.EventSourcedNormalizers;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels;
@@ -25,14 +27,14 @@ namespace JPProject.Sso.Application.Services
         private readonly IStorage _storage;
         private readonly IMediatorHandler Bus;
 
-        public UserManagerAppService(IMapper mapper,
+        public UserManagerAppService(
             IUserService userService,
             IMediatorHandler bus,
             IEventStoreRepository eventStoreRepository,
             IStorage storage
             )
         {
-            _mapper = mapper;
+            _mapper = UserMapping.Mapper;
             _userService = userService;
             Bus = bus;
             _eventStoreRepository = eventStoreRepository;
@@ -44,41 +46,49 @@ namespace JPProject.Sso.Application.Services
             GC.SuppressFinalize(this);
         }
 
-        public Task UpdateProfile(UserViewModel model)
+        public async Task<UserViewModel> FindByUsernameAsync(string username)
         {
-            var registerCommand = _mapper.Map<UpdateProfileCommand>(model);
-            return Bus.SendCommand(registerCommand);
+            var user = await _userService.FindByNameAsync(username);
+            return _mapper.Map<UserViewModel>(user);
         }
 
-        public async Task UpdateProfilePicture(ProfilePictureViewModel model)
+        public async Task<UserViewModel> FindByEmailAsync(string email)
         {
-            await _storage.Remove(model.Id, "images");
-            model.Picture = await _storage.Upload(model);
-            var updateCommand = _mapper.Map<UpdateProfilePictureCommand>(model);
-            await Bus.SendCommand(updateCommand);
+            var user = await _userService.FindByEmailAsync(email);
+            return _mapper.Map<UserViewModel>(user);
         }
 
-        public Task CreatePassword(SetPasswordViewModel model)
+        public async Task<UserViewModel> FindByProviderAsync(string provider, string providerUserId)
         {
-            var registerCommand = _mapper.Map<SetPasswordCommand>(model);
-            return Bus.SendCommand(registerCommand);
+            var user = await _userService.FindByProviderAsync(provider, providerUserId);
+            return _mapper.Map<UserViewModel>(user);
         }
 
-        public Task RemoveAccount(RemoveAccountViewModel model)
+        public async Task<UserViewModel> GetUserDetails(string username)
         {
-            var removeCommand = _mapper.Map<RemoveAccountCommand>(model);
-            return Bus.SendCommand(removeCommand);
+            var users = await _userService.FindByNameAsync(username);
+            return _mapper.Map<UserViewModel>(users);
         }
 
-        public Task ChangePassword(ChangePasswordViewModel model)
+        public async Task<IEnumerable<ClaimViewModel>> GetClaims(string userName)
         {
-            var registerCommand = _mapper.Map<ChangePasswordCommand>(model);
-            return Bus.SendCommand(registerCommand);
+            return _mapper.Map<IEnumerable<ClaimViewModel>>(await _userService.GetClaimByName(userName));
         }
 
-        public Task<bool> HasPassword(string userId)
+        public async Task<IEnumerable<RoleViewModel>> GetRoles(string userName)
         {
-            return _userService.HasPassword(userId);
+            var roles = await _userService.GetRoles(userName);
+            return roles.Select(s => new RoleViewModel() { Name = s });
+        }
+
+        public async Task<IEnumerable<UserLoginViewModel>> GetLogins(string userName)
+        {
+            return _mapper.Map<IEnumerable<UserLoginViewModel>>(await _userService.GetUserLogins(userName));
+        }
+
+        public async Task<IEnumerable<UserListViewModel>> GetUsersInRole(string role)
+        {
+            return _mapper.Map<IEnumerable<UserListViewModel>>(await _userService.GetUserFromRole(role));
         }
 
         public async Task<ListOf<EventHistoryData>> GetEvents(string username, PagingViewModel paging)
@@ -88,88 +98,87 @@ namespace JPProject.Sso.Application.Services
             return new ListOf<EventHistoryData>(_mapper.Map<IEnumerable<EventHistoryData>>(history), total);
         }
 
-        public async Task<ListOf<UserListViewModel>> GetUsers(PagingViewModel paging)
+        public Task<bool> HasPassword(string username)
         {
-            var users = await _userService.GetUsers(paging);
-            var total = await _userService.Count(paging.Search);
+            return _userService.HasPassword(username);
+        }
+
+        public async Task<ListOf<UserListViewModel>> SearchUsers(ICustomQueryable search)
+        {
+            var users = await _userService.Search(search);
+            var total = await _userService.Count(search);
             return new ListOf<UserListViewModel>(_mapper.Map<IEnumerable<UserListViewModel>>(users), total);
         }
 
-        public async Task<IEnumerable<UserListViewModel>> GetUsersById(params string[] id)
+        public Task<bool> CreatePassword(SetPasswordViewModel model)
         {
-            var users = await _userService.GetByIdAsync(id);
-            return _mapper.Map<IEnumerable<UserListViewModel>>(users);
-        }
-        public async Task<UserViewModel> GetUserDetails(string username)
-        {
-            var users = await _userService.FindByNameAsync(username);
-            return _mapper.Map<UserViewModel>(users);
-        }
-
-        public async Task<UserViewModel> GetUserAsync(string value)
-        {
-            var users = await _userService.FindByUserId(value);
-            return _mapper.Map<UserViewModel>(users);
-        }
-
-        public Task UpdateUser(UserViewModel model)
-        {
-            var command = _mapper.Map<UpdateUserCommand>(model);
-            return Bus.SendCommand(command);
-        }
-
-        public async Task<IEnumerable<ClaimViewModel>> GetClaims(string userName)
-        {
-            return _mapper.Map<IEnumerable<ClaimViewModel>>(await _userService.GetClaimByName(userName));
-        }
-
-        public Task SaveClaim(SaveUserClaimViewModel model)
-        {
-            var registerCommand = _mapper.Map<SaveUserClaimCommand>(model);
+            var registerCommand = _mapper.Map<SetPasswordCommand>(model);
             return Bus.SendCommand(registerCommand);
         }
 
-        public Task RemoveClaim(RemoveUserClaimViewModel model)
+        public Task<bool> ChangePassword(ChangePasswordViewModel model)
         {
-            var removeCommand = _mapper.Map<RemoveUserClaimCommand>(model);
-            return Bus.SendCommand(removeCommand);
+            var registerCommand = _mapper.Map<ChangePasswordCommand>(model);
+            return Bus.SendCommand(registerCommand);
         }
 
-        public async Task<IEnumerable<RoleViewModel>> GetRoles(string userName)
+        public Task<bool> UpdateUser(UserViewModel model)
         {
-            var roles = await _userService.GetRoles(userName);
-            return roles.Select(s => new RoleViewModel() { Name = s });
+            var command = _mapper.Map<AdminUpdateUserCommand>(model);
+            return Bus.SendCommand(command);
         }
 
-        public Task RemoveRole(RemoveUserRoleViewModel model)
-        {
-            var removeCommand = _mapper.Map<RemoveUserRoleCommand>(model);
-            return Bus.SendCommand(removeCommand);
-        }
-
-        public Task SaveRole(SaveUserRoleViewModel model)
+        public Task<bool> SaveRole(SaveUserRoleViewModel model)
         {
             var registerCommand = _mapper.Map<SaveUserRoleCommand>(model);
             return Bus.SendCommand(registerCommand);
         }
 
-        public async Task<IEnumerable<UserLoginViewModel>> GetLogins(string userName)
+        public Task<bool> SaveClaim(SaveUserClaimViewModel model)
         {
-            return _mapper.Map<IEnumerable<UserLoginViewModel>>(await _userService.GetUserLogins(userName));
+            var registerCommand = _mapper.Map<SaveUserClaimCommand>(model);
+            return Bus.SendCommand(registerCommand);
         }
 
-        public Task RemoveLogin(RemoveUserLoginViewModel model)
+        public Task<bool> UpdateProfile(UserViewModel model)
+        {
+            var registerCommand = _mapper.Map<UpdateProfileCommand>(model);
+            return Bus.SendCommand(registerCommand);
+        }
+
+        public async Task<bool> UpdateProfilePicture(ProfilePictureViewModel model)
+        {
+            await _storage.Remove(model.Filename, "images");
+            model.Picture = await _storage.Upload(model);
+            var updateCommand = _mapper.Map<UpdateProfilePictureCommand>(model);
+            return await Bus.SendCommand(updateCommand);
+        }
+
+        public Task<bool> RemoveAccount(RemoveAccountViewModel model)
+        {
+            var removeCommand = _mapper.Map<RemoveAccountCommand>(model);
+            return Bus.SendCommand(removeCommand);
+        }
+
+        public Task<bool> RemoveClaim(RemoveUserClaimViewModel model)
+        {
+            var removeCommand = _mapper.Map<RemoveUserClaimCommand>(model);
+            return Bus.SendCommand(removeCommand);
+        }
+
+        public Task<bool> RemoveRole(RemoveUserRoleViewModel model)
+        {
+            var removeCommand = _mapper.Map<RemoveUserRoleCommand>(model);
+            return Bus.SendCommand(removeCommand);
+        }
+
+        public Task<bool> RemoveLogin(RemoveUserLoginViewModel model)
         {
             var registerCommand = _mapper.Map<RemoveUserLoginCommand>(model);
             return Bus.SendCommand(registerCommand);
         }
 
-        public async Task<IEnumerable<UserListViewModel>> GetUsersInRole(string role)
-        {
-            return _mapper.Map<IEnumerable<UserListViewModel>>(await _userService.GetUserFromRole(role));
-        }
-
-        public Task ResetPassword(AdminChangePasswordViewodel model)
+        public Task<bool> ResetPassword(AdminChangePasswordViewodel model)
         {
             var registerCommand = _mapper.Map<AdminChangePasswordCommand>(model);
             return Bus.SendCommand(registerCommand);

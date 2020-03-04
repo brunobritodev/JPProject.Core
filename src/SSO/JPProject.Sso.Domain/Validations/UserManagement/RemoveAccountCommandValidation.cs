@@ -6,7 +6,7 @@ namespace JPProject.Sso.Domain.Validations.UserManagement
     {
         public RemoveAccountCommandValidation()
         {
-            ValidateId();
+            ValidateUsername();
         }
     }
 }

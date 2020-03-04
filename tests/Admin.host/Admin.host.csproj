@@ -10,11 +10,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Admin\JPProject.Admin.Application\JPProject.Admin.Application.csproj" />
-    <ProjectReference Include="..\..\src\Admin\JPProject.Admin.Database\JPProject.Admin.Database.csproj" />
+    <ProjectReference Include="..\..\src\Admin\JPProject.Admin.EntityFramework.Repository\JPProject.Admin.EntityFramework.Repository.csproj" />
     <ProjectReference Include="..\..\src\Core\JPProject.AspNet.Core\JPProject.AspNet.Core.csproj" />
   </ItemGroup>
 

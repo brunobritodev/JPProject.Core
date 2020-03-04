@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
+using JPProject.Sso.Application.Extensions;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.ViewModels.User;
-using JPProject.Sso.Infra.Identity.Extensions;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using MimeKit.Text;
-
 namespace JPProject.Sso.Application.CloudServices.Email
 {
     public class GeneralSmtpService : IEmailService

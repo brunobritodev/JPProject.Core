@@ -26,7 +26,7 @@ namespace JPProject.Sso.Integration.Tests.CloudServicesTest
         [Fact
         (Skip = "Only for dev tests")
         ]
-        public async Task ShouldRemoveFileS3()
+        public async Task Should_Remove_FileS3()
         {
             var service = new AwsStorageService(new StorageSettings(_username,
                 _password, "S3", _storagename,
@@ -38,7 +38,7 @@ namespace JPProject.Sso.Integration.Tests.CloudServicesTest
         [Fact
         (Skip = "Only for dev tests")
         ]
-        public async Task ShouldUploadFileS3()
+        public async Task Should_Upload_FileS3()
         {
             var service = new AwsStorageService(new StorageSettings(_username,
                 _password, "S3", _storagename,

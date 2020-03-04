@@ -1,15 +1,10 @@
-using AutoMapper;
-using AutoMapper.Configuration;
-using JPProject.Admin.Application.AutoMapper;
+using JPProject.Admin.EntityFramework.Repository.Context;
 using JPProject.Admin.Fakers.Test;
-using JPProject.Admin.Infra.Data.Context;
-using JPProject.EntityFrameworkCore.Configuration;
-using JPProject.EntityFrameworkCore.Context;
+using JPProject.Admin.IntegrationTests.Contexts;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 
 namespace JPProject.Admin.IntegrationTests
@@ -23,23 +18,14 @@ namespace JPProject.Admin.IntegrationTests
             var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
             var serviceCollection = new ServiceCollection();
 
-
-            var configurationExpression = new MapperConfigurationExpression();
-            AdminUiMapperConfiguration.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));
-            var automapperConfig = new MapperConfiguration(configurationExpression);
-
-
             void Options(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
 
-            serviceCollection
-                .ConfigureJpAdmin<AspNetUserTest>()
-                .WithSqlServer(Options);
-
             serviceCollection.AddDbContext<EventStoreContext>(Options);
-            serviceCollection.TryAddSingleton(automapperConfig.CreateMapper());
+            serviceCollection
+                .ConfigureJpAdminServices<AspNetUserTest>()
+                .AddEventStore<EventStoreContext>()
+                .AddJpAdminContext(Options);
             serviceCollection.AddMediatR(typeof(WarmupInMemory));
-            serviceCollection.TryAddSingleton(mockHttpContextAccessor.Object);
-
             Services = serviceCollection.BuildServiceProvider();
         }
 
@@ -48,7 +34,7 @@ namespace JPProject.Admin.IntegrationTests
         public void DetachAll()
         {
 
-            var database = Services.GetService<JPProjectAdminUIContext>();
+            var database = Services.GetService<JpProjectAdminUiContext>();
             foreach (var dbEntityEntry in database.ChangeTracker.Entries())
             {
                 if (dbEntityEntry.Entity != null)

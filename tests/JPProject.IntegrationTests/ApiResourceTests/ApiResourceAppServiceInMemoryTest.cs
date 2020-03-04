@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels.ApiResouceViewModels;
+using JPProject.Admin.EntityFramework.Repository.Context;
 using JPProject.Admin.Fakers.Test.ApiResourceFakers;
-using JPProject.Admin.Infra.Data.Context;
 using JPProject.Domain.Core.Notifications;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +18,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
     {
         private readonly ITestOutputHelper _output;
         private readonly IApiResourceAppService _apiResourceAppService;
-        private readonly JPProjectAdminUIContext _database;
+        private readonly JpProjectAdminUiContext _database;
         private DomainNotificationHandler _notifications;
         public WarmupInMemory InMemoryData { get; }
 
@@ -27,13 +27,13 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
             _output = output;
             InMemoryData = inMemoryData;
             _apiResourceAppService = InMemoryData.Services.GetRequiredService<IApiResourceAppService>();
-            _database = InMemoryData.Services.GetRequiredService<JPProjectAdminUIContext>();
+            _database = InMemoryData.Services.GetRequiredService<JpProjectAdminUiContext>();
             _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             _notifications.Clear();
         }
 
         [Fact]
-        public async Task ShouldAddNewApi()
+        public async Task Should_Add_New_Api()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -44,7 +44,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldApiResourceHaveAtLeastOneScope()
+        public async Task Should_ApiResource_Have_At_Least_One_Scope()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -58,7 +58,20 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
 
 
         [Fact]
-        public async Task ShouldRemoveApi()
+        public async Task Should_ApiResource_Have_At_Least_One_Scope_With_His_Name_When_Register()
+        {
+            var command = ApiResourceFaker.GenerateApiResource().Generate();
+
+            await _apiResourceAppService.Save(command);
+
+            var api = _database.ApiResources.FirstOrDefault(s => s.Name == command.Name);
+            api.Should().NotBeNull();
+            api.Scopes.Should().HaveCountGreaterOrEqualTo(1);
+            api.Scopes.Should().Contain(a => a.Name == api.Name);
+        }
+
+        [Fact]
+        public async Task Should_Remove_Api()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -72,7 +85,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldUpdateApi()
+        public async Task Should_Update_Api()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -90,7 +103,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldNotAddAnotherApiWithSameName()
+        public async Task Should_Not_Add_Another_Api_With_Same_Name()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -103,7 +116,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
 
 
         [Fact]
-        public async Task ShouldAddNewApiScope()
+        public async Task Should_Add_New_ApiScope()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -118,7 +131,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldAddNewApiSecret()
+        public async Task Should_Add_New_ApiSecret()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
 
@@ -133,7 +146,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         }
 
         [Fact]
-        public async Task ShouldNotAddNewApiSecretWhenClientDoesntExist()
+        public async Task Should_Not_Add_New_ApiSecret_When_Client_Doesnt_Exist()
         {
             var command = ApiResourceFaker.GenerateApiResource().Generate();
             var secret = ApiResourceFaker.GenerateSaveClientSecret(command.Name).Generate();

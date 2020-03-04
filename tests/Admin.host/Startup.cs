@@ -1,14 +1,10 @@
-using AutoMapper;
-using AutoMapper.Configuration;
-using JPProject.Admin.Application.AutoMapper;
-using JPProject.Admin.Database;
 using JPProject.AspNet.Core;
-using JPProject.Domain.Core.ViewModels;
+using JPProject.Sso.Integration.Tests.Context;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -30,18 +26,15 @@ namespace Admin.host
         {
             services.AddControllers();
 
-            var database = Configuration.GetValue<DatabaseType>("ApplicationSettings:DatabaseType");
-            var connString = Configuration.GetConnectionString("SSOConnection");
+            void Options(DbContextOptionsBuilder opt) => opt.UseInMemoryDatabase("JpTests").EnableSensitiveDataLogging();
+
+            services.AddDbContext<EventStoreContext>(Options);
             services
-                .ConfigureJpAdmin<AspNetUser>()
-                .AddDatabase(database, connString);
+                .ConfigureJpAdminServices<AspNetUser>()
+                .AddEventStore<EventStoreContext>()
+                .AddJpAdminContext(Options);
 
 
-            var configurationExpression = new MapperConfigurationExpression();
-            AdminUiMapperConfiguration.RegisterMappings().ForEach(p => configurationExpression.AddProfile(p));
-            var automapperConfig = new MapperConfiguration(configurationExpression);
-
-            services.TryAddSingleton(automapperConfig.CreateMapper());
             // Adding MediatR for Domain Events and Notifications
             services.AddMediatR(typeof(Startup));
 

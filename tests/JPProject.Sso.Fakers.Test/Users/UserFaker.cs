@@ -1,17 +1,16 @@
 ﻿using Bogus;
 using JPProject.Sso.Domain.Models;
-using JPProject.Sso.Domain.ViewModels.User;
 
 namespace JPProject.Sso.Fakers.Test.Users
 {
     public class UserFaker
     {
-        public static Faker<User> GenerateUser()
+        public static Faker<User> GenerateUser(bool? confirmedEmail = null, string ssn = null)
         {
             return new Faker<User>()
                 .RuleFor(u => u.Id, f => f.Random.Uuid().ToString())
                 .RuleFor(u => u.Email, f => f.Person.Email)
-                .RuleFor(u => u.EmailConfirmed, f => f.Random.Bool())
+                .RuleFor(u => u.EmailConfirmed, f => confirmedEmail ?? f.Random.Bool())
                 .RuleFor(u => u.PasswordHash, f => f.Lorem.Word())
                 .RuleFor(u => u.SecurityStamp, f => f.Lorem.Word())
                 .RuleFor(u => u.PhoneNumber, f => f.Person.Phone)
@@ -24,6 +23,7 @@ namespace JPProject.Sso.Fakers.Test.Users
                 .RuleFor(u => u.Url, f => f.Internet.Url())
                 .RuleFor(u => u.Name, f => f.Person.FullName)
                 .RuleFor(u => u.Company, f => f.Company.CompanyName())
+                .RuleFor(u => u.SocialNumber, f => ssn ?? f.Random.AlphaNumeric(15))
                 .RuleFor(u => u.Bio, f => f.Lorem.Sentence())
                 .RuleFor(u => u.JobTitle, f => f.Lorem.Word());
         }

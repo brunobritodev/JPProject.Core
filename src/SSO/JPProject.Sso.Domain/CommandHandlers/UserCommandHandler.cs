@@ -27,7 +27,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
         private readonly IEmailRepository _emailRepository;
 
         public UserCommandHandler(
-            ISsoUnitOfWork uow,
+            IUnitOfWork uow,
             IMediatorHandler bus,
             INotificationHandler<DomainNotification> notifications,
             IUserService userService,
@@ -48,15 +48,13 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var user = request.ToModel();
-
-            var emailAlreadyExist = await _userService.FindByEmailAsync(user.Email);
+            var emailAlreadyExist = await _userService.FindByEmailAsync(request.Email);
             if (emailAlreadyExist != null)
             {
                 await Bus.RaiseEvent(new DomainNotification("New User", "E-mail already exist. If you don't remember your passwork, reset it."));
                 return false;
             }
-            var usernameAlreadyExist = await _userService.FindByNameAsync(user.UserName);
+            var usernameAlreadyExist = await _userService.FindByNameAsync(request.Username);
 
             if (usernameAlreadyExist != null)
             {
@@ -64,11 +62,12 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var result = await _userService.CreateUserWithPass(user, request.Password);
+            var result = await _userService.CreateUserWithPass(request, request.Password);
             if (result.HasValue)
             {
+                var user = await _userService.FindByNameAsync(request.Username);
                 await SendEmailToUser(user, request, result.Value, EmailType.NewUser);
-                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Id, user.Name, user.Email));
+                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Username, user.Name, user.Email));
                 return true;
             }
             return false;
@@ -82,15 +81,13 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var user = request.ToModel();
-
-            var emailAlreadyExist = await _userService.FindByEmailAsync(user.Email);
+            var emailAlreadyExist = await _userService.FindByEmailAsync(request.Email);
             if (emailAlreadyExist != null)
             {
                 await Bus.RaiseEvent(new DomainNotification("New User", "E-mail already exist. If you don't remember your passwork, reset it."));
                 return false;
             }
-            var usernameAlreadyExist = await _userService.FindByNameAsync(user.UserName);
+            var usernameAlreadyExist = await _userService.FindByNameAsync(request.Username);
 
             if (usernameAlreadyExist != null)
             {
@@ -98,12 +95,13 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var result = await _userService.CreateUserWithProvider(user, request.Provider, request.ProviderId);
+            var result = await _userService.CreateUserWithProvider(request, request.Provider, request.ProviderId);
 
             if (result.HasValue)
             {
+                var user = await _userService.FindByNameAsync(request.Username);
                 await SendEmailToUser(user, request, result.Value, EmailType.NewUserWithoutPassword);
-                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Id, user.Name, user.Email));
+                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Username, user.Name, user.Email));
                 return true;
             }
             return false;
@@ -117,20 +115,12 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false; ;
             }
 
-            var user = new User(
-                email: request.Email,
-                name: request.Name,
-                userName: request.Username,
-                phoneNumber: request.PhoneNumber,
-                picture: request.Picture,
-                request.SocialNumber,
-                request.Birthdate);
-
-            var result = await _userService.CreateUserWithProviderAndPass(user, request.Password, request.Provider, request.ProviderId);
+            var result = await _userService.CreateUserWithProviderAndPass(request);
             if (result.HasValue)
             {
+                var user = await _userService.FindByNameAsync(request.Username);
                 await SendEmailToUser(user, request, result.Value, EmailType.NewUser);
-                await Bus.RaiseEvent(new UserRegisteredEvent(result.Value.Id, user.Name, user.Email));
+                await Bus.RaiseEvent(new UserRegisteredEvent(request.Username, user.Name, user.Email));
                 return true;
             }
             return false;
@@ -150,14 +140,17 @@ namespace JPProject.Sso.Domain.CommandHandlers
             {
                 var user = await _userService.FindByUsernameOrEmail(request.EmailOrUsername);
                 await SendEmailToUser(user, request, accountResult.Value, EmailType.RecoverPassword);
-                await Bus.RaiseEvent(new ResetLinkGeneratedEvent(accountResult.Value.Id, request.Email, request.Username));
+                await Bus.RaiseEvent(new ResetLinkGeneratedEvent(accountResult.Value.Username, request.Email, request.Username));
                 return true;
             }
             return false;
         }
 
-        private async Task SendEmailToUser(User user, UserCommand request, AccountResult accountResult, EmailType type)
+        private async Task SendEmailToUser(IDomainUser user, UserCommand request, AccountResult accountResult, EmailType type)
         {
+            if (user.EmailConfirmed)
+                return;
+
             var email = await _emailRepository.GetByType(type);
             if (email is null)
                 return;
@@ -173,7 +166,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var emailSent = await _userService.ResetPassword(request);
+            var emailSent = await _userService.ResetPassword(request.Email, request.Code, request.Password);
 
             if (emailSent != null)
             {
@@ -182,7 +175,6 @@ namespace JPProject.Sso.Domain.CommandHandlers
             }
             return false;
         }
-
         public async Task<bool> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
         {
             if (!request.IsValid())
@@ -216,8 +208,5 @@ namespace JPProject.Sso.Domain.CommandHandlers
             }
             return false;
         }
-
     }
-
-
 }

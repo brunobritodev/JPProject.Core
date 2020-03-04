@@ -4,9 +4,9 @@ namespace JPProject.Sso.Domain.Commands.UserManagement
 {
     public class SetPasswordCommand : PasswordCommand
     {
-        public SetPasswordCommand(string id, string newPassword, string confirmPassword)
+        public SetPasswordCommand(string username, string newPassword, string confirmPassword)
         {
-            Id = id;
+            Username = username;
             Password = newPassword;
             ConfirmPassword = confirmPassword;
         }

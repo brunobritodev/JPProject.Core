@@ -20,9 +20,9 @@ namespace JPProject.Sso.Domain.Validations.UserManagement
                 .MinimumLength(8).WithMessage("Password minimun length must be 8 characters");
         }
 
-        protected void ValidateId()
+        protected void ValidateUsername()
         {
-            RuleFor(c => c.Id)
+            RuleFor(c => c.Username)
                 .NotEmpty().WithMessage("Invalid user");
         }
     }

@@ -39,8 +39,7 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
 
         [Display(Name = "ProviderId")]
         public string ProviderId { get; set; }
-
-        public DateTime Birthdate { get; set; }
+        public DateTime? Birthdate { get; set; }
 
         /// <summary>
         /// Country unique number
@@ -61,8 +60,8 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
 
         public void ClearSensitiveData()
         {
-            Password = null;
-            ConfirmPassword = null;
+            this.Password = null;
+            this.ConfirmPassword = null;
         }
     }
 }

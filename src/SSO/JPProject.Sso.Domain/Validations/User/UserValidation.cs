@@ -61,11 +61,5 @@ namespace JPProject.Sso.Domain.Validations.User
                 .NotEmpty();
         }
 
-        protected void ValidateBirthdate()
-        {
-            RuleFor(c => c.Birthdate)
-                .NotNull()
-                .Must(time => time < DateTime.Now.Date);
-        }
     }
 }

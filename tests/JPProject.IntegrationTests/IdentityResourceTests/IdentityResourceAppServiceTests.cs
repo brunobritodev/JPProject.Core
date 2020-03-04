@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels.IdentityResourceViewModels;
+using JPProject.Admin.EntityFramework.Repository.Context;
 using JPProject.Admin.Fakers.Test.IdentityResourceFakers;
-using JPProject.Admin.Infra.Data.Context;
 using JPProject.Domain.Core.Notifications;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +17,7 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
     {
         private readonly ITestOutputHelper _output;
         private readonly IIdentityResourceAppService _identityResource;
-        private readonly JPProjectAdminUIContext _database;
+        private readonly JpProjectAdminUiContext _database;
         private DomainNotificationHandler _notifications;
         public WarmupInMemory InMemoryData { get; }
 
@@ -26,14 +26,14 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
             _output = output;
             InMemoryData = inMemoryData;
             _identityResource = InMemoryData.Services.GetRequiredService<IIdentityResourceAppService>();
-            _database = InMemoryData.Services.GetRequiredService<JPProjectAdminUIContext>();
+            _database = InMemoryData.Services.GetRequiredService<JpProjectAdminUiContext>();
             _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             _notifications.Clear();
         }
 
 
         [Fact]
-        public async Task ShouldAddNewIdentityResource()
+        public async Task Should_Add_New_IdentityResource()
         {
             var command = IdentityResourceFaker.GenerateIdentiyResource().Generate();
 
@@ -41,11 +41,11 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
 
             var idrs = _database.IdentityResources.FirstOrDefault(s => s.Name == command.Name);
             idrs.Should().NotBeNull();
-            
+
         }
 
         [Fact]
-        public async Task ShouldRemoveIdentityResource()
+        public async Task Should_Remove_IdentityResource()
         {
             var command = IdentityResourceFaker.GenerateIdentiyResource().Generate();
 
@@ -59,7 +59,7 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
         }
 
         [Fact]
-        public async Task ShouldUpdateIdentityResource()
+        public async Task Should_Update_IdentityResource()
         {
             var command = IdentityResourceFaker.GenerateIdentiyResource().Generate();
 

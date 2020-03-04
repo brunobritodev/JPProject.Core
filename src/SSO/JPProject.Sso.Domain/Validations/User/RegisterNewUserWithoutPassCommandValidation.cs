@@ -2,7 +2,7 @@
 
 namespace JPProject.Sso.Domain.Validations.User
 {
-    public class RegisterNewUserWithoutPassCommandValidation : UserValidation<RegisterNewUserWithoutPassCommand>
+    public class RegisterNewUserWithoutPassCommandValidation : UserValidation<UserCommand>
     {
         public RegisterNewUserWithoutPassCommandValidation()
         {
@@ -13,7 +13,7 @@ namespace JPProject.Sso.Domain.Validations.User
             ValidateProviderId();
         }
 
-        
+
 
     }
 }

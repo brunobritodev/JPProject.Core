@@ -10,6 +10,7 @@ namespace JPProject.Sso.Domain.Commands.User
             EmailOrUsername = emailOrUsername;
         }
 
+
         public override bool IsValid()
         {
             ValidationResult = new SendResetLinkCommandValidation(this).Validate(this);

@@ -26,6 +26,25 @@ namespace JPProject.EntityFrameworkCore.MigrationHelper
             throw new DatabaseNotFoundException("Error wating database. Check ConnectionString and ensure database exist");
         }
 
+        public static async Task WaitForTable<T>(DbContext context) where T : class
+        {
+            var maxAttemps = 10;
+            var delay = 5000;
+
+            for (int i = 0; i < maxAttemps; i++)
+            {
+                var tableExist = await CheckTable<T>(context);
+                if (tableExist)
+                {
+                    return;
+                }
+                await Task.Delay(delay);
+            }
+
+            // after a few attemps we give up
+            throw new DatabaseNotFoundException("Error wating database. Check ConnectionString and ensure database exist");
+        }
+
         private static bool CanConnect(DbContext context)
         {
             try

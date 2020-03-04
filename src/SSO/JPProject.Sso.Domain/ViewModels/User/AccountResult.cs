@@ -2,13 +2,13 @@
 {
     public struct AccountResult
     {
-        public AccountResult(string id, string code, string url)
+        public AccountResult(string username, string code, string url)
         {
-            Id = id;
+            Username = username;
             Code = code;
             Url = url;
         }
-        public string Id { get; }
+        public string Username { get; set; }
         public string Code { get; }
         public string Url { get; }
     }

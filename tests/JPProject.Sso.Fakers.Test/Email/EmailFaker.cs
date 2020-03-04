@@ -44,7 +44,8 @@ namespace JPProject.Sso.Fakers.Test.Email
                 .RuleFor(e => e.Sender, sender)
                 .RuleFor(e => e.Subject, f => f.Lorem.Word())
                 .RuleFor(e => e.Bcc, f => f.Internet.Email())
-                .RuleFor(e => e.Username, f => f.Lorem.Word());
+                .RuleFor(e => e.Username, f => f.Lorem.Word())
+                .RuleFor(e => e.Content, f => f.Lorem.Lines(10));
         }
 
         public static Faker<TemplateViewModel> GenerateTemplateViewModel()
