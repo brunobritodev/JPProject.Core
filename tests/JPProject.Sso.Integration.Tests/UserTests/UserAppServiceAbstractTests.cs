@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using FluentAssertions;
+using IdentityModel;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
 using JPProject.Sso.Application.Interfaces;
@@ -24,9 +25,9 @@ using Xunit.Abstractions;
 
 namespace JPProject.Sso.Integration.Tests.UserTests
 {
-    public abstract class UserAppServiceAbstractTests<T, TUser, TRole, TKey> :
-        IClassFixture<T>
-        where T : class, IWarmupTest
+    public abstract class UserAppServiceAbstractTests<TWarmup, TUser, TRole, TKey> :
+        IClassFixture<TWarmup>
+        where TWarmup : class, IWarmupTest
         where TUser : IdentityUser<TKey>, IDomainUser
         where TRole : IdentityRole<TKey> where TKey : IEquatable<TKey>
     {
@@ -36,9 +37,9 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         private readonly Faker _faker;
         private readonly IUserManageAppService _userManagerAppService;
         private readonly DomainNotificationHandler _notifications;
-        public T UnifiedContextData { get; }
+        public TWarmup UnifiedContextData { get; }
 
-        protected UserAppServiceAbstractTests(T unifiedContext, ITestOutputHelper output)
+        protected UserAppServiceAbstractTests(TWarmup unifiedContext, ITestOutputHelper output)
         {
             _output = output;
             _faker = new Faker();
@@ -58,6 +59,18 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             var result = await _userAppService.Register(command);
             result.Should().BeTrue();
             _database.Users.FirstOrDefault(f => f.UserName == command.Username).Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task New_User_Shold_Have_Claim_Picture()
+        {
+            var command = UserViewModelFaker.GenerateUserViewModel().Generate();
+            var result = await _userAppService.Register(command);
+            result.Should().BeTrue();
+
+            var userClaims = await _userManagerAppService.GetClaims(command.Username);
+            userClaims.FirstOrDefault(f => f.Type == JwtClaimTypes.Picture).Should().NotBeNull();
+
         }
 
 
@@ -93,7 +106,9 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             var result = await _userAppService.Register(command);
             result.Should().BeTrue();
-            _database.Users.FirstOrDefault(f => f.UserName == command.Username)?.SocialNumber.Should().NotBeNull();
+            var userClaims = await _userManagerAppService.GetClaims(command.Username);
+
+            userClaims.FirstOrDefault(f => f.Type == JwtClaimTypes.BirthDate).Should().NotBeNull();
         }
 
         [Fact]
@@ -365,9 +380,9 @@ namespace JPProject.Sso.Integration.Tests.UserTests
                 name = command.Name;
             }
 
-            var search = new UserFindByEmailNameUsername(name);
+            var search = new SearchUserByClaim { Value = name };
 
-            var users = await _userManagerAppService.SearchUsers(search);
+            var users = await _userManagerAppService.SearchUsersByClaims(search);
 
             users.Total.Should().BeGreaterOrEqualTo(1);
             users.Collection.ToList().Count.Should().Be(users.Total);
@@ -386,9 +401,9 @@ namespace JPProject.Sso.Integration.Tests.UserTests
                 ssn = command.SocialNumber;
             }
 
-            var search = new UserSearch<TKey>() { Ssn = ssn };
+            var search = new SearchUserByClaim() { Value = ssn };
 
-            var users = await _userManagerAppService.SearchUsers(search);
+            var users = await _userManagerAppService.SearchUsersByClaims(search);
 
             users.Total.Should().BeGreaterOrEqualTo(1);
             users.Collection.ToList().Count.Should().Be(users.Total);

@@ -34,7 +34,10 @@ namespace JPProject.Sso.Application.Services
         {
             var history = _eventStoreRepository.All().Apply(query).ToList();
             var total = _eventStoreRepository.All().Filter(query).Count();
-            return new ListOf<EventHistoryData>(_mapper.Map<IEnumerable<EventHistoryData>>(history), total);
+            if (total > 0)
+                return new ListOf<EventHistoryData>(_mapper.Map<IEnumerable<EventHistoryData>>(history), total);
+
+            return new ListOf<EventHistoryData>(new List<EventHistoryData>(), 0);
         }
 
         public async Task<IEnumerable<EventSelector>> ListAggregates()

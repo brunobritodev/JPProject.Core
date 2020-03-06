@@ -14,7 +14,8 @@ namespace JPProject.Sso.Application.EventSourcedNormalizers
             Aggregate = aggregate;
             Category = category;
             Ip = ip;
-            EventType = eventType.ToString().AddSpacesToSentence();
+            if ((int)eventType > 0)
+                EventType = eventType.ToString().AddSpacesToSentence();
             Details = details?.Metadata;
         }
 

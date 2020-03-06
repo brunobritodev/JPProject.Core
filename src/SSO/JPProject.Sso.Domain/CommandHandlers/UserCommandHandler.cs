@@ -155,7 +155,8 @@ namespace JPProject.Sso.Domain.CommandHandlers
             if (email is null)
                 return;
 
-            await _emailService.SendEmailAsync(email.GetMessage(user, accountResult, request));
+            var claims =await _userService.GetClaimByName(user.UserName);
+            await _emailService.SendEmailAsync(email.GetMessage(user, accountResult, request, claims));
         }
 
         public async Task<bool> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)

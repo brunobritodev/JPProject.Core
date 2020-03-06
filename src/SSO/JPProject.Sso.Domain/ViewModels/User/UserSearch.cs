@@ -1,15 +1,9 @@
-﻿using AspNetCore.IQueryable.Extensions.Attributes;
-using AspNetCore.IQueryable.Extensions.Filter;
-using AspNetCore.IQueryable.Extensions.Pagination;
-using AspNetCore.IQueryable.Extensions.Sort;
+﻿using JPProject.Sso.Domain.Interfaces;
 
 namespace JPProject.Sso.Domain.ViewModels.User
 {
-    public class UserSearch<TKey> : IQuerySort, IQueryPaging
+    public class UserSearch<TKey> : IUserSearch
     {
-        [QueryOperator(Operator = WhereOperator.Equals, HasName = "SocialNumber")]
-        public string Ssn { get; set; }
-        public bool EmailConfirmed { get; set; }
         public TKey[] Id { get; set; }
         public string Sort { get; set; }
         public int? Limit { get; set; }

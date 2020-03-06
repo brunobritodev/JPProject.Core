@@ -1,5 +1,8 @@
-﻿using System;
+﻿using JPProject.Domain.Core.Util;
+using JPProject.Sso.Domain.ViewModels;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace JPProject.Sso.Application.ViewModels.UserViewModels
 {
@@ -19,6 +22,12 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
         public string UserName { get; set; }
 
         public string Id { get; set; }
+
+        internal void UpdateMetadata(IEnumerable<Claim> claim)
+        {
+            Picture = claim.ValueOf(JwtClaimTypes.Picture);
+            Name = claim.ValueOf(JwtClaimTypes.GivenName);
+        }
     }
 
 }

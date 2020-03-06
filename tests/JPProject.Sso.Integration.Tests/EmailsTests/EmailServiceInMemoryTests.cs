@@ -38,7 +38,8 @@ namespace JPProject.Sso.Integration.Tests.EmailsTests
         public void Should_Replace_Email_Variables()
         {
             var email = EmailFaker.GenerateEmail().Generate();
-            var message = email.GetMessage(UserFaker.GenerateUser().Generate(), new AccountResult(_faker.Random.Guid().ToString(), _faker.Database.Random.AlphaNumeric(5), _faker.Internet.Url()), UserCommandFaker.GenerateRegisterNewUserCommand().Generate());
+            var claims = ClaimFaker.GenerateClaim().Generate(10);
+            var message = email.GetMessage(UserFaker.GenerateUser().Generate(), new AccountResult(_faker.Random.Guid().ToString(), _faker.Database.Random.AlphaNumeric(5), _faker.Internet.Url()), UserCommandFaker.GenerateRegisterNewUserCommand().Generate(), claims);
 
             message.Content.Should()
                 .NotContain("{{picture}}").And

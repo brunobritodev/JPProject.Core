@@ -18,15 +18,7 @@ namespace JPProject.Sso.Fakers.Test.Users
                 .RuleFor(u => u.TwoFactorEnabled, f => f.Random.Bool())
                 .RuleFor(u => u.LockoutEnabled, f => f.Random.Bool())
                 .RuleFor(u => u.AccessFailedCount, f => f.Random.Int())
-                .RuleFor(u => u.UserName, f => f.Person.UserName)
-                .RuleFor(u => u.Picture, f => f.Image.LoremFlickrUrl())
-                .RuleFor(u => u.Url, f => f.Internet.Url())
-                .RuleFor(u => u.Name, f => f.Person.FullName)
-                .RuleFor(u => u.Company, f => f.Company.CompanyName())
-                .RuleFor(u => u.SocialNumber, f => ssn ?? f.Random.AlphaNumeric(15))
-                .RuleFor(u => u.Bio, f => f.Lorem.Sentence())
-                .RuleFor(u => u.JobTitle, f => f.Lorem.Word());
+                .RuleFor(u => u.UserName, f => f.Person.UserName);
         }
-
     }
 }

@@ -1,9 +1,9 @@
-﻿using AspNetCore.IQueryable.Extensions;
-using JPProject.Domain.Core.ViewModels;
+﻿using JPProject.Domain.Core.ViewModels;
 using JPProject.Sso.Application.EventSourcedNormalizers;
 using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Application.ViewModels.RoleViewModels;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
+using JPProject.Sso.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,8 +21,8 @@ namespace JPProject.Sso.Application.Interfaces
         Task<IEnumerable<RoleViewModel>> GetRoles(string userName);
         Task<IEnumerable<UserLoginViewModel>> GetLogins(string userName);
         Task<IEnumerable<UserListViewModel>> GetUsersInRole(string role);
-        Task<ListOf<UserListViewModel>> SearchUsers(ICustomQueryable search);
-
+        Task<ListOf<UserListViewModel>> SearchUsers(IUserSearch search);
+        Task<ListOf<UserListViewModel>> SearchUsersByClaims(IUserClaimSearch search);
         Task<bool> UpdateProfile(UserViewModel model);
         Task<bool> UpdateProfilePicture(ProfilePictureViewModel model);
         Task<bool> ChangePassword(ChangePasswordViewModel model);
