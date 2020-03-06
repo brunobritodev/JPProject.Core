@@ -8,10 +8,10 @@ namespace JPProject.Sso.Domain.Events.User
         public string Username { get; }
         public string Role { get; }
 
-        public UserRoleSavedEvent(string aggregateId, string username, string role)
+        public UserRoleSavedEvent(string username, string role)
             : base(EventTypes.Success)
         {
-            AggregateId = aggregateId;
+            AggregateId = username;
             Username = username;
             Role = role;
         }

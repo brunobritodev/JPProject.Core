@@ -15,10 +15,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.IQueryable.Extensions" Version="3.1.5" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Core\JPProject.Domain.Core\JPProject.Domain.Core.csproj" />
   </ItemGroup>
 

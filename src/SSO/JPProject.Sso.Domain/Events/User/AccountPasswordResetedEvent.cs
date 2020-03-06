@@ -7,10 +7,10 @@ namespace JPProject.Sso.Domain.Events.User
         public string Email { get; }
         public string Code { get; }
 
-        public AccountPasswordResetedEvent(string aggregateId, string email, string code)
+        public AccountPasswordResetedEvent(string username, string email, string code)
             : base(EventTypes.Success)
         {
-            AggregateId = aggregateId.ToString();
+            AggregateId = username;
             Email = email;
             Code = code;
         }

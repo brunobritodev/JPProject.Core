@@ -1,5 +1,4 @@
-﻿using AspNetCore.IQueryable.Extensions;
-using AutoMapper;
+﻿using AutoMapper;
 using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.ViewModels;
@@ -12,9 +11,12 @@ using JPProject.Sso.Application.ViewModels.UserViewModels;
 using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Interfaces;
+using JPProject.Sso.Domain.ViewModels;
+using JPProject.Sso.Domain.ViewModels.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace JPProject.Sso.Application.Services
@@ -49,25 +51,38 @@ namespace JPProject.Sso.Application.Services
         public async Task<UserViewModel> FindByUsernameAsync(string username)
         {
             var user = await _userService.FindByNameAsync(username);
-            return _mapper.Map<UserViewModel>(user);
+            var userVo = _mapper.Map<UserViewModel>(user);
+            return await GetUserMetadata(userVo);
+        }
+
+        private async Task<UserViewModel> GetUserMetadata(UserViewModel user)
+        {
+            if (string.IsNullOrEmpty(user?.UserName))
+                return null;
+            var claims = await _userService.GetClaimByName(user?.UserName);
+            user?.UpdateMetadata(claims.ToList());
+            return user;
         }
 
         public async Task<UserViewModel> FindByEmailAsync(string email)
         {
             var user = await _userService.FindByEmailAsync(email);
-            return _mapper.Map<UserViewModel>(user);
+            var userVo = _mapper.Map<UserViewModel>(user);
+            return await GetUserMetadata(userVo);
         }
 
         public async Task<UserViewModel> FindByProviderAsync(string provider, string providerUserId)
         {
             var user = await _userService.FindByProviderAsync(provider, providerUserId);
-            return _mapper.Map<UserViewModel>(user);
+            var userVo = _mapper.Map<UserViewModel>(user);
+            return await GetUserMetadata(userVo);
         }
 
         public async Task<UserViewModel> GetUserDetails(string username)
         {
             var users = await _userService.FindByNameAsync(username);
-            return _mapper.Map<UserViewModel>(users);
+            var userVo = _mapper.Map<UserViewModel>(users);
+            return await GetUserMetadata(userVo);
         }
 
         public async Task<IEnumerable<ClaimViewModel>> GetClaims(string userName)
@@ -103,11 +118,37 @@ namespace JPProject.Sso.Application.Services
             return _userService.HasPassword(username);
         }
 
-        public async Task<ListOf<UserListViewModel>> SearchUsers(ICustomQueryable search)
+        public async Task<ListOf<UserListViewModel>> SearchUsers(IUserSearch search)
         {
-            var users = await _userService.Search(search);
+            var users = _mapper.Map<IEnumerable<UserListViewModel>>(await _userService.Search(search));
             var total = await _userService.Count(search);
+
+            var claims = await GetClaimsFromUsers(users.Select(s => s.UserName), JwtClaimTypes.Picture, JwtClaimTypes.GivenName);
+            foreach (var domainUser in users)
+            {
+                if (claims.ContainsKey(domainUser.UserName))
+                    domainUser.UpdateMetadata(claims[domainUser.UserName]);
+            }
             return new ListOf<UserListViewModel>(_mapper.Map<IEnumerable<UserListViewModel>>(users), total);
+        }
+
+        public async Task<ListOf<UserListViewModel>> SearchUsersByClaims(IUserClaimSearch search)
+        {
+            var users = _mapper.Map<IEnumerable<UserListViewModel>>(await _userService.SearchByClaim(search));
+            var total = await _userService.CountByClaim(search);
+
+            var claims = await GetClaimsFromUsers(users.Select(s => s.UserName), JwtClaimTypes.Picture, JwtClaimTypes.GivenName);
+            foreach (var domainUser in users)
+            {
+                if (claims.ContainsKey(domainUser.UserName))
+                    domainUser.UpdateMetadata(claims[domainUser.UserName]);
+            }
+            return new ListOf<UserListViewModel>(_mapper.Map<IEnumerable<UserListViewModel>>(users), total);
+        }
+
+        public async Task<Dictionary<Username, IEnumerable<Claim>>> GetClaimsFromUsers(IEnumerable<string> usernames, params string[] claimType)
+        {
+            return await _userService.GetClaimsFromUsers(usernames, claimType);
         }
 
         public Task<bool> CreatePassword(SetPasswordViewModel model)

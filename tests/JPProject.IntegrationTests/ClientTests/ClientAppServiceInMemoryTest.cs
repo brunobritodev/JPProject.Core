@@ -232,7 +232,15 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             var updateCommand = ClientFaker.GenerateClient().Generate();
             await _clientAppService.Update(command.ClientId, updateCommand);
 
-            _database.Clients.FirstOrDefault(f => f.ClientId == updateCommand.ClientId).Should().NotBeNull();
+            var updatedClient = await _clientAppService.GetClientDetails(updateCommand.ClientId);
+            updatedClient.AllowedCorsOrigins.Should().Contain(s => updateCommand.AllowedCorsOrigins.Contains(s));
+            updatedClient.AllowedCorsOrigins.Count.Should().Be(updatedClient.AllowedCorsOrigins.Count);
+
+            updatedClient.ClientSecrets.Should().Contain(s => updateCommand.ClientSecrets.Contains(s));
+            updatedClient.ClientSecrets.Count.Should().Be(updatedClient.ClientSecrets.Count);
+
+            updatedClient.AllowedScopes.Should().Contain(s => updateCommand.AllowedScopes.Contains(s));
+            updatedClient.AllowedScopes.Count.Should().Be(updatedClient.AllowedScopes.Count);
         }
 
         [Fact]

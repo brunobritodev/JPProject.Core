@@ -218,7 +218,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
 
             if (success)
             {
-                await Bus.RaiseEvent(new UserRoleRemovedEvent(_user.Username, request.Username, request.Role));
+                await Bus.RaiseEvent(new UserRoleRemovedEvent(_user.Username, request.Role));
                 return true;
             }
             return false;
@@ -243,7 +243,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
 
             if (success)
             {
-                await Bus.RaiseEvent(new UserRoleSavedEvent(_user.Username, request.Username, request.Role));
+                await Bus.RaiseEvent(new UserRoleSavedEvent(_user.Username, request.Role));
                 return true;
             }
             return false;
@@ -268,7 +268,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
 
             if (success)
             {
-                await Bus.RaiseEvent(new UserLoginRemovedEvent(_user.Username, request.Username, request.LoginProvider, request.ProviderKey));
+                await Bus.RaiseEvent(new UserLoginRemovedEvent(_user.Username, request.LoginProvider, request.ProviderKey));
                 return true;
             }
             return false;

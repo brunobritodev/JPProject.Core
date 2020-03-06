@@ -1,9 +1,13 @@
-﻿using JPProject.Domain.Core.Models;
+﻿using JPProject.Domain.Core.Interfaces;
+using JPProject.Domain.Core.Models;
+using JPProject.Domain.Core.Util;
 using JPProject.Sso.Domain.Commands.Email;
 using JPProject.Sso.Domain.Commands.User;
+using JPProject.Sso.Domain.ViewModels;
 using JPProject.Sso.Domain.ViewModels.User;
 using System;
-using JPProject.Domain.Core.Interfaces;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace JPProject.Sso.Domain.Models
 {
@@ -42,24 +46,26 @@ namespace JPProject.Sso.Domain.Models
             Updated = DateTime.UtcNow;
         }
 
-        public EmailMessage GetMessage(IDomainUser user, AccountResult created, UserCommand command)
+        public EmailMessage GetMessage(IDomainUser user, AccountResult created, UserCommand command,
+            IEnumerable<Claim> claims)
         {
             return new EmailMessage(
                 user.Email,
                 Bcc,
-                GetFormatedContent(Subject, user, created, command),
-                GetFormatedContent(Content, user, created, command),
+                GetFormatedContent(Subject, user, created, command, claims),
+                GetFormatedContent(Content, user, created, command, claims),
                 Sender);
         }
 
-        private string GetFormatedContent(string content, IDomainUser user, AccountResult created, UserCommand command)
+        private string GetFormatedContent(string content, IDomainUser user, AccountResult created, UserCommand command,
+            IEnumerable<Claim> claims)
         {
             if (content is null)
                 return string.Empty;
 
             return content
-                .Replace("{{picture}}", user.Picture)
-                .Replace("{{name}}", user.Name)
+                .Replace("{{picture}}", claims.ValueOf(JwtClaimTypes.Picture))
+                .Replace("{{name}}", claims.ValueOf(JwtClaimTypes.Name, JwtClaimTypes.PreferredUserName, JwtClaimTypes.GivenName))
                 .Replace("{{username}}", user.UserName)
                 .Replace("{{code}}", created.Code)
                 .Replace("{{url}}", created.Url)

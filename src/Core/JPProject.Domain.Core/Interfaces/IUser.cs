@@ -1,4 +1,5 @@
 ﻿using System;
+using JPProject.Domain.Core.ViewModels;
 
 namespace JPProject.Domain.Core.Interfaces
 {
@@ -18,16 +19,6 @@ namespace JPProject.Domain.Core.Interfaces
         DateTimeOffset? LockoutEnd { get; }
         bool LockoutEnabled { get; }
         int AccessFailedCount { get; }
-        string Picture { get; }
-        string Name { get; }
-        string Url { get; }
-        string Company { get; }
-        string Bio { get; }
-        string JobTitle { get; }
-        string SocialNumber { get; }
-        DateTime? Birthdate { get; }
-
-        public void UpdatePicture(string picture);
         void ConfirmEmail();
     }
 

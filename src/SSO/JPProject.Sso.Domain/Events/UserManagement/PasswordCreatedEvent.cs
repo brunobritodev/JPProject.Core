@@ -5,10 +5,10 @@ namespace JPProject.Sso.Domain.Events.UserManagement
     public class PasswordCreatedEvent : Event
     {
 
-        public PasswordCreatedEvent(string aggregateId)
+        public PasswordCreatedEvent(string username)
             : base(EventTypes.Success)
         {
-            AggregateId = aggregateId;
+            AggregateId = username;
         }
     }
 }

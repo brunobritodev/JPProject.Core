@@ -73,7 +73,10 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
             var updateCommand = IdentityResourceFaker.GenerateIdentiyResource().Generate();
             await _identityResource.Update(command.Name, updateCommand);
 
-            _database.IdentityResources.FirstOrDefault(f => f.Name == updateCommand.Name).Should().NotBeNull();
+            var ir = _database.IdentityResources.FirstOrDefault(f => f.Name == updateCommand.Name);
+            ir.Should().NotBeNull();
+            ir.Name.Should().Be(updateCommand.Name);
+            ir.Properties.Should().HaveCount(updateCommand.Properties.Count);
         }
     }
 }

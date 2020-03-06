@@ -7,11 +7,11 @@ namespace JPProject.Sso.Domain.Events.User
         public string Username { get; }
         public string UserEmail { get; }
 
-        public UserRegisteredEvent(string aggregateId, string userName, string userEmail)
+        public UserRegisteredEvent(string username, string userEmail)
             : base(EventTypes.Success)
         {
-            AggregateId = aggregateId.ToString();
-            Username = userName;
+            AggregateId = username;
+            Username = username;
             UserEmail = userEmail;
         }
     }

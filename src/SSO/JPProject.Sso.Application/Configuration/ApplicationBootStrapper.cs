@@ -14,10 +14,11 @@ namespace JPProject.Sso.Application.Configuration
             services.AddScoped<IUserManageAppService, UserManagerAppService>();
             services.AddScoped<IRoleManagerAppService, RoleManagerAppService>();
             services.AddScoped<IEmailAppService, EmailAppService>();
-            services.AddTransient<IGlobalConfigurationAppService, GlobalConfigurationAppService>();
+            services.AddScoped<IEventStoreAppService, EventStoreAppService>();
 
             services.AddTransient<IEmailService, GeneralSmtpService>();
             services.AddTransient<IGlobalConfigurationSettingsService, GlobalConfigurationAppService>();
+            services.AddTransient<IGlobalConfigurationAppService, GlobalConfigurationAppService>();
 
             return services;
         }

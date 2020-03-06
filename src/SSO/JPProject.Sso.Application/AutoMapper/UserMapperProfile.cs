@@ -44,14 +44,14 @@ namespace JPProject.Sso.Application.AutoMapper
             CreateMap<SaveUserRoleViewModel, SaveUserRoleCommand>().ConstructUsing(c => new SaveUserRoleCommand(c.Username, c.Role));
             CreateMap<RemoveUserLoginViewModel, RemoveUserLoginCommand>().ConstructUsing(c => new RemoveUserLoginCommand(c.Username, c.LoginProvider, c.ProviderKey));
             CreateMap<AdminChangePasswordViewodel, AdminChangePasswordCommand>().ConstructUsing(c => new AdminChangePasswordCommand(c.Password, c.ConfirmPassword, c.Username));
-
+            CreateMap<IDomainUser, string>().ConstructUsing(s => s.UserName);
             /*
              * Domain to view model
              */
             CreateMap<IDomainUser, UserViewModel>(MemberList.Destination);
             CreateMap<IDomainUser, UserListViewModel>(MemberList.Destination);
             CreateMap<UserLogin, UserLoginViewModel>(MemberList.Destination);
-            CreateMap<StoredEvent, EventHistoryData>().ConstructUsing(a => new EventHistoryData(a.Message, a.Id.ToString(), a.Details, a.Timestamp.ToString(CultureInfo.InvariantCulture), a.User, a.MessageType, a.RemoteIpAddress));
+            CreateMap<StoredEvent, EventHistoryData>().ConstructUsing(a => new EventHistoryData(a.Message, a.AggregateId, a.Details, a.Timestamp.ToString(CultureInfo.InvariantCulture), a.User, a.MessageType, a.RemoteIpAddress, a.EventType)).IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<Claim, ClaimViewModel>().ConstructUsing(a => new ClaimViewModel(a.Type, a.Value));
 
         }

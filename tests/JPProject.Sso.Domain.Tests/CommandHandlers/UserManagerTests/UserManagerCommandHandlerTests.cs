@@ -3,13 +3,13 @@ using FluentAssertions;
 using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
-using JPProject.Domain.Core.StringUtils;
 using JPProject.Sso.Domain.CommandHandlers;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Fakers.Test.Users;
 using Moq;
 using System.Threading;
 using System.Threading.Tasks;
+using JPProject.Domain.Core.Util;
 using Xunit;
 
 namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserManagerTests

@@ -1,5 +1,4 @@
-﻿using JPProject.Domain.Core.StringUtils;
-using JPProject.Sso.Application.ViewModels;
+﻿using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Domain.ViewModels.Settings;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
@@ -7,6 +6,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using JPProject.Domain.Core.Util;
 
 namespace JPProject.Sso.Application.CloudServices.Storage
 {

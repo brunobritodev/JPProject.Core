@@ -11,6 +11,7 @@ namespace JPProject.Sso.Domain.Events.GlobalConfiguration
 
         public GlobalConfigurationCreatedEvent(string key, string value, in bool isPublic, in bool sensitive)
         {
+            AggregateId = key;
             Key = key;
             Value = value;
             IsPublic = isPublic;

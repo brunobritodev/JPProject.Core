@@ -158,7 +158,7 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         {
             _emailRepository.Setup(s => s.GetByType(It.IsAny<EmailType>())).ReturnsAsync(EmailFaker.GenerateEmail());
             _userService.Setup(s => s.CreateUserWithPass(It.IsAny<RegisterNewUserCommand>(), It.IsAny<string>())).ReturnsAsync(new AccountResult(_faker.Random.Guid().ToString(), _faker.Random.String(), _faker.Internet.Url()));
-            _userService.SetupSequence(s => s.FindByNameAsync(It.IsAny<string>())).ReturnsAsync((IDomainUser)null).ReturnsAsync(UserFaker.GenerateUser().Generate());
+            _userService.SetupSequence(s => s.FindByNameAsync(It.IsAny<string>())).ReturnsAsync((IDomainUser)null).ReturnsAsync(UserFaker.GenerateUser(confirmedEmail: false).Generate());
 
             var command = UserCommandFaker.GenerateRegisterNewUserCommand(shouldConfirmEmail: true).Generate();
 

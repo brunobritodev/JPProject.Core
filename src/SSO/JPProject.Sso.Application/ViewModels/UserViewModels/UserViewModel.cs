@@ -1,6 +1,10 @@
-﻿using JPProject.Domain.Core.StringUtils;
+﻿using JPProject.Domain.Core.Util;
+using JPProject.Sso.Domain.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Security.Claims;
 
 namespace JPProject.Sso.Application.ViewModels.UserViewModels
 {
@@ -49,6 +53,20 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
             return Provider.IsPresent() && ProviderId.IsPresent();
         }
 
+        public void UpdateMetadata(List<Claim> claims)
+        {
+            Url = claims.ValueOf(JwtClaimTypes.WebSite);
+            Company = claims.ValueOf("company");
+            Bio = claims.ValueOf("bio");
 
+            if (claims.Contains(JwtClaimTypes.BirthDate))
+                Birthdate = DateTime.Parse(claims.ValueOf(JwtClaimTypes.BirthDate));
+
+            JobTitle = claims.ValueOf("job_title");
+            SocialNumber = claims.ValueOf("social_number");
+            Picture = claims.ValueOf(JwtClaimTypes.Picture);
+            Name = claims.ValueOf(JwtClaimTypes.GivenName);
+        }
     }
+
 }

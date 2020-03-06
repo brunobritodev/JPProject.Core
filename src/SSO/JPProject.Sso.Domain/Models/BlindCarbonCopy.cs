@@ -1,5 +1,5 @@
-﻿using JPProject.Domain.Core.StringUtils;
-using System.Linq;
+﻿using System.Linq;
+using JPProject.Domain.Core.Util;
 
 namespace JPProject.Sso.Domain.Models
 {
