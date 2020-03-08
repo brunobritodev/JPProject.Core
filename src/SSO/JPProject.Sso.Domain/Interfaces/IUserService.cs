@@ -1,4 +1,7 @@
-﻿using JPProject.Domain.Core.Interfaces;
+﻿using AspNetCore.IQueryable.Extensions;
+using AspNetCore.IQueryable.Extensions.Pagination;
+using AspNetCore.IQueryable.Extensions.Sort;
+using JPProject.Domain.Core.Interfaces;
 using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Commands.UserManagement;
 using JPProject.Sso.Domain.Models;
@@ -42,10 +45,10 @@ namespace JPProject.Sso.Domain.Interfaces
         Task<bool> ResetPasswordAsync(string username, string password);
         Task<string> ResetPassword(string email, string code, string password);
         Task<string> AddLoginAsync(string email, string provider, string providerId);
-        Task<int> Count(IUserSearch search);
-        Task<IEnumerable<IDomainUser>> Search(IUserSearch search);
+        Task<int> CountByProperties(string query);
+        Task<IEnumerable<IDomainUser>> SearchByProperties(string query, IQuerySort sort, IQueryPaging paging);
+        Task<IEnumerable<IDomainUser>> Search(ICustomQueryable search);
+        Task<int> Count(ICustomQueryable search);
         Task<Dictionary<Username, IEnumerable<Claim>>> GetClaimsFromUsers(IEnumerable<string> username, params string[] claimType);
-        Task<IEnumerable<IDomainUser>> SearchByClaim(IUserClaimSearch search);
-        Task<int> CountByClaim(IUserClaimSearch search);
     }
 }

@@ -1,4 +1,6 @@
-﻿using JPProject.Domain.Core.ViewModels;
+﻿using AspNetCore.IQueryable.Extensions.Pagination;
+using AspNetCore.IQueryable.Extensions.Sort;
+using JPProject.Domain.Core.ViewModels;
 using JPProject.Sso.Application.EventSourcedNormalizers;
 using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Application.ViewModels.RoleViewModels;
@@ -7,6 +9,7 @@ using JPProject.Sso.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JPProject.Sso.Domain.ViewModels.User;
 
 namespace JPProject.Sso.Application.Interfaces
 {
@@ -21,8 +24,8 @@ namespace JPProject.Sso.Application.Interfaces
         Task<IEnumerable<RoleViewModel>> GetRoles(string userName);
         Task<IEnumerable<UserLoginViewModel>> GetLogins(string userName);
         Task<IEnumerable<UserListViewModel>> GetUsersInRole(string role);
-        Task<ListOf<UserListViewModel>> SearchUsers(IUserSearch search);
-        Task<ListOf<UserListViewModel>> SearchUsersByClaims(IUserClaimSearch search);
+        Task<ListOf<UserListViewModel>> SearchUsersByProperties(UserFindByProperties findByProperties);
+        Task<ListOf<UserListViewModel>> Search(IUserSearch search);
         Task<bool> UpdateProfile(UserViewModel model);
         Task<bool> UpdateProfilePicture(ProfilePictureViewModel model);
         Task<bool> ChangePassword(ChangePasswordViewModel model);
