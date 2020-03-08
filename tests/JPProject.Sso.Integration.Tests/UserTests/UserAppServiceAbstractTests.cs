@@ -322,7 +322,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
 
             var search = new UserSearch<TKey>() { Id = users };
 
-            var usersFound = await _userManagerAppService.SearchUsers(search);
+            var usersFound = await _userManagerAppService.Search(search);
 
             usersFound.Total.Should().BeGreaterOrEqualTo(1);
             usersFound.Collection.ToList().Count.Should().Be(usersFound.Total);
@@ -367,6 +367,25 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
 
+        [Fact]
+        public async Task Should_Search_User_By_Username()
+        {
+            string name = string.Empty;
+            var commands = UserViewModelFaker.GenerateUserViewModel().Generate(_faker.Random.Int(1, 10));
+            foreach (var command in commands)
+            {
+                var result = await _userAppService.Register(command);
+                result.Should().BeTrue();
+                name = command.Username;
+            }
+
+            var search = new UserFindByProperties(name);
+
+            var users = await _userManagerAppService.SearchUsersByProperties(search);
+
+            users.Total.Should().BeGreaterOrEqualTo(1);
+            users.Collection.ToList().Count.Should().Be(users.Total);
+        }
 
         [Fact]
         public async Task Should_Search_User_By_Name()
@@ -380,9 +399,9 @@ namespace JPProject.Sso.Integration.Tests.UserTests
                 name = command.Name;
             }
 
-            var search = new SearchUserByClaim { Value = name };
+            var search = new UserFindByProperties(name);
 
-            var users = await _userManagerAppService.SearchUsersByClaims(search);
+            var users = await _userManagerAppService.SearchUsersByProperties(search);
 
             users.Total.Should().BeGreaterOrEqualTo(1);
             users.Collection.ToList().Count.Should().Be(users.Total);
@@ -401,14 +420,70 @@ namespace JPProject.Sso.Integration.Tests.UserTests
                 ssn = command.SocialNumber;
             }
 
-            var search = new SearchUserByClaim() { Value = ssn };
+            var search = new UserFindByProperties(ssn);
 
-            var users = await _userManagerAppService.SearchUsersByClaims(search);
+            var users = await _userManagerAppService.SearchUsersByProperties(search);
 
             users.Total.Should().BeGreaterOrEqualTo(1);
             users.Collection.ToList().Count.Should().Be(users.Total);
         }
 
+        [Fact]
+        public async Task Should_Search_Return_All_Users()
+        {
+            var commands = UserViewModelFaker.GenerateUserViewModel().Generate(50);
+
+            foreach (var command in commands)
+            {
+                var result = await _userAppService.Register(command);
+                result.Should().BeTrue();
+            }
+
+            var search = new UserSearch<TKey>() { Limit = 50 };
+            var users = await _userManagerAppService.Search(search);
+
+            users.Total.Should().BeGreaterOrEqualTo(1);
+            users.Collection.ToList().Count.Should().Be(50);
+            users.Total.Should().Be(users.Total);
+        }
+
+        [Fact]
+        public async Task Should_Search_Return_By_Limit()
+        {
+            var commands = UserViewModelFaker.GenerateUserViewModel().Generate(50);
+
+            foreach (var command in commands)
+            {
+                var result = await _userAppService.Register(command);
+                result.Should().BeTrue();
+            }
+
+            var search = new UserSearch<TKey>() { Limit = 10 };
+
+            var users = await _userManagerAppService.Search(search);
+
+            users.Total.Should().BeGreaterOrEqualTo(1);
+            users.Collection.ToList().Count.Should().Be(10);
+            users.Total.Should().Be(users.Total);
+        }
+
+        [Fact]
+        public async Task Should_Search_By_Claim_And_Count_Be_Equal_Limit()
+        {
+            var commands = UserViewModelFaker.GenerateUserViewModel().Generate(50);
+            foreach (var command in commands)
+            {
+                var result = await _userAppService.Register(command);
+                result.Should().BeTrue();
+            }
+
+            var search = new UserFindByProperties(null) { Limit = 10 };
+            var users = await _userManagerAppService.SearchUsersByProperties(search);
+
+            users.Total.Should().BeGreaterOrEqualTo(1);
+            users.Collection.ToList().Count.Should().Be(10);
+            users.Total.Should().Be(users.Total);
+        }
     }
 
     [Trait("Category", "Database - Unified Contexts")]

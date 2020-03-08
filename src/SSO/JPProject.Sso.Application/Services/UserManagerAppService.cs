@@ -118,10 +118,10 @@ namespace JPProject.Sso.Application.Services
             return _userService.HasPassword(username);
         }
 
-        public async Task<ListOf<UserListViewModel>> SearchUsers(IUserSearch search)
+        public async Task<ListOf<UserListViewModel>> SearchUsersByProperties(UserFindByProperties findByProperties)
         {
-            var users = _mapper.Map<IEnumerable<UserListViewModel>>(await _userService.Search(search));
-            var total = await _userService.Count(search);
+            var users = _mapper.Map<IEnumerable<UserListViewModel>>(await _userService.SearchByProperties(findByProperties.Query, findByProperties, findByProperties));
+            var total = await _userService.CountByProperties(findByProperties.Query);
 
             var claims = await GetClaimsFromUsers(users.Select(s => s.UserName), JwtClaimTypes.Picture, JwtClaimTypes.GivenName);
             foreach (var domainUser in users)
@@ -132,10 +132,10 @@ namespace JPProject.Sso.Application.Services
             return new ListOf<UserListViewModel>(_mapper.Map<IEnumerable<UserListViewModel>>(users), total);
         }
 
-        public async Task<ListOf<UserListViewModel>> SearchUsersByClaims(IUserClaimSearch search)
+        public async Task<ListOf<UserListViewModel>> Search(IUserSearch search)
         {
-            var users = _mapper.Map<IEnumerable<UserListViewModel>>(await _userService.SearchByClaim(search));
-            var total = await _userService.CountByClaim(search);
+            var users = _mapper.Map<IEnumerable<UserListViewModel>>(await _userService.Search(search));
+            var total = await _userService.Count(search);
 
             var claims = await GetClaimsFromUsers(users.Select(s => s.UserName), JwtClaimTypes.Picture, JwtClaimTypes.GivenName);
             foreach (var domainUser in users)

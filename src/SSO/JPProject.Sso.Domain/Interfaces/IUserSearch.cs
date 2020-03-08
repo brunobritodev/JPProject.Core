@@ -8,7 +8,4 @@ namespace JPProject.Sso.Domain.Interfaces
     {
     }
 
-    public interface IUserClaimSearch : ICustomQueryable, IQuerySort, IQueryPaging
-    {
-    }
 }
