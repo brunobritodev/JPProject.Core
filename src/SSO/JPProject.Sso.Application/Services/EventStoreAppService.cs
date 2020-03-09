@@ -32,7 +32,7 @@ namespace JPProject.Sso.Application.Services
 
         public ListOf<EventHistoryData> GetEvents(ICustomEventQueryable query)
         {
-            var history = _eventStoreRepository.All().Apply(query).ToList();
+            var history = _eventStoreRepository.All().Apply((ICustomQueryable)query).ToList();
             var total = _eventStoreRepository.All().Filter(query).Count();
             if (total > 0)
                 return new ListOf<EventHistoryData>(_mapper.Map<IEnumerable<EventHistoryData>>(history), total);
