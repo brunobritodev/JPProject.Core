@@ -16,10 +16,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="mediatr" Version="8.0.0" />
-    <PackageReference Include="FluentValidation" Version="8.6.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.1" />
-    <PackageReference Include="AspNetCore.IQueryable.Extensions" Version="3.1.5" />
+    <PackageReference Include="mediatr" Version="8.0.1" />
+    <PackageReference Include="FluentValidation" Version="8.6.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.2" />
+    <PackageReference Include="AspNetCore.IQueryable.Extensions" Version="3.1.6" />
   </ItemGroup>
 
 </Project>

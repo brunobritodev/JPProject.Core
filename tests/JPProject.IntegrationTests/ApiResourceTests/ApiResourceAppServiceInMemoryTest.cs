@@ -1,6 +1,8 @@
-﻿using FluentAssertions;
+﻿using Bogus;
+using FluentAssertions;
 using JPProject.Admin.Application.Interfaces;
 using JPProject.Admin.Application.ViewModels.ApiResouceViewModels;
+using JPProject.Admin.Domain.Commands;
 using JPProject.Admin.EntityFramework.Repository.Context;
 using JPProject.Admin.Fakers.Test.ApiResourceFakers;
 using JPProject.Domain.Core.Notifications;
@@ -20,6 +22,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
         private readonly IApiResourceAppService _apiResourceAppService;
         private readonly JpProjectAdminUiContext _database;
         private DomainNotificationHandler _notifications;
+        private Faker _faker;
         public WarmupInMemory InMemoryData { get; }
 
         public ApiResourceAppServiceInMemoryTest(WarmupInMemory inMemoryData, ITestOutputHelper output)
@@ -30,6 +33,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
             _database = InMemoryData.Services.GetRequiredService<JpProjectAdminUiContext>();
             _notifications = (DomainNotificationHandler)InMemoryData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
             _notifications.Clear();
+            _faker = new Faker();
         }
 
         [Fact]
@@ -137,13 +141,31 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
 
             await _apiResourceAppService.Save(command);
 
-            var secret = ApiResourceFaker.GenerateSaveClientSecret(command.Name);
+            var secret = ApiResourceFaker.GenerateSaveClientSecret(command.Name).Generate();
 
             await _apiResourceAppService.SaveSecret(secret);
 
             _database.ApiResources.FirstOrDefault(f => f.Name == command.Name).Should().NotBeNull();
             _database.ApiSecrets.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
         }
+
+        [Fact]
+        public async Task Should_Add_New_ApiSecret_Without_Description()
+        {
+            var command = ApiResourceFaker.GenerateApiResource(name: "teste", addApiSecrets: false).Generate();
+
+            await _apiResourceAppService.Save(command);
+
+            var secret = ApiResourceFaker.GenerateSaveClientSecret(command.Name, HashType.Sha256, type: "SharedSecret").Generate();
+            secret.Description = null;
+            secret.Expiration = null;
+
+            await _apiResourceAppService.SaveSecret(secret);
+
+            _database.ApiResources.FirstOrDefault(f => f.Name == command.Name).Should().NotBeNull();
+            _database.ApiSecrets.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
+        }
+
 
         [Fact]
         public async Task Should_Not_Add_New_ApiSecret_When_Client_Doesnt_Exist()

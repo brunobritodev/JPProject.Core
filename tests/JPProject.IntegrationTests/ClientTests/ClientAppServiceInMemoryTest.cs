@@ -271,6 +271,27 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
         }
 
         [Fact]
+        public async Task Should_Remove_ClientSecret()
+        {
+            var command = ClientViewModelFaker.GenerateSaveClient().Generate();
+
+            await _clientAppService.Save(command);
+
+            var secret = ClientViewModelFaker.GenerateSaveClientSecret(command.ClientId).Generate();
+
+            await _clientAppService.SaveSecret(secret);
+
+            _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId).Should().NotBeNull();
+            _database.ClientSecrets.Include(i => i.Client).Where(f => f.Client.ClientId == command.ClientId).Should().NotBeNull();
+
+            var dbSecret = _database.ClientSecrets.Include(c => c.Client).FirstOrDefault(s => s.Client.ClientId == command.ClientId);
+
+            var commandRemoveSecret = new RemoveClientSecretViewModel(command.ClientId, secret.Type, dbSecret.Value);
+            var result = await _clientAppService.RemoveSecret(commandRemoveSecret);
+            result.Should().BeTrue();
+        }
+
+        [Fact]
         public async Task Should_Not_Add_New_ClientSecret_When_Client_Doesnt_Exist()
         {
             var command = ClientViewModelFaker.GenerateSaveClient().Generate();
