@@ -62,7 +62,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         }
 
         [Fact]
-        public async Task New_User_Shold_Have_Claim_Picture()
+        public async Task New_User_Could_Have_Claim_Picture()
         {
             var command = UserViewModelFaker.GenerateUserViewModel().Generate();
             var result = await _userAppService.Register(command);
