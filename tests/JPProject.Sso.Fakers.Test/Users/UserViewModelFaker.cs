@@ -30,13 +30,8 @@ namespace JPProject.Sso.Fakers.Test.Users
                 .RuleFor(r => r.Email, f => f.Person.Email)
                 .RuleFor(r => r.Password, f => pass)
                 .RuleFor(r => r.ConfirmPassword, f => pass)
-                .RuleFor(r => r.PhoneNumber, f => f.Phone.PhoneNumber())
                 .RuleFor(r => r.Name, f => f.Person.FullName)
-                .RuleFor(r => r.Username, f => f.Person.UserName)
-                .RuleFor(r => r.Picture, f => f.Person.Avatar)
-                .RuleFor(r => r.SocialNumber, f => f.Person.Ssn())
-                .RuleFor(r => r.Birthdate, f => f.Person.DateOfBirth)
-                .RuleFor(r => r.ConfirmEmail, f => ConfirmEmail ?? f.Random.Bool());
+                .RuleFor(r => r.Username, f => f.Person.UserName);
         }
         public static Faker<RegisterUserViewModel> GenerateUserWithProviderViewModel()
         {
