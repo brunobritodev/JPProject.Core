@@ -8,7 +8,6 @@ using JPProject.Sso.Domain.Commands.GlobalConfiguration;
 using JPProject.Sso.Domain.Interfaces;
 using JPProject.Sso.Domain.ViewModels.Settings;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace JPProject.Sso.Application.Services
@@ -45,7 +44,7 @@ namespace JPProject.Sso.Application.Services
         {
             var settings = await _globalConfigurationSettingsRepository.All();
 
-            var publicSettings = new PublicSettings(new Settings(settings.Where(w => w.Public && !w.Sensitive)));
+            var publicSettings = new PublicSettings(new Settings(settings));
 
             return publicSettings;
         }
