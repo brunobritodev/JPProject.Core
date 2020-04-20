@@ -8,8 +8,13 @@ namespace JPProject.Sso.Domain.ViewModels.Settings
         {
             Logo = settings["Logo"];
             Version = new Version(settings["SSO:Version"]);
+            UseRecaptcha = settings["UseRecaptcha"] == "true";
+            RecaptchaSiteKey = settings["Recaptcha:SiteKey"];
         }
-        public Version Version { get; set; }
-        public string Logo { get; set; }
+
+        public string RecaptchaSiteKey { get; set; }
+        public bool UseRecaptcha { get; }
+        public Version Version { get; }
+        public string Logo { get; }
     }
 }
