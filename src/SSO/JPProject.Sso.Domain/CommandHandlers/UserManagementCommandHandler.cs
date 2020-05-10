@@ -8,6 +8,7 @@ using JPProject.Sso.Domain.Events.User;
 using JPProject.Sso.Domain.Events.UserManagement;
 using JPProject.Sso.Domain.Interfaces;
 using MediatR;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +26,8 @@ namespace JPProject.Sso.Domain.CommandHandlers
         IRequestHandler<RemoveUserClaimCommand, bool>,
         IRequestHandler<RemoveUserRoleCommand, bool>,
         IRequestHandler<SaveUserRoleCommand, bool>,
-        IRequestHandler<AdminChangePasswordCommand, bool>
+        IRequestHandler<AdminChangePasswordCommand, bool>,
+        IRequestHandler<SynchronizeClaimsCommand, bool>
     {
         private readonly IUserService _userService;
         private readonly ISystemUser _user;
@@ -296,6 +298,44 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 await Bus.RaiseEvent(new AdminChangedPasswordEvent(request.Username));
                 return true;
             }
+            return false;
+        }
+
+
+        public async Task<bool> Handle(SynchronizeClaimsCommand request, CancellationToken cancellationToken)
+        {
+            if (!request.IsValid())
+            {
+                NotifyValidationErrors(request);
+                return false;
+            }
+
+            var userClaims = (await _userService.GetClaimByName(request.Username)).ToList();
+            foreach (var claim in request.Claims)
+            {
+                var actualUserClaims = userClaims.Find(f => f.Type == claim.Type);
+                if (actualUserClaims == null)
+                {
+                    await _userService.SaveClaim(request.Username, claim);
+                }
+                else
+                {
+                    var newValue = claim.Value;
+                    var currentValue = actualUserClaims.Value;
+                    if (currentValue != newValue)
+                    {
+                        await _userService.RemoveClaim(request.Username, actualUserClaims.Type, actualUserClaims.Value);
+                        await _userService.SaveClaim(request.Username, claim);
+                    }
+                }
+            }
+
+            if (await Commit())
+            {
+                await Bus.RaiseEvent(new ClaimsSyncronizedEvent(request.Username, request.Claims));
+                return true;
+            }
+
             return false;
         }
     }

@@ -95,7 +95,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 return false;
             }
 
-            var result = await _userService.CreateUserWithProvider(request, request.Provider, request.ProviderId);
+            var result = await _userService.CreateUserWithouthPassword(request);
 
             if (result.HasValue)
             {
@@ -155,7 +155,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             if (email is null)
                 return;
 
-            var claims =await _userService.GetClaimByName(user.UserName);
+            var claims = await _userService.GetClaimByName(user.UserName);
             await _emailService.SendEmailAsync(email.GetMessage(user, accountResult, request, claims));
         }
 
@@ -209,5 +209,6 @@ namespace JPProject.Sso.Domain.CommandHandlers
             }
             return false;
         }
+
     }
 }

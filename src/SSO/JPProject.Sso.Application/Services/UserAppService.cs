@@ -38,11 +38,23 @@ namespace JPProject.Sso.Application.Services
             return Bus.SendCommand(registerCommand);
         }
 
+        /// <summary>
+        /// Register user and check Provider
+        /// </summary>
         public Task<bool> RegisterWithoutPassword(SocialViewModel model)
         {
             var registerCommand = _mapper.Map<RegisterNewUserWithoutPassCommand>(model);
             return Bus.SendCommand(registerCommand);
         }
+        /// <summary>
+        /// Register user and dont check Provider
+        /// </summary>
+        public Task<bool> RegisterWithoutPassword(RegisterWithoutPasswordViewModel model)
+        {
+            var registerCommand = _mapper.Map<RegisterNewUserWithoutPassCommand>(model);
+            return Bus.SendCommand(registerCommand);
+        }
+
         public Task<bool> RegisterWithProvider(RegisterUserViewModel model)
         {
             var registerCommand = _mapper.Map<RegisterNewUserWithProviderCommand>(model);

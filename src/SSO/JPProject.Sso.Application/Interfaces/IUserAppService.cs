@@ -10,6 +10,7 @@ namespace JPProject.Sso.Application.Interfaces
         Task<bool> AdminRegister(AdminRegisterUserViewModel model);
         Task<bool> Register(RegisterUserViewModel model);
         Task<bool> RegisterWithoutPassword(SocialViewModel model);
+        Task<bool> RegisterWithoutPassword(RegisterWithoutPasswordViewModel model);
         Task<bool> CheckUsername(string userName);
         Task<bool> CheckEmail(string email);
         Task<bool> RegisterWithProvider(RegisterUserViewModel model);

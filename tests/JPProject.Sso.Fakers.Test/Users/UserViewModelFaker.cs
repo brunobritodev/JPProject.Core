@@ -45,7 +45,14 @@ namespace JPProject.Sso.Fakers.Test.Users
                 .RuleFor(r => r.Username, f => f.Person.UserName)
                 .RuleFor(r => r.Picture, f => f.Person.Avatar);
         }
-
+        public static Faker<RegisterWithoutPasswordViewModel> GenerateUserWithoutPasswordViewModel(string email = null, string username = null)
+        {
+            return new Faker<RegisterWithoutPasswordViewModel>()
+                .RuleFor(r => r.Email, f => email ?? f.Person.Email)
+                .RuleFor(r => r.Name, f => f.Person.FullName)
+                .RuleFor(r => r.Username, f => username ?? f.Person.UserName)
+                .RuleFor(r => r.Picture, f => f.Person.Avatar);
+        }
         public static Faker<SocialViewModel> GenerateSocialViewModel(string email = null, string username = null)
         {
             return new Faker<SocialViewModel>()

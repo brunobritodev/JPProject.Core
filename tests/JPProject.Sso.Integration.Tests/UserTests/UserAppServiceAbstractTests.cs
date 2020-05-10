@@ -3,6 +3,7 @@ using FluentAssertions;
 using IdentityModel;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
+using JPProject.Domain.Core.ViewModels;
 using JPProject.Sso.Application.Interfaces;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
 using JPProject.Sso.AspNetIdentity.Models.Identity;
@@ -18,8 +19,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bogus.Extensions.UnitedStates;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -108,7 +111,32 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             result.Should().BeTrue();
             var userClaims = await _userManagerAppService.GetClaims(command.Username);
 
-            userClaims.FirstOrDefault(f => f.Type == JwtClaimTypes.BirthDate).Should().NotBeNull();
+            userClaims.FirstOrDefault(f => f.Type == "social_number").Should().NotBeNull();
+        }
+
+
+        [Fact]
+        public async Task Should_Synchronize_Claims()
+        {
+            var command = UserViewModelFaker.GenerateUserViewModel().Generate();
+            var result = await _userAppService.Register(command);
+            result.Should().BeTrue();
+            var userClaims = await _userManagerAppService.GetClaims(command.Username);
+
+            userClaims.FirstOrDefault(f => f.Type == "social_number").Should().NotBeNull();
+
+            var newSSN = _faker.Person.Ssn();
+            var newClaims = new List<ClaimViewModel>()
+            {
+                new ClaimViewModel("social_number",newSSN )
+            };
+
+            await _userManagerAppService.SynchronizeClaims(command.Username, newClaims);
+            userClaims = await _userManagerAppService.GetClaims(command.Username);
+
+            userClaims.FirstOrDefault(f => f.Type == "social_number").Should().NotBeNull();
+            userClaims.FirstOrDefault(f => f.Type == "social_number").Value.Should().Be(newSSN);
+            userClaims.Count(f => f.Type == "social_number").Should().Be(1);
         }
 
         [Fact]
@@ -164,6 +192,16 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             result = await _userAppService.Register(command);
             result.Should().BeFalse();
             _database.Users.Count(f => f.Email == command.Email).Should().Be(1);
+        }
+
+        [Fact]
+        public async Task Should_Register_User_Without_Password()
+        {
+            var command = UserViewModelFaker.GenerateUserWithoutPasswordViewModel().Generate();
+
+            var result = await _userAppService.RegisterWithoutPassword(command);
+            result.Should().BeTrue();
+            _database.Users.FirstOrDefault(f => f.UserName == command.Username).Should().NotBeNull();
         }
 
 

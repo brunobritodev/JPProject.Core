@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using JPProject.Sso.Domain.Commands.User;
-using System;
 
 namespace JPProject.Sso.Domain.Validations.User
 {
@@ -45,14 +44,17 @@ namespace JPProject.Sso.Domain.Validations.User
 
         protected void ValidateProvider()
         {
+
             RuleFor(c => c.Provider)
-                .NotEmpty();
+                .NotEmpty()
+                .When(c => c.CheckProvider);
         }
 
         protected void ValidateProviderId()
         {
             RuleFor(c => c.ProviderId)
-                .NotEmpty();
+                .NotEmpty()
+                .When(c => c.CheckProvider);
         }
 
         protected void ValidateCode()

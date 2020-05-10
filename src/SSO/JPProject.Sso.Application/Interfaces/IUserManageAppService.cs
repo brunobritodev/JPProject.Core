@@ -1,15 +1,13 @@
-﻿using AspNetCore.IQueryable.Extensions.Pagination;
-using AspNetCore.IQueryable.Extensions.Sort;
-using JPProject.Domain.Core.ViewModels;
+﻿using JPProject.Domain.Core.ViewModels;
 using JPProject.Sso.Application.EventSourcedNormalizers;
 using JPProject.Sso.Application.ViewModels;
 using JPProject.Sso.Application.ViewModels.RoleViewModels;
 using JPProject.Sso.Application.ViewModels.UserViewModels;
 using JPProject.Sso.Domain.Interfaces;
+using JPProject.Sso.Domain.ViewModels.User;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using JPProject.Sso.Domain.ViewModels.User;
 
 namespace JPProject.Sso.Application.Interfaces
 {
@@ -21,6 +19,7 @@ namespace JPProject.Sso.Application.Interfaces
         Task<ListOf<EventHistoryData>> GetEvents(string username, PagingViewModel paging);
         Task<UserViewModel> GetUserDetails(string username);
         Task<IEnumerable<ClaimViewModel>> GetClaims(string userName);
+        Task<bool> SynchronizeClaims(string username, IEnumerable<ClaimViewModel> claims);
         Task<IEnumerable<RoleViewModel>> GetRoles(string userName);
         Task<IEnumerable<UserLoginViewModel>> GetLogins(string userName);
         Task<IEnumerable<UserListViewModel>> GetUsersInRole(string role);
