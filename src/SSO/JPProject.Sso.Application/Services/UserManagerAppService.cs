@@ -90,6 +90,12 @@ namespace JPProject.Sso.Application.Services
             return _mapper.Map<IEnumerable<ClaimViewModel>>(await _userService.GetClaimByName(userName));
         }
 
+        public Task<bool> SynchronizeClaims(string username, IEnumerable<ClaimViewModel> claims)
+        {
+            var registerCommand = new SynchronizeClaimsCommand(username, claims.Select(s => new Claim(s.Type, s.Value)));
+            return Bus.SendCommand(registerCommand);
+        }
+
         public async Task<IEnumerable<RoleViewModel>> GetRoles(string userName)
         {
             var roles = await _userService.GetRoles(userName);

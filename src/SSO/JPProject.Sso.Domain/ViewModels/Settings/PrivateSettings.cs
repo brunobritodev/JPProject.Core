@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace JPProject.Sso.Domain.ViewModels.Settings
 {
@@ -21,6 +22,7 @@ namespace JPProject.Sso.Domain.ViewModels.Settings
                                         settings["Storage:Region"]);
 
             Recaptcha = new RecaptchaSettings(settings["Recaptcha:SiteKey"], settings["Recaptcha:PrivateKey"]);
+            LdapSettings = new LdapSettings(settings["Ldap:DomainName"], settings["Ldap:DistinguishedName"], settings["Ldap:Attributes"], settings["Ldap:AuthType"], settings["Ldap:SearchScope"]);
 
             if (bool.TryParse(settings["SendEmail"], out _))
                 SendEmail = bool.Parse(settings["SendEmail"]);
@@ -31,8 +33,12 @@ namespace JPProject.Sso.Domain.ViewModels.Settings
             if (bool.TryParse(settings["UseRecaptcha"], out _))
                 UseRecaptcha = bool.Parse(settings["UseRecaptcha"]);
 
+            if (settings.ContainsKey("LoginStrategy"))
+                LoginStrategy = Enum.Parse<LoginStrategyType>(settings["LoginStrategy"]);
         }
 
+        public LdapSettings LdapSettings { get; set; }
+        public LoginStrategyType LoginStrategy { get; set; }
         public bool UseRecaptcha { get; set; }
         public bool UseStorage { get; }
         public bool SendEmail { get; }

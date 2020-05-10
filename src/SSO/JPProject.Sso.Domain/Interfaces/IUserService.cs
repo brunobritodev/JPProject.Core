@@ -15,7 +15,7 @@ namespace JPProject.Sso.Domain.Interfaces
     public interface IUserService
     {
         Task<AccountResult?> CreateUserWithPass(RegisterNewUserCommand user, string password);
-        Task<AccountResult?> CreateUserWithProvider(RegisterNewUserWithoutPassCommand user, string provider, string providerUserId);
+        Task<AccountResult?> CreateUserWithouthPassword(RegisterNewUserWithoutPassCommand user);
         Task<AccountResult?> CreateUserWithProviderAndPass(RegisterNewUserWithProviderCommand user);
         Task<AccountResult?> GenerateResetPasswordLink(string emailOrUsername);
         Task<IDomainUser> FindByEmailAsync(string email);

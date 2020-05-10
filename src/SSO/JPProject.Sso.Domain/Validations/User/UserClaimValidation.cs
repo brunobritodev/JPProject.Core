@@ -19,5 +19,10 @@ namespace JPProject.Sso.Domain.Validations.User
         {
             RuleFor(c => c.Type).NotEmpty().WithMessage("Please ensure you have entered key");
         }
+
+        protected void ValidateClaims()
+        {
+            RuleFor(c => c.Claims).NotEmpty().WithMessage("Please provide at least one claim");
+        }
     }
 }

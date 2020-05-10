@@ -48,6 +48,7 @@ namespace JPProject.Sso.Application.ViewModels.UserViewModels
         public string Bio { get; set; }
         public string JobTitle { get; set; }
         public string SocialNumber { get; set; }
+        public List<Claim> CustomClaims { get; set; } = new List<Claim>();
         public bool ContainsFederationGateway()
         {
             return Provider.IsPresent() && ProviderId.IsPresent();

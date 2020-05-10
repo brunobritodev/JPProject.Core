@@ -19,5 +19,6 @@ namespace JPProject.Sso.Domain.Commands.User
         public string EmailOrUsername { get; protected set; }
         public DateTime? Birthdate { get; internal set; }
         public string SocialNumber { get; internal set; }
+        public bool CheckProvider { get; protected set; }
     }
 }

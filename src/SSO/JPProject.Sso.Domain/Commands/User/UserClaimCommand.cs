@@ -1,4 +1,6 @@
 ﻿using JPProject.Domain.Core.Commands;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace JPProject.Sso.Domain.Commands.User
 {
@@ -9,5 +11,7 @@ namespace JPProject.Sso.Domain.Commands.User
         public string Type { get; protected set; }
 
         public string Value { get; protected set; }
+        public IEnumerable<Claim> Claims { get; protected set; }
+
     }
 }

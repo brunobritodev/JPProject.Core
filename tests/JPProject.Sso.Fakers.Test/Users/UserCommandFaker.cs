@@ -17,7 +17,8 @@ namespace JPProject.Sso.Fakers.Test.Users
                     f.Person.FullName,
                     f.Image.PicsumUrl(),
                     f.Company.CompanyName(),
-                    f.Rant.Random.AlphaNumeric(9)
+                    f.Rant.Random.AlphaNumeric(9),
+                    f.Random.Bool()
                 )
             );
         }
