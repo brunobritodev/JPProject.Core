@@ -38,9 +38,7 @@ namespace JPProject.Sso.Domain.ViewModels.Settings
         }
 
         public LdapSettings LdapSettings { get; set; }
-
         public LoginStrategyType LoginStrategy { get; set; }
-
         public bool UseRecaptcha { get; set; }
         public bool UseStorage { get; }
         public bool SendEmail { get; }
