@@ -22,7 +22,15 @@ namespace JPProject.Sso.Domain.ViewModels.Settings
                                         settings["Storage:Region"]);
 
             Recaptcha = new RecaptchaSettings(settings["Recaptcha:SiteKey"], settings["Recaptcha:PrivateKey"]);
-            LdapSettings = new LdapSettings(settings["Ldap:DomainName"], settings["Ldap:DistinguishedName"], settings["Ldap:Attributes"], settings["Ldap:AuthType"], settings["Ldap:SearchScope"]);
+            LdapSettings = new LdapSettings(
+                settings["Ldap:DomainName"],
+                settings["Ldap:DistinguishedName"],
+                settings["Ldap:Attributes"],
+                settings["Ldap:AuthType"],
+                settings["Ldap:SearchScope"],
+                settings["Ldap:PortNumber"],
+                settings["Ldap:FullyQualifiedDomainName"],
+                settings["Ldap:ConnectionLess"]);
 
             if (bool.TryParse(settings["SendEmail"], out _))
                 SendEmail = bool.Parse(settings["SendEmail"]);
