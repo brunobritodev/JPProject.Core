@@ -30,7 +30,8 @@ namespace JPProject.Sso.Domain.ViewModels.Settings
                 settings["Ldap:SearchScope"],
                 settings["Ldap:PortNumber"],
                 settings["Ldap:FullyQualifiedDomainName"],
-                settings["Ldap:ConnectionLess"]);
+                settings["Ldap:ConnectionLess"],
+                settings["Ldap:Address"]);
 
             if (bool.TryParse(settings["SendEmail"], out _))
                 SendEmail = bool.Parse(settings["SendEmail"]);
