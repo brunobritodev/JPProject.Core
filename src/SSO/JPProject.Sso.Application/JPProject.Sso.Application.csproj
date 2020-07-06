@@ -16,9 +16,9 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="AWSSDK.S3" Version="3.3.110.38" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.111.21" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="3.1.2" />
-    <PackageReference Include="MailKit" Version="2.5.2" />
+    <PackageReference Include="MailKit" Version="2.7.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>
