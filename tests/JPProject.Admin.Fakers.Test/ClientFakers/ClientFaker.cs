@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using Bogus;
+﻿using Bogus;
 using IdentityServer4.Models;
+using System.Linq;
 
 namespace JPProject.Admin.Fakers.Test.ClientFakers
 {
@@ -55,7 +54,7 @@ namespace JPProject.Admin.Fakers.Test.ClientFakers
                 .RuleFor(c => c.AccessTokenLifetime, f => accessTokenLifetime ?? f.Random.Int(0))
                 .RuleFor(c => c.AuthorizationCodeLifetime, f => authorizationCodeLifetime ?? f.Random.Int(0))
                 .RuleFor(c => c.AbsoluteRefreshTokenLifetime, f => absoluteRefreshTokenLifetime ?? f.Random.Int(0))
-                .RuleFor(c => c.SlidingRefreshTokenLifetime, f => slidingRefreshTokenLifetime?? f.Random.Int(0))
+                .RuleFor(c => c.SlidingRefreshTokenLifetime, f => slidingRefreshTokenLifetime ?? f.Random.Int(0))
                 .RuleFor(c => c.DeviceCodeLifetime, f => deviceCodeLifetime ?? f.Random.Int(0));
         }
 
@@ -67,10 +66,10 @@ namespace JPProject.Admin.Fakers.Test.ClientFakers
                 .RuleFor(s => s.Type, f => f.PickRandom(IdentityHelpers.SecretTypes));
         }
 
-        public static Faker<Claim> GenerateClientClaim()
+        public static Faker<ClientClaim> GenerateClientClaim()
         {
-            return new Faker<Claim>().CustomInstantiator(f =>
-                    new Claim(
+            return new Faker<ClientClaim>().CustomInstantiator(f =>
+                    new ClientClaim(
                         f.PickRandom(IdentityHelpers.Claims),
                         f.Lorem.Word()
                     ));

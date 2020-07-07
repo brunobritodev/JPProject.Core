@@ -29,7 +29,7 @@ namespace JPProject.Admin.Fakers.Test.ApiResourceFakers
                 .RuleFor(a => a.DisplayName, f => f.Lorem.Word())
                 .RuleFor(a => a.Description, f => f.Lorem.Word())
                 .RuleFor(a => a.ApiSecrets, f => GenerateSecrets().Generate(f.Random.Int(0, 3)).ToList())
-                .RuleFor(a => a.Scopes, f => GenerateScopes().Generate(f.Random.Int(0, 3)).ToList())
+                .RuleFor(a => a.Scopes, f => f.Lorem.Words(f.Random.Int(0, 3)).ToList())
                 .RuleFor(a => a.UserClaims, f => f.MakeLazy(f.Random.Int(1, 10), () => f.Commerce.Product()).ToList())
                 .RuleFor(a => a.Properties, f => RandomData());
         }
@@ -41,9 +41,9 @@ namespace JPProject.Admin.Fakers.Test.ApiResourceFakers
                 .RuleFor(a => a.Value, f => f.Lorem.Word())
                 .RuleFor(a => a.Type, f => f.Lorem.Word());
         }
-        public static Faker<Scope> GenerateScopes()
+        public static Faker<ApiScope> GenerateScopes()
         {
-            return new Faker<Scope>()
+            return new Faker<ApiScope>()
                 .RuleFor(a => a.Name, f => f.Lorem.Word())
                 .RuleFor(a => a.DisplayName, f => f.Lorem.Word())
                 .RuleFor(a => a.Description, f => f.Lorem.Word())

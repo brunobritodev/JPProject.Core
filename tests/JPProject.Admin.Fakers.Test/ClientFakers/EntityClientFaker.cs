@@ -2,7 +2,6 @@
 using IdentityServer4.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 
 namespace JPProject.Admin.Fakers.Test.ClientFakers
 {
@@ -21,9 +20,9 @@ namespace JPProject.Admin.Fakers.Test.ClientFakers
 
             return dic;
         }
-        public static Faker<Claim> GenerateClientClaim()
+        public static Faker<ClientClaim> GenerateClientClaim()
         {
-            return new Faker<Claim>().CustomInstantiator(f => new Claim(f.Internet.DomainName(), f.Lorem.Paragraph()));
+            return new Faker<ClientClaim>().CustomInstantiator(f => new ClientClaim(f.Internet.DomainName(), f.Lorem.Paragraph()));
         }
 
         public static Faker<Secret> GenerateClientSecret()

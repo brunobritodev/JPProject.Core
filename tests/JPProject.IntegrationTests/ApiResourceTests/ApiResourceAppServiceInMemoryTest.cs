@@ -9,6 +9,7 @@ using JPProject.Domain.Core.Notifications;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -57,7 +58,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
             var api = _database.ApiResources.FirstOrDefault(s => s.Name == command.Name);
             api.Should().NotBeNull();
             api.Scopes.Should().HaveCountGreaterOrEqualTo(1);
-            api.Scopes.Should().Contain(a => a.Name == api.Name);
+            api.Scopes.Should().Contain(a => a.Scope == api.Name);
         }
 
 
@@ -71,7 +72,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
             var api = _database.ApiResources.FirstOrDefault(s => s.Name == command.Name);
             api.Should().NotBeNull();
             api.Scopes.Should().HaveCountGreaterOrEqualTo(1);
-            api.Scopes.Should().Contain(a => a.Name == api.Name);
+            api.Scopes.Should().Contain(a => a.Scope == api.Name);
         }
 
         [Fact]
@@ -126,12 +127,14 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
 
             await _apiResourceAppService.Save(command);
 
-            var scope = ApiResourceFaker.GenerateSaveScopeViewModer(command.Name).Generate();
+            command.Scopes = new List<string>() { "new_scope" };
 
-            await _apiResourceAppService.SaveScope(scope);
+            await _apiResourceAppService.Update(command.Name, command);
 
-            _database.ApiResources.FirstOrDefault(f => f.Name == command.Name).Should().NotBeNull();
-            _database.ApiScopes.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
+            var resourceDb = _database.ApiResources.Include(s => s.Scopes).FirstOrDefault(f => f.Name == command.Name);
+            resourceDb.Should().NotBeNull();
+            _database.ApiResourceScopes.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
+            resourceDb.Scopes.Any(a => a.Scope.Equals("new_scope")).Should().BeTrue();
         }
 
         [Fact]
@@ -146,7 +149,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
             await _apiResourceAppService.SaveSecret(secret);
 
             _database.ApiResources.FirstOrDefault(f => f.Name == command.Name).Should().NotBeNull();
-            _database.ApiSecrets.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
+            _database.ApiResourceSecrets.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
         }
 
         [Fact]
@@ -163,7 +166,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
             await _apiResourceAppService.SaveSecret(secret);
 
             _database.ApiResources.FirstOrDefault(f => f.Name == command.Name).Should().NotBeNull();
-            _database.ApiSecrets.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
+            _database.ApiResourceSecrets.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
         }
 
 
@@ -176,7 +179,7 @@ namespace JPProject.Admin.IntegrationTests.ApiResourceTests
             var result = await _apiResourceAppService.SaveSecret(secret);
 
             _notifications.GetNotifications().Select(s => s.Value).ToList().ForEach(_output.WriteLine);
-            _database.ApiSecrets.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
+            _database.ApiResourceSecrets.Include(i => i.ApiResource).Where(f => f.ApiResource.Name == command.Name).Should().NotBeNull();
             result.Should().BeFalse();
         }
 

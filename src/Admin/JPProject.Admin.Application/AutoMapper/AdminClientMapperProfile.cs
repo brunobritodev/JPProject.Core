@@ -13,9 +13,9 @@ namespace JPProject.Admin.Application.AutoMapper
     {
         public AdminClientMapperProfile()
         {
-            CreateMap<Client, ClientListViewModel>(MemberList.Destination);
+            CreateMap<ClientClaim, ClientListViewModel>(MemberList.Destination);
             CreateMap<KeyValuePair<string, string>, ClientPropertyViewModel>();
-            CreateMap<Claim, ClaimViewModel>().ConstructUsing(a => new ClaimViewModel(a.Type, a.Value));
+            CreateMap<ClientClaim, ClaimViewModel>().ConstructUsing(a => new ClaimViewModel(a.Type, a.Value));
             /*
             * Client commands
             */
