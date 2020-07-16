@@ -2,7 +2,7 @@
 
 namespace JPProject.Sso.Application.ViewModels
 {
-    public class SocialViewModel
+    public class RegisterUserLdapViewModel
     {
         [EmailAddress]
         [Display(Name = "Email")]
@@ -18,9 +18,5 @@ namespace JPProject.Sso.Application.ViewModels
 
         [Display(Name = "Picture")]
         public string Picture { get; set; }
-
-        public string ProviderId { get; set; }
-
-        public string Provider { get; set; }
     }
 }

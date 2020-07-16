@@ -2,6 +2,12 @@
 {
     public struct AccountResult
     {
+        public AccountResult(string username)
+        {
+            Username = username;
+            Code = null;
+            Url = null;
+        }
         public AccountResult(string username, string code, string url)
         {
             Username = username;

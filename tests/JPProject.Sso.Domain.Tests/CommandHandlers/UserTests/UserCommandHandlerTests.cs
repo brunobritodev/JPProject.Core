@@ -79,7 +79,9 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
         {
             var command = UserCommandFaker.GenerateAddLoginCommand().Generate();
 
-            _userService.Setup(s => s.AddLoginAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync((string)null);
+            _userService.SetupSequence(s => s.AddLoginAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync((string)null)
+                .ReturnsAsync((string)null);
 
             var result = await _commandHandler.Handle(command, _tokenSource.Token);
 
@@ -101,6 +103,32 @@ namespace JPProject.Sso.Domain.Tests.CommandHandlers.UserTests
 
             _userService.Verify(s => s.FindByEmailAsync(It.Is<string>(e => e == command.Email)), Times.Once);
             result.Should().BeFalse();
+        }
+
+
+        [Fact]
+        public async Task Should_Add_New_User_If_It_Dont_Have_Email()
+        {
+            var command = UserCommandFaker.GenerateRegisterNewUserWithoutPassCommand(checkProvider: false, setEmail: false, setName: false).Generate();
+
+            _userService.SetupSequence(s => s.FindByNameAsync(It.Is<string>(e => e == command.Username)))
+                .ReturnsAsync((IDomainUser)null)
+                .ReturnsAsync(UserFaker.GenerateUser().Generate());
+
+            _userService.Setup(s =>
+                s.CreateUserWithouthPassword(
+                    It.Is<RegisterNewUserWithoutPassCommand>(i => i.Username.Equals(command.Username) && i.Email == null))
+                )
+                .ReturnsAsync(
+                    new AccountResult(command.Username, _faker.Random.AlphaNumeric(8), _faker.Internet.Url())
+                    );
+
+            var result = await _commandHandler.Handle(command, _tokenSource.Token);
+
+
+            _userService.Verify(s => s.FindByEmailAsync(It.Is<string>(e => e == command.Email)), Times.Once);
+            _userService.Verify(s => s.FindByNameAsync(It.Is<string>(e => e == command.Username)), Times.Exactly(2));
+            result.Should().BeTrue();
         }
 
 
