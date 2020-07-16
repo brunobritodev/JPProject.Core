@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Bogus.Extensions.UnitedStates;
 using FluentAssertions;
 using IdentityModel;
 using JPProject.Domain.Core.Interfaces;
@@ -18,11 +19,11 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Bogus.Extensions.UnitedStates;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -40,6 +41,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         private readonly Faker _faker;
         private readonly IUserManageAppService _userManagerAppService;
         private readonly DomainNotificationHandler _notifications;
+        private IOptions<IdentityOptions> _identityOptions;
         public TWarmup UnifiedContextData { get; }
 
         protected UserAppServiceAbstractTests(TWarmup unifiedContext, ITestOutputHelper output)
@@ -49,7 +51,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             UnifiedContextData = unifiedContext;
             _userAppService = UnifiedContextData.Services.GetRequiredService<IUserAppService>();
             _userManagerAppService = UnifiedContextData.Services.GetRequiredService<IUserManageAppService>();
-
+            _identityOptions = UnifiedContextData.Services.GetRequiredService<IOptions<IdentityOptions>>();
             _notifications = (DomainNotificationHandler)UnifiedContextData.Services.GetRequiredService<INotificationHandler<DomainNotification>>();
 
             _notifications.Clear();
@@ -197,11 +199,25 @@ namespace JPProject.Sso.Integration.Tests.UserTests
         [Fact]
         public async Task Should_Register_User_Without_Password()
         {
-            var command = UserViewModelFaker.GenerateUserWithoutPasswordViewModel().Generate();
+            var command = UserViewModelFaker.GenerateUserLdapViewModel().Generate();
 
-            var result = await _userAppService.RegisterWithoutPassword(command);
+            var result = await _userAppService.Register(command);
             result.Should().BeTrue();
             _database.Users.FirstOrDefault(f => f.UserName == command.Username).Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task Should_Register_User_Without_Email()
+        {
+            _identityOptions.Value.User.RequireUniqueEmail = false;
+            var command = UserViewModelFaker.GenerateUserLdapViewModel(setEmail: false).Generate();
+
+            var result = await _userAppService.Register(command);
+            result.Should().BeTrue();
+            var user = _database.Users.FirstOrDefault(f => f.UserName == command.Username);
+
+            user.Should().NotBeNull();
+            user?.Email.Should().BeNullOrEmpty();
         }
 
 
@@ -235,7 +251,7 @@ namespace JPProject.Sso.Integration.Tests.UserTests
             command.ConfirmPassword = null;
 
 
-            var result = await _userAppService.RegisterWithProvider(command);
+            var result = await _userAppService.RegisterWithPasswordAndProvider(command);
             result.Should().BeTrue();
             _database.Users.FirstOrDefault(f => f.UserName == command.Username).Should().NotBeNull();
         }

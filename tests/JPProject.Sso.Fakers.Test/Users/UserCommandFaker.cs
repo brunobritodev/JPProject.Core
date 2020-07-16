@@ -8,13 +8,13 @@ namespace JPProject.Sso.Fakers.Test.Users
 {
     public class UserCommandFaker
     {
-        public static Faker<RegisterNewUserWithoutPassCommand> GenerateRegisterNewUserWithoutPassCommand()
+        public static Faker<RegisterNewUserWithoutPassCommand> GenerateRegisterNewUserWithoutPassCommand(bool? checkProvider = null, bool setEmail = true, bool setName = true)
         {
             return new Faker<RegisterNewUserWithoutPassCommand>().CustomInstantiator(
                 f => new RegisterNewUserWithoutPassCommand(
                     f.Person.UserName,
-                    f.Person.Email,
-                    f.Person.FullName,
+                    setEmail ? f.Person.Email : null,
+                    setName ? f.Person.FullName : null,
                     f.Image.PicsumUrl(),
                     f.Company.CompanyName(),
                     f.Rant.Random.AlphaNumeric(9),
@@ -43,6 +43,7 @@ namespace JPProject.Sso.Fakers.Test.Users
                     shouldConfirmEmail ?? f.Random.Bool()
                 ));
         }
+
 
         public static Faker<AddLoginCommand> GenerateAddLoginCommand()
         {

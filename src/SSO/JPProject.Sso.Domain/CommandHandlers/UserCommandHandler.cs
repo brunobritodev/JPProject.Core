@@ -2,6 +2,7 @@
 using JPProject.Domain.Core.Commands;
 using JPProject.Domain.Core.Interfaces;
 using JPProject.Domain.Core.Notifications;
+using JPProject.Domain.Core.Util;
 using JPProject.Sso.Domain.Commands.User;
 using JPProject.Sso.Domain.Events.User;
 using JPProject.Sso.Domain.Interfaces;
@@ -54,8 +55,8 @@ namespace JPProject.Sso.Domain.CommandHandlers
                 await Bus.RaiseEvent(new DomainNotification("New User", "E-mail already exist. If you don't remember your passwork, reset it."));
                 return false;
             }
-            var usernameAlreadyExist = await _userService.FindByNameAsync(request.Username);
 
+            var usernameAlreadyExist = await _userService.FindByNameAsync(request.Username);
             if (usernameAlreadyExist != null)
             {
                 await Bus.RaiseEvent(new DomainNotification("New User", "Username already exist. If you don't remember your passwork, reset it."));
@@ -107,6 +108,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
             return false;
         }
 
+
         public async Task<bool> Handle(RegisterNewUserWithProviderCommand request, CancellationToken cancellationToken)
         {
             if (!request.IsValid())
@@ -148,7 +150,7 @@ namespace JPProject.Sso.Domain.CommandHandlers
 
         private async Task SendEmailToUser(IDomainUser user, UserCommand request, AccountResult accountResult, EmailType type)
         {
-            if (user.EmailConfirmed)
+            if (user.EmailConfirmed || !user.Email.IsEmail())
                 return;
 
             var email = await _emailRepository.GetByType(type);
