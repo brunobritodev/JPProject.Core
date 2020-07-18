@@ -23,15 +23,6 @@ namespace JPProject.Sso.Fakers.Test.Users
                 .RuleFor(r => r.SocialNumber, f => f.Person.Ssn())
                 .RuleFor(r => r.Birthdate, f => f.Person.DateOfBirth);
         }
-        public static Faker<RegisterUserLdapViewModel> GenerateUserLdapViewModel(bool setEmail = true)
-        {
-            var pass = _faker.Internet.Password();
-            return new Faker<RegisterUserLdapViewModel>()
-                .RuleFor(r => r.Email, f => setEmail ? f.Person.Email : null)
-                .RuleFor(r => r.Name, f => f.Person.FullName)
-                .RuleFor(r => r.Username, f => f.Person.UserName)
-                .RuleFor(r => r.Picture, f => f.Person.Avatar);
-        }
         public static Faker<AdminRegisterUserViewModel> GenerateRegisterAdminViewModel(bool? ConfirmEmail)
         {
             var pass = _faker.Internet.Password();
@@ -54,9 +45,9 @@ namespace JPProject.Sso.Fakers.Test.Users
                 .RuleFor(r => r.Username, f => f.Person.UserName)
                 .RuleFor(r => r.Picture, f => f.Person.Avatar);
         }
-        public static Faker<RegisterUserLdapViewModel> GenerateUserWithoutPasswordViewModel(string email = null, string username = null)
+        public static Faker<RegisterWithoutPasswordViewModel> GenerateUserWithoutPasswordViewModel(string email = null, string username = null)
         {
-            return new Faker<RegisterUserLdapViewModel>()
+            return new Faker<RegisterWithoutPasswordViewModel>()
                 .RuleFor(r => r.Email, f => email ?? f.Person.Email)
                 .RuleFor(r => r.Name, f => f.Person.FullName)
                 .RuleFor(r => r.Username, f => username ?? f.Person.UserName)

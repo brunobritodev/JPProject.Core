@@ -4,6 +4,8 @@ namespace JPProject.Sso.Domain.Commands.User
 {
     public class RegisterNewUserWithoutPassCommand : UserCommand
     {
+        
+
         public RegisterNewUserWithoutPassCommand(string username, string email, string name, string picture, string provider, string providerId, bool checkProvider)
         {
             CheckProvider = checkProvider;
@@ -21,5 +23,4 @@ namespace JPProject.Sso.Domain.Commands.User
             return ValidationResult.IsValid;
         }
     }
-
 }
