@@ -9,7 +9,8 @@ namespace JPProject.Sso.Domain.Validations.User
         {
             RuleFor(c => c.Name)
                 .NotEmpty().WithMessage("Please ensure you have entered the Username")
-                .Length(2, 150).WithMessage("The Username must have between 2 and 150 characters");
+                .Length(2, 150).WithMessage("The Username must have between 2 and 150 characters")
+                .When(w => w.Name != null);
         }
 
 
@@ -17,7 +18,8 @@ namespace JPProject.Sso.Domain.Validations.User
         {
             RuleFor(c => c.Email)
                 .NotEmpty()
-                .EmailAddress();
+                .EmailAddress()
+                .When(w => w.Email != null); ;
         }
 
         protected void ValidateUsername()
