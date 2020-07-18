@@ -27,11 +27,18 @@ namespace JPProject.Sso.Application.Services
             Bus = bus;
         }
 
+        /// <summary>
+        /// Register user as an admin. Bypass many validation rules
+        /// </summary>
         public Task<bool> AdminRegister(AdminRegisterUserViewModel model)
         {
             var registerCommand = _mapper.Map<RegisterNewUserCommand>(model);
             return Bus.SendCommand(registerCommand);
         }
+
+        /// <summary>
+        /// Register regular user. With password and without Provider
+        /// </summary>
         public Task<bool> Register(RegisterUserViewModel model)
         {
             var registerCommand = _mapper.Map<RegisterNewUserCommand>(model);
@@ -39,23 +46,27 @@ namespace JPProject.Sso.Application.Services
         }
 
         /// <summary>
-        /// Register user and check Provider
+        /// Register user from LDAP connection
+        /// </summary>
+        public Task<bool> Register(RegisterUserLdapViewModel model)
+        {
+            var registerCommand = _mapper.Map<RegisterNewUserWithoutPassCommand>(model);
+            return Bus.SendCommand(registerCommand);
+        }
+
+        /// <summary>
+        /// Register user and add a new Login for him. Usually for federation logins
         /// </summary>
         public Task<bool> RegisterWithoutPassword(SocialViewModel model)
         {
             var registerCommand = _mapper.Map<RegisterNewUserWithoutPassCommand>(model);
             return Bus.SendCommand(registerCommand);
         }
-        /// <summary>
-        /// Register user and dont check Provider
-        /// </summary>
-        public Task<bool> RegisterWithoutPassword(RegisterWithoutPasswordViewModel model)
-        {
-            var registerCommand = _mapper.Map<RegisterNewUserWithoutPassCommand>(model);
-            return Bus.SendCommand(registerCommand);
-        }
 
-        public Task<bool> RegisterWithProvider(RegisterUserViewModel model)
+        /// <summary>
+        /// Register user with password and add a new Login for him.
+        /// </summary>
+        public Task<bool> RegisterWithPasswordAndProvider(RegisterUserViewModel model)
         {
             var registerCommand = _mapper.Map<RegisterNewUserWithProviderCommand>(model);
             return Bus.SendCommand(registerCommand);
