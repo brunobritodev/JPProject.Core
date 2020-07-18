@@ -14,13 +14,6 @@ namespace JPProject.Admin.Application.AutoMapper
         {
             CreateMap<IdentityResource, IdentityResourceListView>(MemberList.Destination);
             CreateMap<Claim, ClaimViewModel>().ConstructUsing(a => new ClaimViewModel(a.Type, a.Value));
-            /*
-            * Persisted grant
-            */
-            CreateMap<RemovePersistedGrantViewModel, RemovePersistedGrantCommand>().ConstructUsing(c => new RemovePersistedGrantCommand(c.Key));
-
-
-
         }
     }
 }

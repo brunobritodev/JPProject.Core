@@ -1,9 +1,8 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using IdentityServer4.Models;
 using JPProject.Admin.Application.ViewModels.IdentityResourceViewModels;
-using JPProject.Admin.Domain.Commands.IdentityResource;
 using JPProject.Domain.Core.ViewModels;
+using System.Security.Claims;
 
 namespace JPProject.Admin.Application.AutoMapper
 {
@@ -13,12 +12,6 @@ namespace JPProject.Admin.Application.AutoMapper
         {
             CreateMap<IdentityResource, IdentityResourceListView>(MemberList.Destination);
             CreateMap<Claim, ClaimViewModel>().ConstructUsing(a => new ClaimViewModel(a.Type, a.Value));
-
-            /*
-             * Identity ApiResource commands
-             */
-            CreateMap<IdentityResource, RegisterIdentityResourceCommand>().ConstructUsing(c => new RegisterIdentityResourceCommand(c));
-            CreateMap<RemoveIdentityResourceViewModel, RemoveIdentityResourceCommand>().ConstructUsing(c => new RemoveIdentityResourceCommand(c.Name));
 
         }
     }

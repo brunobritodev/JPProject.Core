@@ -41,10 +41,7 @@ namespace JPProject.Admin.IntegrationTests.PersistedGrantTests
 
             InMemoryData.DetachAll();
 
-            var command = new RemovePersistedGrantViewModel("teste");
-
-
-            await _persistedGrant.Remove(command);
+            await _persistedGrant.Remove("teste");
 
             _database.PersistedGrants.Count().Should().Be(0);
         }

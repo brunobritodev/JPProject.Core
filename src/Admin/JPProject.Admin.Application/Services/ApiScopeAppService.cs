@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
+using IdentityServer4.Models;
 using JPProject.Admin.Application.AutoMapper;
 using JPProject.Admin.Application.Interfaces;
-using JPProject.Admin.Application.ViewModels.ApiScopeViewModels;
 using JPProject.Admin.Domain.Commands.ApiScope;
 using JPProject.Domain.Core.Bus;
 using JPProject.Domain.Core.Interfaces;
 using System;
 using System.Threading.Tasks;
+using JPProject.Admin.Domain.Interfaces;
 
 namespace JPProject.Admin.Application.Services
 {
@@ -14,31 +15,37 @@ namespace JPProject.Admin.Application.Services
     {
         private IMapper _mapper;
         private IEventStoreRepository _eventStoreRepository;
-        private readonly IApiScopeAppService _apiScopeAppService;
+        private readonly IApiScopeRepository _apiScopeRepository;
         public IMediatorHandler Bus { get; set; }
 
         public ApiScopeAppService(
             IMediatorHandler bus,
             IEventStoreRepository eventStoreRepository,
-            IApiScopeAppService apiScopeAppService)
+            IApiScopeRepository apiScopeRepository)
         {
             _mapper = AdminApiResourceMapper.Mapper;
             Bus = bus;
             _eventStoreRepository = eventStoreRepository;
-            _apiScopeAppService = apiScopeAppService;
+            _apiScopeRepository = apiScopeRepository;
         }
 
-        public Task<bool> RemoveScope(RemoveApiScopeViewModel model)
+        public Task<bool> Remove(string name)
         {
-            var registerCommand = _mapper.Map<RemoveApiScopeCommand>(model);
+            var registerCommand = new RemoveApiScopeCommand(name);
             return Bus.SendCommand(registerCommand);
         }
 
 
-        public Task<bool> SaveScope(SaveApiScopeViewModel model)
+        public Task<bool> Save(ApiScope model)
         {
-            var registerCommand = _mapper.Map<SaveApiScopeCommand>(model);
+            var registerCommand = new SaveApiScopeCommand(model);
             return Bus.SendCommand(registerCommand);
+        }
+
+        public Task<bool> Update(string oldName, ApiScope apiScope)
+        {
+            var command = new UpdateApiScopeCommand(oldName, apiScope);
+            return Bus.SendCommand(command);
         }
 
 

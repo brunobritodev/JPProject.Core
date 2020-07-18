@@ -53,7 +53,7 @@ namespace JPProject.Admin.IntegrationTests.IdentityResourceTests
 
             _database.IdentityResources.FirstOrDefault(s => s.Name == command.Name).Should().NotBeNull();
 
-            await _identityResource.Remove(new RemoveIdentityResourceViewModel(command.Name));
+            await _identityResource.Remove(command.Name);
             _notifications.GetNotifications().Select(s => s.Value).ToList().ForEach(_output.WriteLine);
             _database.IdentityResources.FirstOrDefault(s => s.Name == command.Name).Should().BeNull();
         }
