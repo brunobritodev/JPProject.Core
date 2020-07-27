@@ -212,7 +212,7 @@ namespace JPProject.Admin.IntegrationTests.ClientTests
             _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId).Should().NotBeNull();
             _database.ClientPostLogoutRedirectUris.Any().Should().BeTrue();
 
-            await _clientAppService.Remove(new RemoveClientViewModel(command.ClientId));
+            await _clientAppService.Remove(command.ClientId);
 
             _database.Clients.FirstOrDefault(s => s.ClientId == command.ClientId).Should().BeNull();
         }
